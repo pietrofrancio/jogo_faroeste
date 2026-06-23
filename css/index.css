@@ -1,3 +1,175 @@
-*{
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+ 
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+ 
+body {
+    font-family: 'Press Start 2P', cursive;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #000;
+}
+ 
+/* --- VÍDEO DE FUNDO --- */
+.video-background {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+}
+ 
+#bg-video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: sepia(0.3) contrast(1.1) brightness(0.8);
+}
+ 
+.overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(43, 19, 7, 0.3);
+}
+ 
+/* --- CONTAINER DO MENU --- */
+.menu-container {
+    position: relative;
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+ 
+/* --- LOGO --- */
+.game-logo {
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin-bottom: 2rem;
+    image-rendering: pixelated;
+    filter: drop-shadow(5px 5px 0px rgba(36, 13, 4, 0.7));
+}
+ 
+/* --- GRUPO DE BOTÕES --- */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 480px;
+}
+ 
+/* --- BOTÃO BASE --- */
+.btn-western {
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background-color: rgba(94, 47, 29, 0.9);
+    color: #ffebc2;
+    border: 3px solid #a07040;
+    padding: 0;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 4px 4px 0px #1a0a04;
+    letter-spacing: 1px;
+    overflow: hidden;
+    border-radius: 3px;
+}
+ 
+/* --- ÍCONE À ESQUERDA --- */
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    min-width: 52px;
+    height: 52px;
+    background-color: rgba(60, 28, 12, 0.95);
+    border-right: 3px solid #a07040;
+    color: #d4a55a;
+    flex-shrink: 0;
+}
+ 
+.btn-icon svg {
+    width: 28px;
+    height: 28px;
+    color: #d4a55a;
+}
+ 
+/* --- LABEL DO BOTÃO --- */
+.btn-label {
+    flex: 1;
+    padding: 0 16px;
+    text-align: left;
+}
+ 
+/* --- BOTÃO DE JOGAR (destaque) --- */
+.btn-play {
+    border-color: #ffd27a;
+    color: #ffd27a;
+    background-color: rgba(130, 45, 15, 0.95);
+    font-size: 0.85rem;
+    box-shadow: 4px 4px 0px #1a0a04;
+}
+ 
+.btn-play .btn-icon {
+    width: 60px;
+    min-width: 60px;
+    height: 60px;
+    background-color: rgba(100, 40, 10, 0.95);
+    border-right-color: #ffd27a;
+    color: #ffd27a;
+}
+ 
+.btn-play .btn-icon svg {
+    width: 32px;
+    height: 32px;
+    color: #ffd27a;
+}
+ 
+/* Setas decorativas do botão Jogar */
+.btn-arrows-left,
+.btn-arrows-right {
+    font-size: 0.6rem;
+    opacity: 0.7;
+    padding: 0 6px;
+    color: #ffd27a;
+}
+ 
+/* --- HOVER --- */
+.btn-western:hover {
+    background-color: rgba(200, 160, 80, 0.95);
+    color: #3a1a06;
+    border-color: #3a1a06;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px #1a0a04;
+}
+ 
+.btn-western:hover .btn-icon {
+    background-color: rgba(160, 120, 50, 0.95);
+    border-right-color: #3a1a06;
+    color: #3a1a06;
+}
+ 
+.btn-western:hover .btn-icon svg {
+    color: #3a1a06;
+}
+ 
+.btn-western:hover .btn-arrows-left,
+.btn-western:hover .btn-arrows-right {
+    color: #3a1a06;
+}
+ 
+/* --- CLIQUE --- */
+.btn-western:active {
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0px #1a0a04;
 }
