@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/intro.css">
+    <script src="../js/intro.js" defer></script>
+
+    <title>Introdução</title>
+</head>
+<body>
+<audio id="musicaIntro" autoplay loop>
+    <source src="../music/intro.mp3" type="audio/mp3">
+</audio>
+    <!-- Cenário -->
+    <div id="cenario">
+
+        <!-- Personagem -->
+        <img id="personagem" src="../img/personagem.png" alt="Personagem">
+
+        <!-- Caixa de diálogo -->
+        <div id="dialogo">
+            <p id="texto"></p>
+
+            <span class="continuar">
+                Pressione ESPAÇO para continuar
+            </span>
+        </div>
+
+    </div>
+
+    <!-- Tela preta para transição -->
+    <div id="fade"></div>
+
+</body>
+</html>

@@ -173,3 +173,9 @@ body {
     transform: translate(3px, 3px);
     box-shadow: 1px 1px 0px #1a0a04;
 }
+.btn-western,
+.btn-western:visited,
+.btn-western:hover {
+    text-decoration: none;
+    color: #ffebc2;
+}
