@@ -4,6 +4,18 @@ const des = canvas.getContext('2d');
 
 const chao_y = 600; // Posição Y onde fica o chão
 
+const musicaEscolhida =
+    localStorage.getItem('musicaJogo')
+
+if(musicaEscolhida){
+
+    const audio = new Audio(musicaEscolhida)
+
+    audio.loop = true
+    audio.volume = 0.5
+
+    audio.play().catch(() => {})
+}
 // ---------------------------------------------------------
 // 2. Definição das Classes
 // ---------------------------------------------------------
