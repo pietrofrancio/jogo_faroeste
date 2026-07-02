@@ -22,6 +22,20 @@ body{
     position:relative;
 }
 
+/* AQUI È AQULA MENSAGEM DE PULAR A HISTORIA */
+
+.pular{
+    position: absolute;
+
+    bottom: 45px; /* sobe o texto */
+    right: 30px;
+
+    font-size: 12px;
+    color: #b0894a;
+    font-weight: bold;
+
+    animation: piscar 1.2s infinite;
+}
 /* Personagem */
 
 #personagem{
