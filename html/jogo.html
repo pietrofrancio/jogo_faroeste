@@ -4,14 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/jogo.css">
-    <script src="../index.js"defer></script>
+    <script src="../js/jogo.js" defer></script>
     <title>Página do jogo</title>
 </head>
 <body>
   
     <div class="game-container">
-        <canvas id="des" width="1908" height="940"></canvas>
+        
+        <div id="hud">
+            <span id="pontos">Ouro: 0</span>
+            <span id="vidas">Vidas: 5 ♥</span>
+        </div>
 
+        <div id="cenario">
+            <img id="protagonista" src="../img/morganaNormal.png" alt="Protagonista">
+        </div>
+        <div id="texto"></div>
+        <div id="fade"></div>
     </div>
+    
 </body>
 </html>
