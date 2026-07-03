@@ -22,13 +22,27 @@ body{
     position:relative;
 }
 
+/* AQUI È AQULA MENSAGEM DE PULAR A HISTORIA */
+
+.pular{
+    position: absolute;
+
+    bottom: 45px; /* sobe o texto */
+    right: 30px;
+
+    font-size: 12px;
+    color: #b0894a;
+    font-weight: bold;
+
+    animation: piscar 1.2s infinite;
+}
 /* Personagem */
 
 #personagem{
     position:absolute;
 
     bottom:120px;
-    left:100px;
+    left:50px;
 
     width:300px;
 
@@ -88,4 +102,45 @@ body{
     pointer-events:none;
 
     transition:opacity 1s;
+}
+
+/* Nome do Personagem */
+#nome-personagem {
+    /* O absolute aqui se baseia no #dialogo, já que ele também tem position */
+    position: absolute; 
+    
+    /* O valor negativo puxa a caixa para cima, tirando ela de dentro do balão */
+    top: -45px; 
+    
+    /* Alinhado com o padding esquerdo de 30px que você já colocou no #dialogo */
+    left: 30px; 
+
+    /* Estilos visuais combinando com o seu tema */
+    background: rgba(30,15,10, 1); 
+    border: 5px solid #a07040;
+    color: #ffebc2;
+
+    /* Espaçamento interno da caixinha */
+    padding: 10px 15px;
+    font-size: 16px;
+}
+
+/* ==========================================
+   DICA DO BOTÃO ESPAÇO
+   ========================================== */
+.continuar {
+    position: absolute;
+    bottom: 15px; 
+    font-size: 14px; /* Ajuste o tamanho se achar necessário */
+    color: #b0894a; /* Cor amarelinha clássica de RPG */
+    font-weight: bold;
+    
+    /* Ativa a animação de piscar */
+    animation: piscar 1.2s infinite; 
+}
+
+/* Criando a animação de piscar */
+@keyframes piscar {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
 }

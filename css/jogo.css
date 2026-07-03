@@ -1,8 +1,219 @@
-*{
-    margin: 0;
+/* ==========================================
+   ÁREA DO JOGO
+   ========================================== */
+#cenario {
+    width: 100%;
+    height: 100vh; /* Ocupa a tela toda */
+    background-image: url('../img/cenario-mina.png'); /* Coloque a imagem da mina aqui */
+    background-size: cover;
+    background-position: center;
+    position: relative; /* SUPER IMPORTANTE: Mantém os inimigos presos aqui dentro */
+    overflow: hidden; /* Esconde o que sair da tela */
+    cursor: crosshair; /* Muda o mouse para uma mira! */
 }
 
-canvas{
-    border: 2px solid black;
+/* Classe que vamos dar para cada inimigo criado */
+.inimigo {
+    position: absolute;
+    width: 80px; /* Tamanho do inimigo, ajuste como quiser */
+    cursor: crosshair;
+    transition: transform 0.1s;
 }
 
+/* Efeito rápido quando o inimigo for atingido */
+.inimigo:active {
+    transform: scale(0.8);
+}
+
+/* ==========================================
+   PAINEL DE INFORMAÇÕES (HUD)
+   ========================================== */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between; /* Coloca o ouro na esquerda e vidas na direita */
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffcc00;
+    text-shadow: 2px 2px 0px #000; /* Bordinha preta para o texto não sumir no fundo */
+    z-index: 10; /* Garante que o texto fique por cima de tudo */
+    pointer-events: none; /* Faz o mouse ignorar o texto na hora de atirar */
+}
+
+/* ==========================================
+   PROTAGONISTA
+   ========================================== */
+#protagonista {
+    position: absolute;
+    
+    /* ANTES ERA 120px, AUMENTAMOS PARA 170px */
+    width: 150px;   
+    height: 170px;  
+    
+    bottom: 50px;   /* Mantenha igual para ela continuar no chão */
+    left: 50px;
+    z-index: 2;
+    transform-origin: bottom center; 
+    object-fit: contain;     
+    object-position: bottom; 
+
+    /* ==========================================
+   PROTAGONISTA - CORREÇÃO DE DIREÇÃO
+   ========================================== */
+
+/* Quando a Morgana estiver correndo ou pulando para a esquerda,
+   ela já tem o transform: scaleX(-1) aplicado pelo JavaScript.
+   
+   Mas, para garantir que, no momento do clique (quando ela para),
+   ela não dê aquela "viradinha" fantasma, nós forçamos a direção
+   aqui no CSS também! */
+
+#protagonista {
+    /* ... (mantenha suas regras atuais) */
+    
+    /* Vamos adicionar essa regra para garantir que, por padrão,
+       sempre que o JavaScript não disser o contrário, ela olhe para a direita.
+       Isso serve como uma "âncora" de segurança. */
+    transform: scaleX(1); 
+}
+
+/* Quando você clica para atirar para a esquerda, o JavaScript aplica a classe 
+   que nós vamos criar agora para forçar a virada. */
+#protagonista.olhando-esquerda {
+    transform: scaleX(-1) !important; /* !important garante que essa regra vença */
+}
+}
+
+/* ==========================================
+   INIMIGOS (FORÇANDO A DIREÇÃO CORRETA SEMPRE)
+   ========================================== */
+.inimigo {
+    position: absolute;
+    width: 150px;   
+    height: 150px;  
+    bottom: 50px;   
+    z-index: 1;
+    object-fit: contain;
+    object-position: bottom;
+
+    /* A MÁGICA ESTÁ AQUI: */
+    /* Usando o !important, nós dizemos ao navegador que NÃO IMPORTA se o sprite mudou, 
+       se ele está andando ou se está atirando: ele DEVE continuar virado para a esquerda. */
+    transform: scaleX(-1) !important; 
+}
+
+/* ==========================================
+   PROJÉTIL (100% CÓDIGO)
+   ========================================== */
+.bala {
+    position: absolute;
+    width: 15px;
+    height: 7px;
+    background-color: #796d6d; /* Cor amarela brilhante */
+    border-radius: 50%;        /* Deixa perfeitamente redonda */
+    /*box-shadow: 0 0 10px #ff9800, 0 0 20px #ff5722; /* Efeito de brilho de fogo/energia */
+    z-index: 3;
+}
+
+/*BOTAO DE PAUSAR*/
+#btnPause{
+    pointer-events: auto;
+    background:#6b3d18;
+    color:#fff3c2;
+    border:2px solid #d6a75f;
+    padding:8px 16px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:16px;
+}
+
+/*bola de feno*/
+.bola-feno{
+    position:absolute;
+    width:80px;
+    height:80px;
+    z-index:1;
+}
+
+
+/*Toda essa merda aqui em baixo e o css da telinha de comprar vida quando a morgana morre e aparece o game over =)*/
+#gameOverMenu{
+    position:fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:rgba(20,10,5,.85);
+    z-index:9999;
+}
+
+#gameOverMenu.oculto{
+    display:none;
+}
+
+.painelGameOver{
+    width:600px;
+    padding:35px;
+    background:#9d6a3b;
+    border:6px solid #3e2412;
+    outline:6px solid #c08a54;
+    box-shadow:
+        8px 8px 0 #2b1709,
+        inset 0 0 0 4px #6d4422;
+    image-rendering:pixelated;
+    text-align:center;
+    font-family:"Press Start 2P", monospace;
+}
+
+.painelGameOver h1{
+    margin-bottom:30px;
+    color:#8b0000;
+    font-size:48px;
+    letter-spacing:2px;
+    text-shadow:
+        4px 4px 0 #300000,
+        0 0 6px #6d695f;
+}
+
+.textoGameOver{
+    color:#2f1908;
+    font-size:16px;
+    line-height:2;
+    margin-bottom:30px;
+}
+
+.painelGameOver button{
+    width:100%;
+    margin-top:15px;
+    padding:16px;
+    background:#6c3f1f;
+    color:#ffe9a8;
+    border:4px solid #3a200f;
+    outline:3px solid #b57b44;
+    font-family:"Press Start 2P", monospace;
+    font-size:14px;
+    cursor:pointer;
+    transition:.1s;
+    image-rendering:pixelated;
+}
+
+.painelGameOver button:hover{
+    background:#8a542b;
+    transform:translateY(-2px);
+    box-shadow:0 4px 0 #3a200f;
+}
+
+.painelGameOver button:active{
+    transform:translateY(2px);
+    box-shadow:none;
+}
+
+.painelGameOver button span{
+    display:block;
+    margin-top:10px;
+    font-size:11px;
+    color:#ffd34d;
+}
