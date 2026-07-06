@@ -6,7 +6,6 @@ const fade = document.getElementById("fade")
 const cenario = document.getElementById("cenario")
 const nomePersonagem = document.getElementById("nome-personagem")
 const imgPersonagem = document.getElementById("personagem")
-// CAPTURANDO O SPAN AQUI:
 const spanContinuar = document.querySelector(".continuar")
 const spanPular = document.querySelector(".pular")
 
@@ -23,7 +22,7 @@ musicaIntro.play().catch(() => {
 })
 
 // ==========================================
-// PARA PULAR A HISTORIAAAAAAAAAAAAAA
+// PARA PULAR A HISTORIAAAAAAAAAAAAAA (Calma Gabriela, ass: Clari)
 // ==========================================
 window.addEventListener("keydown", (e) => {
 
@@ -37,7 +36,6 @@ window.addEventListener("keydown", (e) => {
     }
 
 })
-
 
 // ==========================================
 // HISTÓRIA
@@ -61,7 +59,7 @@ const cenas = [
         fundo: "../img/cenario1.png",
         nome: "Protagonista",
         fala: "Depende de quanta grana estamos falando.",
-        imagem: "../img/morganaNormal.png",
+        imagem: "../img/morganaGananciosa.png",
         posicao: "esquerda"
     },
     {
@@ -124,7 +122,6 @@ let bloqueiaInput = false
 nomePersonagem.innerText = cenas[cenaAtual].nome
 texto.innerText = cenas[cenaAtual].fala
 
-// Função atualizada
 function atualizarVisual() {
 
     // 1. Trata a imagem do personagem
@@ -139,21 +136,17 @@ function atualizarVisual() {
             imgPersonagem.style.left = "auto"
             imgPersonagem.style.right = "50px"
 
-            // ADICIONE ESTAS DUAS LINHAS PARA O CONTRATANTE:
-            imgPersonagem.style.transform = "scale(1.4)" // 1.4 significa 40% maior. Ajuste esse número como quiser (ex: 1.2, 1.5, 2.0)
-            imgPersonagem.style.transformOrigin = "bottom" // Faz ele crescer para cima, sem afundar no chão
+            imgPersonagem.style.transform = "scale(1.4)" 
+            imgPersonagem.style.transformOrigin = "bottom" 
         } else {
             imgPersonagem.style.right = "auto"
             imgPersonagem.style.left = "50px"
-
-            // ADICIONE ESTA LINHA PARA A PROTAGONISTA VOLTAR AO NORMAL:
-            imgPersonagem.style.transform = "scale(1)" // Volta ao tamanho original (100%)
+            imgPersonagem.style.transform = "scale(1)" 
         }
     }
 
     // 2. Trata Nome, Texto e agora a DICA DE ESPAÇO!
     if (cenas[cenaAtual].posicao === "direita") {
-        // Lado direito
         nomePersonagem.style.left = "auto"
         nomePersonagem.style.right = "30px"
         texto.style.textAlign = "right"
@@ -164,7 +157,6 @@ function atualizarVisual() {
         spanPular.style.left = "auto"
         spanPular.style.right = "30px"
     } else {
-        // Lado esquerdo (padrão)
         nomePersonagem.style.right = "auto"
         nomePersonagem.style.left = "30px"
         texto.style.textAlign = "left"
@@ -177,7 +169,6 @@ function atualizarVisual() {
     }
 }
 
-// Roda a função para a cena inicial
 atualizarVisual()
 
 // ==========================================

@@ -2,7 +2,7 @@
 const canvas = document.getElementById('des');
 const des = canvas.getContext('2d'); 
 
-const chao_y = 600; // Posição Y onde fica o chão
+const chao_y = 600; 
 
 const musicaEscolhida =
     localStorage.getItem('musicaJogo')
@@ -16,6 +16,7 @@ if(musicaEscolhida){
 
     audio.play().catch(() => {})
 }
+
 // ---------------------------------------------------------
 // 2. Definição das Classes
 // ---------------------------------------------------------
