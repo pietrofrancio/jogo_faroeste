@@ -228,7 +228,10 @@ function finalizarDialogo() {
 // ==========================================
 let ouro = Number(localStorage.getItem("ouro")) || 0
 let pontos = 0
-let pontosParaProximaFase = 20 
+let faseAtual = 2 // Declarada aqui primeiro!
+
+// CORREÇÃO: Calcula dinamicamente antes de exibir no HUD pela primeira vez
+let pontosParaProximaFase = faseAtual * 40 
 
 hudOuro.innerText = `Ouro: ${ouro}`
 hudPontos.innerText = `Pontos: 0/${pontosParaProximaFase}`
@@ -433,31 +436,30 @@ window.addEventListener("keyup", (e) => {
 
 let balas = [] 
 
-function criarBolaFeno() {
+function criarBolaFeno() { 
     if (emTransicaoDeFase || jogoPausado) return;
     const fenoElemento = document.createElement("img")
     fenoElemento.className = "bola-feno"
 
     if (faseAtual === 2) {
-        // Sorteia uma das 3 skins de coiote para ser o obstáculo
+        // Sorteia apenas o coiote cinza ou o laranja para ser o obstáculo de pulo
         const skinsCoiote = [
             "../img/coioteCinzaAndando1.png",
-            "../img/coioteLaranjaAndando1.png",
-            "../img/coiote_corre1.png"
+            "../img/coioteLaranjaAndando1.png"
         ];
         const skinSorteada = skinsCoiote[Math.floor(Math.random() * skinsCoiote.length)];
         fenoElemento.src = skinSorteada;
         
-        // Aumentado o tamanho de todos!
         fenoElemento.style.width = "180px";  
         fenoElemento.style.height = "120px";
         
-        // Se for o coiote cinza ou o coiote_corre e eles vierem olhando para a direita,
-        // forçamos eles a começarem olhando para a esquerda:
-        if (skinSorteada.includes("coioteCinza") || skinSorteada.includes("coiote_corre")) {
+        // 🌟 CONTROLE DE DIREÇÃO DE RÉ:
+        // Se a sua imagem original olha para a ESQUERDA, use "scaleX(1)".
+        // Se ela originalmente olha para a DIREITA, mude para "scaleX(-1)" para que ele ande de frente!
+        if (skinSorteada.includes("coioteCinza")) {
+            fenoElemento.style.transform = "scaleX(-1)"; 
+        } else if (skinSorteada.includes("coioteLaranja")) {
             fenoElemento.style.transform = "scaleX(-1)";
-        } else {
-            fenoElemento.style.transform = "scaleX(1)";
         }
     } else {
         fenoElemento.src = spritesFeno[0];
@@ -481,9 +483,10 @@ function criarBolaFeno() {
         elemento: fenoElemento,
         x: posX,
         y: posY,
-        velocidade: 12, 
+        velocidade: 12, // Velocidade ideal de corrida
         frame: 0,      
-        timer: 0       
+        timer: 0,
+        skinOriginal: fenoElemento.src 
     });
 }
 
@@ -539,7 +542,7 @@ function criarMoeda(x, y) {
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-let faseAtual = 2
+faseAtual = 1
 let inimigos = []
 
 const dadosInimigos = {
@@ -548,13 +551,10 @@ const dadosInimigos = {
     hostil3: { andando: ["../img/xerifeAndando1.png", "../img/xerifeAndando2.png", "../img/xerifeAndando3.png", "../img/xerifeAndando4.png", "../img/xerifeAndando5.png", "../img/xerifeAndando6.png", "../img/xerifeAndando7.png"], atirando: ["../img/xerifeAtirando1.png", "../img/xerifeAtirando2.png", "../img/xerifeAtirando3.png", "../img/xerifeAtirando4.png", "../img/xerifeAtirando5.png"] },
     chefao:  { andando: ["../img/chefao_anda1.png"], atirando: ["../img/chefao_atira1.png", "../img/chefao_atira2.png"] },
     
-    // --- NOVOS INIMIGOS DA FASE 2 (CORRIGIDO: coiote1, coiote2, coiote3 perfeitamente separados) ---
+   // --- NOVOS INIMIGOS DA FASE 2 ---
     bandidoCavalo1: { andando: ["../img/bandidoCavalo1Andando1.png", "../img/bandidoCavalo1Andando2.png", "../img/bandidoCavalo1Andando3.png", "../img/bandidoCavalo1Andando4.png", "../img/bandidoCavalo1Andando5.png"], atirando: ["../img/bandidoCavalo1Atirando1.png", "../img/bandidoCavalo1Atirando2.png"] },
     bandidoCavalo2: { andando: ["../img/cavalo2_anda1.png", "../img/cavalo2_anda2.png"], atirando: ["../img/cavalo2_atira1.png"] },
     fantasma:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png"] },
-    coiote1:        { andando: ["../img/coioteCinzaAndando1.png", "../img/coioteCinzaAndando2.png", "../img/coioteCinzaAndando3.png", "../img/coioteCinzaAndando4.png", "../img/coioteCinzaAndando5.png", "../img/coioteCinzaAndando6.png"] }, 
-    coiote2:        { andando: ["../img/coioteLaranjaAndando1.png", "../img/coioteLaranjaAndando2.png", "../img/coioteLaranjaAndando3.png", "../img/coioteLaranjaAndando4.png", "../img/coioteLaranjaAndando5.png", "../img/coioteLaranjaAndando6.png"] }, 
-    coiote3:        { andando: ["../img/coiote_corre1.png", "../img/coiote_corre2.png"], atirando: ["../img/coiote_corre1.png"] }
 }
 
 // CORRIGIDO: Removido a duplicidade das fases e corrigido o "host2" da fase 3
@@ -575,53 +575,64 @@ function carregarCenarioDaFase() {
 function criarInimigo() {
     if (jogoPausado || naContagem || emTransicaoDeFase) return;
     
-    const inimigoElemento = document.createElement("img")
-    inimigoElemento.classList.add("inimigo")
+    // 1. Sorteia qual inimigo vai nascer baseado na fase atual
+    const listaInimigosDaFase = configuracaoFases[faseAtual].inimigos;
+    const tipoSorteado = listaInimigosDaFase[Math.floor(Math.random() * listaInimigosDaFase.length)];
 
-    const listaInimigosDaFase = configuracaoFases[faseAtual].inimigos
-    const tipoSorteado = listaInimigosDaFase[Math.floor(Math.random() * listaInimigosDaFase.length)]
-
-    // Verificação de segurança extra para evitar tela preta caso falte alguma imagem
+    // Verificação de segurança para evitar que o jogo quebre caso falte alguma imagem
     if (!dadosInimigos[tipoSorteado]) return;
 
-    inimigoElemento.src = dadosInimigos[tipoSorteado].andando[0]
+    const inimigoElemento = document.createElement("img");
+    
+    // 2. Define a classe CSS correta de acordo com o tipo
+    if (tipoSorteado === "bandidoCavalo1" || tipoSorteado === "bandidoCavalo2") {
+        inimigoElemento.classList.add("inimigo-cavalo");
+    } else {
+        inimigoElemento.classList.add("inimigo");
+    }
 
-    // Ajuste de tamanho especiais
-    // Ajuste de tamanho e orientações iniciais
+    inimigoElemento.src = dadosInimigos[tipoSorteado].andando[0];
+
+    // 3. Ajustes inline de tamanho (limpos nos cavalos para o CSS de 400px agir)
     if (tipoSorteado === "chefao") {
         inimigoElemento.style.width = "200px";
         inimigoElemento.style.height = "200px";
     } 
     else if (tipoSorteado === "bandidoCavalo1" || tipoSorteado === "bandidoCavalo2") {
-        // Aumentando consideravelmente os bandidos a cavalo
-        inimigoElemento.style.width = "220px";
-        inimigoElemento.style.height = "180px";
+        inimigoElemento.style.width = "";
+        inimigoElemento.style.height = "";
     }
     else {
-        // Tamanho padrão humano (Morgana/Fantasma/Xerife)
-        inimigoElemento.style.width = "100px";
-        inimigoElemento.style.height = "120px";
+        inimigoElemento.style.width = "140px";
+        inimigoElemento.style.height = "160px";
     }
 
-    // Se o pistoleiro (fantasma) por padrão olha para a direita na imagem original,
-    // forçamos ele a começar olhando para a esquerda (scaleX(-1)):
+    // 4. Configuração de direção e posicionamento inicial de spawn
     let direcaoInicial = "scaleX(1)";
     if (tipoSorteado === "fantasma") {
         direcaoInicial = "scaleX(-1)";
     }
+    inimigoElemento.style.transform = direcaoInicial;
 
-    let posX = window.innerWidth
-    inimigoElemento.style.left = `${posX}px`
-    inimigoElemento.style.bottom = `${chao}px`
+    let posX = window.innerWidth;
+    inimigoElemento.style.left = `${posX}px`;
+    inimigoElemento.style.bottom = `${chao}px`;
 
-    cenario.appendChild(inimigoElemento)
+    cenario.appendChild(inimigoElemento);
 
-    // Define velocidades diferentes
+    // 5. Configuração das velocidades de movimento
     let velocidadeInimigo = 7;
     if (tipoSorteado === "coiote1" || tipoSorteado === "coiote2" || tipoSorteado === "coiote3") {
         velocidadeInimigo = 12; 
     }
 
+    // 6. Lógica de Vida (Resistência): Cavalos tomam 2 tiros, o restante toma 1
+    let vidaInimigo = 1;
+    if (tipoSorteado === "bandidoCavalo1" || tipoSorteado === "bandidoCavalo2") {
+        vidaInimigo = 2;
+    }
+
+    // 7. Salva o inimigo no array principal
     inimigos.push({
         elemento: inimigoElemento,
         x: posX,
@@ -630,8 +641,9 @@ function criarInimigo() {
         timer: 0,
         estado: "andando",
         timerAtaque: 0,
-        velocidade: velocidadeInimigo 
-    })
+        velocidade: velocidadeInimigo,
+        vida: vidaInimigo
+    });
 }
 
 function iniciarContagemFase() {
@@ -859,50 +871,70 @@ if (ini.estado === "andando") {
 
     // --- 3. LÓGICA DOS PROJÉTEIS (MOVIMENTO E COLISÃO) ---
     for (let b = balas.length - 1; b >= 0; b--) {
-        let bala = balas[b]
-        bala.x += (18 * bala.direcao) 
-        bala.elemento.style.left = `${bala.x}px`
-        let balaDestruida = false
+        let bala = balas[b];
+        bala.x += (18 * bala.direcao);
+        bala.elemento.style.left = `${bala.x}px`;
+        let balaDestruida = false;
 
         for (let i = inimigos.length - 1; i >= 0; i--) {
-            let ini = inimigos[i]
-            let distBalaX = Math.abs(bala.x - ini.x)
-            let distBalaY = Math.abs(bala.y - (chao + 75)) 
+            let ini = inimigos[i];
+            let distBalaX = Math.abs(bala.x - ini.x);
+            let distBalaY = Math.abs(bala.y - (chao + 75)); 
 
             if (distBalaX < 50 && distBalaY < 75) {
-                let pontosGanhos = 0
-                if (ini.tipo === "hostil1" || ini.tipo === "hostil2") {
-                    pontosGanhos = 3 
-                } else if (ini.tipo === "hostil3") {
-                    pontosGanhos = 5 
+                // Remove a bala da tela e do array imediatamente
+                bala.elemento.remove();
+                balas.splice(b, 1);
+                balaDestruida = true;
+
+                // Reduz a vida do inimigo atingido
+                ini.vida--;
+
+                // O inimigo só morre e dá pontos se a vida dele chegar a 0
+                if (ini.vida <= 0) {
+                    let pontosGanhos = 0;
+
+                    // Define os pontos baseado no tipo do inimigo abatido
+                    if (ini.tipo === "hostil1" || ini.tipo === "hostil2") {
+                        pontosGanhos = 3;
+                    } else if (ini.tipo === "hostil3" || ini.tipo === "fantasma") {
+                        pontosGanhos = 5;
+                    } else if (ini.tipo === "bandidoCavalo1" || ini.tipo === "bandidoCavalo2") {
+                        pontosGanhos = 7; // Cavalos dão mais pontos por terem 2 de vida
+                    } else if (ini.tipo === "chefao") {
+                        pontosGanhos = 20;
+                    }
+
+                    // Incrementa os pontos e atualiza o placar na tela
+                    pontos += pontosGanhos;
+                    hudPontos.innerText = `Pontos: ${pontos}/${pontosParaProximaFase}`;
+
+                    // Dropa a moeda onde o inimigo morreu
+                    criarMoeda(ini.x + 40, chao + 20);
+                    
+                    // Remove o inimigo morto da tela e do array
+                    ini.elemento.remove();
+                    inimigos.splice(i, 1);
+
+                    // Verifica se o jogador acumulou pontos para mudar de fase
+                    verificarMudancaDeFase();
+
+                    // Se for o chefão, finaliza o jogo
+                    if (ini.tipo === "chefao") {
+                        alert("Parabéns! Você derrotou o Chefão com seus poderes e salvou o dia!");
+                        location.reload();
+                    }
                 }
-
-                pontos += pontosGanhos
-                hudPontos.innerText = `Pontos: ${pontos}/${pontosParaProximaFase}`
-
-                criarMoeda(ini.x + 40, chao + 20)
-                
-                ini.elemento.remove()
-                inimigos.splice(i, 1)
-                bala.elemento.remove()
-                balas.splice(b, 1)
-                balaDestruida = true
-
-                verificarMudancaDeFase()
-
-                if (ini.tipo === "chefao") {
-                    alert("Parabéns! Você derrotou o Chefão com seus poderes e salvou o dia!")
-                    location.reload()
-                }
-                break 
+                break; // Sai do loop de inimigos pois esta bala já colidiu
             }
         }
 
-        if (balaDestruida) continue
+        if (balaDestruida) continue;
 
+        // Remove a bala caso ela saia dos limites da tela sem atingir ninguém
         if (bala.x > window.innerWidth || bala.x < -50) {
-            bala.elemento.remove()
-            balas.splice(b, 1)
+            bala.elemento.remove();
+            balas.splice(b, 1);
         }
     }
 
@@ -945,29 +977,34 @@ for (let i = moedas.length - 1; i >= 0; i--) {
         }
     }
 
-    // --- 4. LÓGICA E ANIMAÇÃO DAS BOLAS DE FENO ---
+
+  // --- 4. LÓGICA E ANIMAÇÃO DAS BOLAS DE FENO (OBSTÁCULOS/COIOTES) ---
     for (let i = bolasFeno.length - 1; i >= 0; i--) {
         let bola = bolasFeno[i]
-        bola.x -= bola.velocidade
         
+        // 🌟 CORREÇÃO CRÍTICA: Subtrai a velocidade para ele se mover da DIREITA para a ESQUERDA!
+        bola.x -= bola.velocidade
+
         bola.timer++
         if (bola.timer >= 5) { 
             bola.timer = 0
             
             if (faseAtual === 2) {
-                // Animação do Coiote (6 frames)
-                bola.frame = (bola.frame + 1) % 6;
-                bola.elemento.src = `../img/coioteCinzaAndando${bola.frame + 1}.png`;
+                bola.frame = (bola.frame + 1) % 6; // Ambos têm animação de 6 frames
                 
-                // 🌟 FORÇA O COIOTE GIGANTE EM TODO FRAME!
+                if (bola.skinOriginal.includes("coioteCinza")) {
+                    bola.elemento.src = `../img/coioteCinzaAndando${bola.frame + 1}.png`;
+                    bola.elemento.style.transform = "scaleX(1)"; // Alinhe o scale com o Passo B
+                } else if (bola.skinOriginal.includes("coioteLaranja")) {
+                    bola.elemento.src = `../img/coioteLaranjaAndando${bola.frame + 1}.png`;
+                    bola.elemento.style.transform = "scaleX(1)"; // Alinhe o scale com o Passo B
+                }
+                
                 bola.elemento.style.width = "180px";
                 bola.elemento.style.height = "120px";
             } else {
-                // Nas outras fases, roda o feno normal
                 bola.frame = (bola.frame + 1) % spritesFeno.length;
                 bola.elemento.src = spritesFeno[bola.frame];
-                
-                // Tamanho do feno normal
                 bola.elemento.style.width = "60px";
                 bola.elemento.style.height = "60px";
             }
@@ -977,9 +1014,6 @@ for (let i = moedas.length - 1; i >= 0; i--) {
         bola.elemento.style.bottom = `${bola.y}px`
 
         let distanciaX = Math.abs(protaX - bola.x)
-
-        // Se o coiote ficou maior, precisamos aumentar um pouquinho a área de colisão 
-        // para o jogador não tomar dano "invisível" ou atravessar o focinho dele.
         let limiteColisao = (faseAtual === 2) ? 90 : 60; 
 
         if (distanciaX < limiteColisao && protaY <= chao + 40) {
@@ -989,7 +1023,8 @@ for (let i = moedas.length - 1; i >= 0; i--) {
             continue
         }
 
-        if (bola.x < -200) { // Aumentado para sumir só depois que sair totalmente da tela
+        // 🌟 CORREÇÃO CRÍTICA: Deleta o bicho apenas quando ele sumir completamente na ESQUERDA
+        if (bola.x < -200) {
             bola.elemento.remove()
             bolasFeno.splice(i, 1)
         }
