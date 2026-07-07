@@ -108,14 +108,30 @@
    ========================================== */
 .inimigo {
     position: absolute;
-    width: 150px;   
-    height: 150px;  
+    width: 140px;   
+    height: 160px;  /* 🌟 Ajustado para 170px para acompanhar a nova proporção */
     bottom: 50px;   
-    z-index: 5; /* MUDOU AQUI: De 1 para 5. Agora eles ficam na frente do cenário! */
+    z-index: 5; 
     object-fit: contain;
-    object-position: bottom;
+    object-position: bottom; /* Mantém os pés deles firmados perfeitamente no chão */
     cursor: crosshair;
     transition: transform 0.1s;
+}
+
+/* ==========================================
+   INIMIGOS GIGANTES (BANDIDOS A CAVALO)
+   ========================================== */
+.inimigo-cavalo {
+    position: absolute;
+    width: 250px;   /* 🌟 Largura maior para acomodar o cavalo horizontalmente */
+    height: 230px;  /* 🌟 Altura proporcional para o cavalo + bandido */
+    bottom: 50px;   
+    z-index: 5; 
+    object-fit: contain;
+    object-position: bottom; 
+    cursor: crosshair;
+    transition: transform 0.1s;
+    image-rendering: pixelated; /* Mantém a arte em pixel bonita ao esticar */
 }
 
 /* Efeito rápido quando o inimigo for atingido */
@@ -136,19 +152,23 @@
 }
 
 /* ==========================================
-   BOLA DE FENO
+   BOLA DE FENO / COIOTES OBSTÁCULOS
    ========================================== */
 .bola-feno {
     position: absolute;
-    width: 70px;   /* 🌟 Sem o !important agora! */
-    height: 73px;  /* 🌟 Sem o !important agora! */
+    width: 180px;   /* 🌟 Atualizado para o tamanho real do coiote gigante */
+    height: 120px;  /* 🌟 Atualizado para o tamanho real do coiote gigante */
     object-fit: contain;
-    object-position: center;
+    object-position: bottom center; /* Alinha as patas no chão perfeitamente */
     image-rendering: pixelated; 
     image-rendering: crisp-edges;
     background-color: transparent !important; 
-    z-index: 4;
-    filter: sepia(100%) hue-rotate(10deg) brightness(1.0) contrast(0.85);
+    z-index: 6; /* 🌟 Mantido na frente da Morgana (que é z-index 5) */
+    
+    /* 🌟 Prepara a propriedade para receber a inversão do JavaScript */
+    transform: scaleX(1);
+    transform-origin: center center; 
+    filter: none; 
 }
 
 /* ==========================================
