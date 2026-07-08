@@ -109,13 +109,20 @@
 .inimigo {
     position: absolute;
     width: 140px;   
-    height: 160px;  /* 🌟 Ajustado para 170px para acompanhar a nova proporção */
+    height: 160px;  
     bottom: 50px;   
     z-index: 5; 
     object-fit: contain;
-    object-position: bottom; /* Mantém os pés deles firmados perfeitamente no chão */
+    object-position: bottom; 
     cursor: crosshair;
     transition: transform 0.1s;
+}
+
+/* REFEITA/ADICIONADA: Força o fantasma a ignorar a limitação menor */
+.inimigo.fantasma {
+    width: 160px;   /* Um pouco maior na largura para compensar as bordas transparentes da sprite */
+    height: 175px;  /* Altura que bate com a escala visual da protagonista */
+    object-fit: fill; /* Opcional: se ele ainda parecer pequeno, mude para 'fill' ou 'cover' para forçar a imagem a esticar até a borda */
 }
 
 /* ==========================================
@@ -356,4 +363,11 @@ html, body {
 /* Classe que ativa o escurecimento */
 #transicao-tela.escuro {
     opacity: 1;
+}
+
+/* Isso intercepta qualquer imagem que tenha "fantasma" no nome do arquivo */
+img[src*="fantasma"] {
+    width: 230px !important;
+    height: 250px !important;
+    object-fit: contain !important;
 }

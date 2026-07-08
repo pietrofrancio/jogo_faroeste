@@ -483,7 +483,7 @@ function criarBolaFeno() {
         elemento: fenoElemento,
         x: posX,
         y: posY,
-        velocidade: 12, // Velocidade ideal de corrida
+        velocidade: 10, // Velocidade ideal de corrida
         frame: 0,      
         timer: 0,
         skinOriginal: fenoElemento.src 
@@ -542,7 +542,7 @@ function criarMoeda(x, y) {
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-faseAtual = 1
+faseAtual = 2
 let inimigos = []
 
 const dadosInimigos = {
@@ -552,9 +552,9 @@ const dadosInimigos = {
     chefao:  { andando: ["../img/chefao_anda1.png"], atirando: ["../img/chefao_atira1.png", "../img/chefao_atira2.png"] },
     
    // --- NOVOS INIMIGOS DA FASE 2 ---
-    bandidoCavalo1: { andando: ["../img/bandidoCavalo1Andando1.png", "../img/bandidoCavalo1Andando2.png", "../img/bandidoCavalo1Andando3.png", "../img/bandidoCavalo1Andando4.png", "../img/bandidoCavalo1Andando5.png"], atirando: ["../img/bandidoCavalo1Atirando1.png", "../img/bandidoCavalo1Atirando2.png"] },
-    bandidoCavalo2: { andando: ["../img/cavalo2_anda1.png", "../img/cavalo2_anda2.png"], atirando: ["../img/cavalo2_atira1.png"] },
-    fantasma:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png"] },
+    bandidoCavalo1: { andando: ["../img/bandidoCavalo1Andando1.png", "../img/bandidoCavalo1Andando2.png", "../img/bandidoCavalo1Andando3.png", "../img/bandidoCavalo1Andando4.png", "../img/bandidoCavalo1Andando5.png", "../img/bandidoCavalo1Andando6.png"], atirando: ["../img/bandidoCavalo1Atirando1.png", "../img/bandidoCavalo1Atirando2.png", "../img/bandidoCavalo1Atirando3.png"] },
+    bandidoCavalo2: { andando: ["../img/bandidoCavalo2Andando1.png", "../img/bandidoCavalo2Andando2.png", "../img/bandidoCavalo2Andando3.png", "../img/bandidoCavalo2Andando4.png", "../img/bandidoCavalo2Andando5.png", "../img/bandidoCavalo2Andando6.png"], atirando: ["../img/bandidoCavalo2Atirando1.png", "../img/bandidoCavalo2Atirando2.png", "../img/bandidoCavalo2Atirando3.png"] },
+    fantasma:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
 }
 
 // CORRIGIDO: Removido a duplicidade das fases e corrigido o "host2" da fase 3
@@ -594,6 +594,7 @@ function criarInimigo() {
     inimigoElemento.src = dadosInimigos[tipoSorteado].andando[0];
 
     // 3. Ajustes inline de tamanho (limpos nos cavalos para o CSS de 400px agir)
+    // 3. Ajustes inline de tamanho (Força o tamanho correto para cada tipo)
     if (tipoSorteado === "chefao") {
         inimigoElemento.style.width = "200px";
         inimigoElemento.style.height = "200px";
@@ -602,7 +603,13 @@ function criarInimigo() {
         inimigoElemento.style.width = "";
         inimigoElemento.style.height = "";
     }
+    else if (tipoSorteado === "fantasma") {
+    // Ajuste perfeito para o fantasma não ficar desproporcional
+    inimigoElemento.style.width = "130px";
+    inimigoElemento.style.height = "150px";
+    }
     else {
+        // Demais inimigos padrão
         inimigoElemento.style.width = "140px";
         inimigoElemento.style.height = "160px";
     }
