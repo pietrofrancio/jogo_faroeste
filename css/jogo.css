@@ -287,11 +287,35 @@ html, body {
 /* Personagem do Diálogo */
 #personagem {
     position: absolute;
-    bottom: 120px;
-    left: 50px;
-    width: 300px;
-    image-rendering: pixelated;
-    z-index: 90;
+    
+    /* MODIFICAÇÃO AQUI: Em vez de 0, faz ela subir exatamente acima da caixa de diálogo */
+    bottom: 180px; 
+    
+    /* Defina aqui o tamanho exato que você quer para ambas */
+    width: 350px !important;  
+    height: 450px !important; 
+    
+    /* O GRANDE TRUQUE: Mantém a proporção e impede que as imagens fiquem esticadas */
+    object-fit: contain !important; 
+    object-position: bottom center !important;
+    
+    /* Garante que ela fique na frente do cenário, mas atrás do texto/nome se necessário */
+    z-index: 90; 
+    transition: none !important; /* Remove transições que possam dar delay na troca */
+}
+
+/* ==========================================
+   AJUSTES EXCLUSIVOS DA MORGANA SÉRIA
+   ========================================== */
+img[src*="morganaSeria"] {
+    /* 1. Aumenta a escala dela (mude o 1.15 para mais ou para menos se precisar) */
+    transform: scale(1.35) !important;
+    
+    /* Define a base inferior como ponto fixo para ela não flutuar ao crescer */
+    transform-origin: bottom left !important; 
+    
+    /* 2. Empurra ela um pouco mais para a esquerda (aumente o -20px se quiser mais para a esquerda) */
+    margin-left: -50px !important;
 }
 
 /* Nome do Personagem na Caixa */
