@@ -65,6 +65,30 @@ const cenasTransicao1_2 = [
     },
 ];
 
+const cenasTransicao2_3 = [
+    {
+        fundo: "../img/cenario2.png",
+        nome: "Protagonista",
+        fala: "O que era aquela coisa!?",
+        imagem: "../img/morganaSeria.png", 
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario2.png",
+        nome: "Protagonista",
+        fala: "Coiotes eu entendo… mas pistoleiros fantasmas? Isso não é normal",
+        imagem: "../img/morganaSeria.png", 
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario2.png",
+        nome: "Protagonista",
+        fala: "Mas não importa, vou seguir em frente, eu preciso encontrar todo aquele ouro",
+        imagem: "../img/morganaNormal.png", 
+        posicao: "esquerda"
+    },
+];
+
 function iniciarDialogo(listaDeCenas) {
     if (!listaDeCenas || listaDeCenas.length === 0) {
         console.error("Erro: Nenhuma cena foi passada para iniciarDialogo().");
@@ -182,21 +206,23 @@ function mostrarCena() {
     }
 
     if (imgAvatar) {
-        if (cena.imagem) {
-            imgAvatar.src = cena.imagem;
-            imgAvatar.style.display = "block";
-            
-            if (cena.posicao === "direita") {
-                imgAvatar.style.left = "auto";
-                imgAvatar.style.right = "50px";
-                imgAvatar.style.transform = "scaleX(-1)";
-            } else {
-                imgAvatar.style.right = "auto";
-                imgAvatar.style.left = "50px";
-                imgAvatar.style.transform = "scaleX(1)";
-            }
+    if (cena.imagem) {
+        imgAvatar.src = cena.imagem;
+        imgAvatar.style.display = "block";
+        
+        // Limpa os estilos antigos antes de aplicar os novos para evitar conflito
+        imgAvatar.style.left = "";
+        imgAvatar.style.right = "";
+        
+        if (cena.posicao === "direita") {
+            imgAvatar.style.right = "50px";
+            imgAvatar.style.transform = "scaleX(-1)";
         } else {
-            imgAvatar.style.display = "none";
+            imgAvatar.style.left = "50px";
+            imgAvatar.style.transform = "scaleX(1)";
+        }
+    } else {
+        imgAvatar.style.display = "none";
         }
     }
 }
@@ -221,6 +247,9 @@ function finalizarDialogo() {
     if (listaCenasAtiva === cenasTransicao1_2) {
         avancarDeFaseLogica(); 
     }
+    if (listaCenasAtiva === cenasTransicao2_3) {
+        avancarDeFaseLogica(); 
+    }
 }
 
 // ==========================================
@@ -228,7 +257,7 @@ function finalizarDialogo() {
 // ==========================================
 let ouro = Number(localStorage.getItem("ouro")) || 0
 let pontos = 0
-let faseAtual = 2 // Declarada aqui primeiro!
+let faseAtual = 3 // Declarada aqui primeiro!
 
 // CORREÇÃO: Calcula dinamicamente antes de exibir no HUD pela primeira vez
 let pontosParaProximaFase = faseAtual * 40 
@@ -542,26 +571,30 @@ function criarMoeda(x, y) {
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-faseAtual = 2
+faseAtual = 3
 let inimigos = []
 
 const dadosInimigos = {
     hostil1: { andando: ["../img/bandido1Andando1.png", "../img/bandido1Andando2.png", "../img/bandido1Andando3.png", "../img/bandido1Andando4.png", "../img/bandido1Andando5.png", "../img/bandido1Andando6.png", "../img/bandido1Andando7.png"], atirando: ["../img/bandido1Atirando1.png", "../img/bandido1Atirando2.png", "../img/bandido1Atirando3.png", "../img/bandido1Atirando4.png"] },
     hostil2: { andando: ["../img/bandido2Andando1.png", "../img/bandido2Andando2.png", "../img/bandido2Andando3.png", "../img/bandido2Andando4.png", "../img/bandido2Andando5.png", "../img/bandido2Andando6.png", "../img/bandido2Andando7.png"], atirando: ["../img/bandido2Atirando1.png", "../img/bandido2Atirando2.png", "../img/bandido2Atirando3.png", "../img/bandido2Atirando4.png", "../img/bandido2Atirando5.png"] },
     hostil3: { andando: ["../img/xerifeAndando1.png", "../img/xerifeAndando2.png", "../img/xerifeAndando3.png", "../img/xerifeAndando4.png", "../img/xerifeAndando5.png", "../img/xerifeAndando6.png", "../img/xerifeAndando7.png"], atirando: ["../img/xerifeAtirando1.png", "../img/xerifeAtirando2.png", "../img/xerifeAtirando3.png", "../img/xerifeAtirando4.png", "../img/xerifeAtirando5.png"] },
-    chefao:  { andando: ["../img/chefao_anda1.png"], atirando: ["../img/chefao_atira1.png", "../img/chefao_atira2.png"] },
     
    // --- NOVOS INIMIGOS DA FASE 2 ---
     bandidoCavalo1: { andando: ["../img/bandidoCavalo1Andando1.png", "../img/bandidoCavalo1Andando2.png", "../img/bandidoCavalo1Andando3.png", "../img/bandidoCavalo1Andando4.png", "../img/bandidoCavalo1Andando5.png", "../img/bandidoCavalo1Andando6.png"], atirando: ["../img/bandidoCavalo1Atirando1.png", "../img/bandidoCavalo1Atirando2.png", "../img/bandidoCavalo1Atirando3.png"] },
     bandidoCavalo2: { andando: ["../img/bandidoCavalo2Andando1.png", "../img/bandidoCavalo2Andando2.png", "../img/bandidoCavalo2Andando3.png", "../img/bandidoCavalo2Andando4.png", "../img/bandidoCavalo2Andando5.png", "../img/bandidoCavalo2Andando6.png"], atirando: ["../img/bandidoCavalo2Atirando1.png", "../img/bandidoCavalo2Atirando2.png", "../img/bandidoCavalo2Atirando3.png"] },
     fantasma:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
+
+   // --- NOVOS INIMIGOS DA FASE 3 ---
+    cavaloEsqueleto1:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
+    cavaloEsqueleto2:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
+    cameloZumbi:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
 }
 
 // CORRIGIDO: Removido a duplicidade das fases e corrigido o "host2" da fase 3
 const configuracaoFases = {
     1: { nome: "Cidade Empoeirada", inimigos: ["hostil1", "hostil2", "hostil3"], fundo: "url('../img/cenario1.png')" },
     2: { nome: "Sob Um Sol Escaldante", inimigos: ["bandidoCavalo1", "bandidoCavalo2", "fantasma"], fundo: "url('../img/cenario2.png')" },
-    3: { nome: "O Desfiladeiro Sombrio", inimigos: ["hostil2", "hostil3"], fundo: "url('../img/cenario3.png')" },
+    3: { nome: "Vozes Que Vêm Lá Debaixo", inimigos: ["cavaloEsqueleto1", "cavaloEsqueleto2", "cameloZumbi"], fundo: "url('../img/cenario3.png')" },
     4: { nome: "Emboscada no Saloon", inimigos: ["hostil1", "hostil2", "hostil3"], fundo: "url('../img/cenario4.png')" },
     5: { nome: "O Confronto Final", inimigos: ["chefao"], fundo: "url('../img/cenario5.png')" }
 }
@@ -1047,6 +1080,11 @@ function verificarMudancaDeFase() {
 
     if (faseAtual === 1) {
         iniciarDialogo(cenasTransicao1_2);
+        return; 
+    }
+
+    if (faseAtual === 2) {
+        iniciarDialogo(cenasTransicao2_3);
         return; 
     }
 
