@@ -178,6 +178,17 @@
     filter: none; 
 }
 
+.abutre {
+    position: absolute;
+    width: 400px;   /* Ajuste conforme o tamanho da sua arte */
+    height: 400px;  /* Ajuste conforme o tamanho da sua arte */
+    z-index: 6;     /* Mesma camada dos obstáculos */
+    object-fit: contain;
+    image-rendering: pixelated;
+    bottom: 250px;  /* Altura padrão de voo (pode ser randomizada no JS) */
+    transform: scaleX(1);
+}
+
 /* ==========================================
    TELA DE GAME OVER E LOJA
    ========================================== */
