@@ -295,6 +295,18 @@ let bolasFeno = []
 const spritesFeno = []
 const totalSpritesFeno = 35 
 
+let abutres = [] 
+const spritesAbutre1 = [
+    "../img/abutre1voando1.png", "../img/abutre1voando2.png", "../img/abutre1voando3.png",
+    "../img/abutre1voando4.png", "../img/abutre1voando5.png", "../img/abutre1voando6.png",
+    "../img/abutre1voando7.png"
+]
+const spritesAbutre2 = [
+    "../img/abutre2voando1.png", "../img/abutre2voando2.png", "../img/abutre2voando3.png",
+    "../img/abutre2voando4.png", "../img/abutre2voando5.png", "../img/abutre2voando6.png",
+    "../img/abutre2voando7.png"
+]
+
 for (let i = 1; i <= totalSpritesFeno; i++) {
     spritesFeno.push(`../img/bola_feno${i}.png`)
 }
@@ -334,7 +346,7 @@ btnVida1.addEventListener("click", () => {
         localStorage.setItem("ouro", ouro)
         hudOuro.innerText = `Ouro: ${ouro}`
         vidas = 1
-        hudVidas.innerText = `Vidas: ${vidas} ♥`
+        hudVidas.innerText = `Vidas: ${vidas}`
         protaX = 50
         protaY = chao
         protagonista.style.left = `${protaX}px`
@@ -368,7 +380,7 @@ btnVida2.addEventListener("click", () => {
         localStorage.setItem("ouro", ouro)
         hudOuro.innerText = `Ouro: ${ouro}`
         vidas = 2
-        hudVidas.innerText = `Vidas: ${vidas} ♥`
+        hudVidas.innerText = `Vidas: ${vidas}`
         protaX = 50
         protaY = chao
         protagonista.style.left = `${protaX}px`
@@ -470,8 +482,11 @@ function criarBolaFeno() {
     const fenoElemento = document.createElement("img")
     fenoElemento.className = "bola-feno"
 
+    let posY = chao; // Altura padrão (no chão)
+    let asSprites = null; // Guardará o array de animação se for abutre
+
     if (faseAtual === 2) {
-        // Sorteia apenas o coiote cinza ou o laranja para ser o obstáculo de pulo
+        // --- COIOTES DA FASE 2 ---
         const skinsCoiote = [
             "../img/coioteCinzaAndando1.png",
             "../img/coioteLaranjaAndando1.png"
@@ -482,15 +497,32 @@ function criarBolaFeno() {
         fenoElemento.style.width = "180px";  
         fenoElemento.style.height = "120px";
         
-        // 🌟 CONTROLE DE DIREÇÃO DE RÉ:
-        // Se a sua imagem original olha para a ESQUERDA, use "scaleX(1)".
-        // Se ela originalmente olha para a DIREITA, mude para "scaleX(-1)" para que ele ande de frente!
-        if (skinSorteada.includes("coioteCinza")) {
+        if (skinSorteada.includes("coioteCinza") || skinSorteada.includes("coioteLaranja")) {
             fenoElemento.style.transform = "scaleX(-1)"; 
-        } else if (skinSorteada.includes("coioteLaranja")) {
-            fenoElemento.style.transform = "scaleX(-1)";
         }
-    } else {
+    } 
+    else if (faseAtual === 3) {
+        // --- ABUTRES DA FASE 3 ---
+        // Sorteia entre o tipo 1 e o tipo 2
+        const tipoAbutre = Math.random() > 0.5 ? 1 : 2;
+        
+        // CORREÇÃO CRÍTICA: Vincula direto aos arrays certos e corrigidos lá do topo!
+        if (tipoAbutre === 1) {
+            asSprites = spritesAbutre1;
+        } else {
+            asSprites = spritesAbutre2;
+        }
+
+        fenoElemento.src = asSprites[0]; // Começa na primeira sprite
+        fenoElemento.style.width = "120px";  // Mantém o tamanho ajustado para o voo
+        fenoElemento.style.height = "120px";
+        fenoElemento.style.transform = "none";
+
+        // Faz ele voar: Sorteia uma altura no céu (entre 220px e 320px)
+        posY = Math.floor(Math.random() * (320 - 220 + 1)) + 220;
+    } 
+    else {
+        // --- BOLA DE FENO PADRÃO (FASE 1 E DEMAIS) ---
         fenoElemento.src = spritesFeno[0];
         fenoElemento.style.width = "60px";  
         fenoElemento.style.height = "60px";
@@ -501,7 +533,6 @@ function criarBolaFeno() {
     fenoElemento.style.zIndex = "4";
     
     let posX = window.innerWidth + 50;
-    let posY = chao;
 
     fenoElemento.style.bottom = `${posY}px`;
     fenoElemento.style.left = `${posX}px`;
@@ -512,10 +543,11 @@ function criarBolaFeno() {
         elemento: fenoElemento,
         x: posX,
         y: posY,
-        velocidade: 10, // Velocidade ideal de corrida
+        velocidade: 10, 
         frame: 0,      
         timer: 0,
-        skinOriginal: fenoElemento.src 
+        skinOriginal: fenoElemento.src,
+        spritesAnimacao: asSprites // Passa o array de 7 imagens certinho
     });
 }
 
@@ -585,8 +617,8 @@ const dadosInimigos = {
     fantasma:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
 
    // --- NOVOS INIMIGOS DA FASE 3 ---
-    cavaloEsqueleto1:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
-    cavaloEsqueleto2:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
+    cavaloEsqueleto1:       { andando: ["../img/cavaloEsqueleto1andando1.png", "../img/cavaloEsqueleto1andando2.png", "../img/cavaloEsqueleto1andando3.png", "../img/cavaloEsqueleto1andando4.png", "../img/cavaloEsqueleto1andando5.png"],  atirando: ["../img/cavaloEsqueleto1atirando1.png", "../img/cavaloEsqueleto1atirando2.png", "cavaloEsqueleto1atirando3"] },
+    cavaloEsqueleto2:       { andando: ["../img/cavaloEsqueleto2andando1.png", "../img/cavaloEsqueleto2andando2.png", "../img/cavaloEsqueleto2andando3.png", "../img/cavaloEsqueleto2andando4.png", "../img/cavaloEsqueleto2andando5.png"],  atirando: ["../img/cavaloEsqueleto2atirando1.png", "../img/cavaloEsqueleto2atirando2.png", "../img/cavaloEsqueleto2atirando2.png"] },
     cameloZumbi:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
 }
 
@@ -1018,52 +1050,88 @@ for (let i = moedas.length - 1; i >= 0; i--) {
     }
 
 
-  // --- 4. LÓGICA E ANIMAÇÃO DAS BOLAS DE FENO (OBSTÁCULOS/COIOTES) ---
+  // --- 4. LÓGICA E ANIMAÇÃO DAS BOLAS DE FENO (OBSTÁCULOS/COIOTES/ABUTRES) ---
     for (let i = bolasFeno.length - 1; i >= 0; i--) {
         let bola = bolasFeno[i]
         
-        // 🌟 CORREÇÃO CRÍTICA: Subtrai a velocidade para ele se mover da DIREITA para a ESQUERDA!
+        // Movimentação padrão da DIREITA para a ESQUERDA
         bola.x -= bola.velocidade
 
-        bola.timer++
-        if (bola.timer >= 5) { 
-            bola.timer = 0
-            
-            if (faseAtual === 2) {
-                bola.frame = (bola.frame + 1) % 6; // Ambos têm animação de 6 frames
+        // CONTROLE DE ANIMAÇÃO E TAMANHO SEPARADO POR TIPO
+        if (bola.spritesAnimacao) { 
+            // --- Animação e Tamanho do Abutre (Fase 3) ---
+            bola.timer++;
+            if (bola.timer >= 6) { // Ajuste para 6 para bater a asa de forma mais fluida com 7 frames
+                bola.timer = 0;
+                bola.frame = (bola.frame + 1) % bola.spritesAnimacao.length; 
+                bola.elemento.src = bola.spritesAnimacao[bola.frame];
+            }
+            // Força o tamanho correto dele no loop para o feno não esmagá-lo
+            bola.elemento.style.width = "120px";
+            bola.elemento.style.height = "120px";
+            bola.elemento.style.transform = "none";
+        } 
+        else if (faseAtual === 2) {
+            // --- Animação e Tamanho do Coiote (Fase 2) ---
+            bola.timer++
+            if (bola.timer >= 5) { 
+                bola.timer = 0
+                bola.frame = (bola.frame + 1) % 6; 
                 
                 if (bola.skinOriginal.includes("coioteCinza")) {
                     bola.elemento.src = `../img/coioteCinzaAndando${bola.frame + 1}.png`;
-                    bola.elemento.style.transform = "scaleX(1)"; // Alinhe o scale com o Passo B
                 } else if (bola.skinOriginal.includes("coioteLaranja")) {
                     bola.elemento.src = `../img/coioteLaranjaAndando${bola.frame + 1}.png`;
-                    bola.elemento.style.transform = "scaleX(1)"; // Alinhe o scale com o Passo B
                 }
-                
-                bola.elemento.style.width = "180px";
-                bola.elemento.style.height = "120px";
-            } else {
+            }
+            bola.elemento.style.width = "180px";
+            bola.elemento.style.height = "120px";
+            bola.elemento.style.transform = "scaleX(1)";
+        } 
+        else {
+            // --- Animação e Tamanho do Feno Padrão (Fase 1) ---
+            bola.timer++
+            if (bola.timer >= 5) { 
+                bola.timer = 0
                 bola.frame = (bola.frame + 1) % spritesFeno.length;
                 bola.elemento.src = spritesFeno[bola.frame];
-                bola.elemento.style.width = "60px";
-                bola.elemento.style.height = "60px";
             }
+            bola.elemento.style.width = "60px";
+            bola.elemento.style.height = "60px";
+            bola.elemento.style.transform = "none";
         }
 
+        // Atualiza a posição do elemento no cenário
         bola.elemento.style.left = `${bola.x}px`
         bola.elemento.style.bottom = `${bola.y}px`
 
+        // Surtos de colisão baseados na proximidade horizontal e vertical
         let distanciaX = Math.abs(protaX - bola.x)
-        let limiteColisao = (faseAtual === 2) ? 90 : 60; 
+        let distanciaY = Math.abs(protaY - bola.y)
+        
+        let limiteColisaoX = (faseAtual === 2) ? 90 : 60; 
+        let colidiu = false;
 
-        if (distanciaX < limiteColisao && protaY <= chao + 40) {
+        if (bola.spritesAnimacao) {
+            // Colisão com o Abutre no ar: bate se estiver perto no X e no Y ao mesmo tempo
+            if (distanciaX < 60 && distanciaY < 60) {
+                colidiu = true;
+            }
+        } else {
+            // Colisão com Feno/Coiote no chão: bate se estiver perto no X e a Morgana estiver baixa
+            if (distanciaX < limiteColisaoX && protaY <= chao + 40) {
+                colidiu = true;
+            }
+        }
+
+        if (colidiu) {
             bola.elemento.remove()
             bolasFeno.splice(i, 1)
             perderVida()
             continue
         }
 
-        // 🌟 CORREÇÃO CRÍTICA: Deleta o bicho apenas quando ele sumir completamente na ESQUERDA
+        // Deleta o bicho apenas quando ele sumir completamente na ESQUERDA
         if (bola.x < -200) {
             bola.elemento.remove()
             bolasFeno.splice(i, 1)
@@ -1125,7 +1193,7 @@ function perderVida() {
     if (invencivel) return; // Se estiver no tempo de piscar, ignora o dano
 
     vidas--;
-    hudVidas.innerText = `Vidas: ${vidas} ♥`;
+    hudVidas.innerText = `Vidas: ${vidas}`;
 
     if (vidas <= 0) {
         jogoPausado = true;
