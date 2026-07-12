@@ -257,7 +257,7 @@ function finalizarDialogo() {
 // ==========================================
 let ouro = Number(localStorage.getItem("ouro")) || 0
 let pontos = 0
-let faseAtual = 3 // Declarada aqui primeiro!
+let faseAtual = 1 // Declarada aqui primeiro!
 
 // CORREÇÃO: Calcula dinamicamente antes de exibir no HUD pela primeira vez
 let pontosParaProximaFase = faseAtual * 40 
@@ -275,8 +275,6 @@ window.addEventListener("keydown", iniciarMusica)
 window.addEventListener("mousedown", iniciarMusica)
 musicaJogo.play().catch(() => {})
 const menuGameOver = document.getElementById("gameOverMenu")
-const btnVida1 = document.getElementById("comprar1Vida")
-const btnVida2 = document.getElementById("comprar2Vidas")
 const btnRecusar = document.getElementById("recusar")
 let invencivel = false
 
@@ -339,100 +337,66 @@ btnPause.addEventListener("click", () => {
 btnRecusar.addEventListener("click", () => {
     location.reload()
 })
-
-btnVida1.addEventListener("click", () => {
-    if (ouro >= 3) {
-        ouro -= 3
-        localStorage.setItem("ouro", ouro)
-        hudOuro.innerText = `Ouro: ${ouro}`
-        vidas = 1
-        hudVidas.innerText = `Vidas: ${vidas}`
-        protaX = 50
-        protaY = chao
-        protagonista.style.left = `${protaX}px`
-        protagonista.style.bottom = `${protaY}px`
-        invencivel = true
-        const piscar = setInterval(() => {
-            protagonista.style.opacity = protagonista.style.opacity == "0.3" ? "1" : "0.3"
-        }, 150)
-
-        inimigos.forEach(i => i.elemento.remove())
-        inimigos = []
-        bolasFeno.forEach(b => b.elemento.remove())
-        bolasFeno = []
-
-        setTimeout(() => {
-            invencivel = false
-            clearInterval(piscar)
-            protagonista.style.opacity = "1"
-        }, 3000)
-        menuGameOver.classList.add("oculto")
-        jogoPausado = false
-        loopDoJogo()
-    } else {
-        alert("Você não possui ouro suficiente!")
-    }
-})
-
-btnVida2.addEventListener("click", () => {
-    if (ouro >= 5) {
-        ouro -= 5
-        localStorage.setItem("ouro", ouro)
-        hudOuro.innerText = `Ouro: ${ouro}`
-        vidas = 2
-        hudVidas.innerText = `Vidas: ${vidas}`
-        protaX = 50
-        protaY = chao
-        protagonista.style.left = `${protaX}px`
-        protagonista.style.bottom = `${protaY}px`
-        invencivel = true
-        const piscar = setInterval(() => {
-            protagonista.style.opacity = protagonista.style.opacity == "0.3" ? "1" : "0.3"
-        }, 150)
-        inimigos.forEach(i => i.elemento.remove())
-        inimigos = []
-        bolasFeno.forEach(b => b.elemento.remove())
-        bolasFeno = []
-
-        setTimeout(() => {
-            invencivel = false
-            clearInterval(piscar)
-            protagonista.style.opacity = "1"
-        }, 3000)
-        menuGameOver.classList.add("oculto")
-        jogoPausado = false
-        loopDoJogo()
-    } else {
-        alert("Você não possui ouro suficiente!")
-    }
-})
-
 // ==========================================
-// CONFIGURAÇÃO DOS SPRITES DA PROTAGONISTA
+// PERSONAGEM SELECIONADO
 // ==========================================
-const spritesMorgana = {
-    parada: "../img/morganaParada.png",
 
-    agachada: ["../img/morganaAgachada.png"],
+const personagemSelecionado =
+    localStorage.getItem("personagemSelecionado") || "morgana"
 
-    pulo: [
-        "../img/morganaPulando1.png", "../img/morganaPulando2.png",
-        "../img/morganaPulando3.png", "../img/morganaPulando4.png",
-        "../img/morganaPulando5.png", "../img/morganaPulando6.png",
-    ],
-    correndo: [
-        "../img/morganaCorrendo1.png", "../img/morganaCorrendo2.png",
-        "../img/morganaCorrendo3.png", "../img/morganaCorrendo4.png",
-        "../img/morganaCorrendo5.png", "../img/morganaCorrendo6.png",
-        "../img/morganaCorrendo7.png", "../img/morganaCorrendo8.png",
-        "../img/morganaCorrendo9.png", "../img/morganaCorrendo10.png",
-        "../img/morganaCorrendo11.png",
-    ],
-    atirando: [
-        "../img/morganaAtirando1.png", "../img/morganaAtirando2.png",
-        "../img/morganaAtirando3.png", "../img/morganaAtirando4.png",
-    ]
+function criarSprites(nome){
+
+    return{
+
+        parada:`../img/${nome}Parada.png`,
+
+        agachada:[
+            `../img/${nome}Agachada.png`
+        ],
+
+        pulo:[
+            `../img/${nome}Pulando1.png`,
+            `../img/${nome}Pulando2.png`,
+            `../img/${nome}Pulando3.png`,
+            `../img/${nome}Pulando4.png`,
+            `../img/${nome}Pulando5.png`,
+            `../img/${nome}Pulando6.png`
+        ],
+
+        correndo:[
+            `../img/${nome}Correndo1.png`,
+            `../img/${nome}Correndo2.png`,
+            `../img/${nome}Correndo3.png`,
+            `../img/${nome}Correndo4.png`,
+            `../img/${nome}Correndo5.png`,
+            `../img/${nome}Correndo6.png`,
+            `../img/${nome}Correndo7.png`,
+            `../img/${nome}Correndo8.png`,
+            `../img/${nome}Correndo9.png`,
+            `../img/${nome}Correndo10.png`,
+            `../img/${nome}Correndo11.png`
+        ],
+
+        atirando:[
+            `../img/${nome}Atirando1.png`,
+            `../img/${nome}Atirando2.png`,
+            `../img/${nome}Atirando3.png`,
+            `../img/${nome}Atirando4.png`
+        ]
+
+    }
+
 }
+
+const personagens = {
+    morgana: criarSprites("morgana"),
+    ruby: criarSprites("ruby"),
+    jack: criarSprites("jack")
+}
+const spritesMorgana =
+    personagens[personagemSelecionado] || personagens.morgana
+console.log("Personagem salvo:", personagemSelecionado);
+console.log(personagens);
 
 let frameCorrendo = 0; let framePulo = 0; let frameAtirando = 0; let frameAgachado = 0; // <-- Corrigido aqui para frameCorrendo
 let estaAtirando = false; let timerAnimacao = 0;
@@ -477,6 +441,7 @@ window.addEventListener("keydown", (e) => {
         estaAtirando = true;
         frameAtirando = 0;
         timerAnimacao = 0;
+        criarBala();
         somTiro.currentTime = 0;
         somTiro.play().catch(() => {});
     }
@@ -622,7 +587,7 @@ function criarMoeda(x, y) {
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-faseAtual = 3
+faseAtual = 1  // aqui muda em q faze começa o jogoooo 
 let inimigos = []
 
 const dadosInimigos = {
@@ -632,7 +597,7 @@ const dadosInimigos = {
     
    // --- NOVOS INIMIGOS DA FASE 2 ---
     bandidoCavalo1: { andando: ["../img/bandidoCavalo1Andando1.png", "../img/bandidoCavalo1Andando2.png", "../img/bandidoCavalo1Andando3.png", "../img/bandidoCavalo1Andando4.png", "../img/bandidoCavalo1Andando5.png", "../img/bandidoCavalo1Andando6.png"], atirando: ["../img/bandidoCavalo1Atirando1.png", "../img/bandidoCavalo1Atirando2.png", "../img/bandidoCavalo1Atirando3.png"] },
-    bandidoCavalo2: { andando: ["../img/bandidoCavalo2Andando1.png", "../img/bandidoCavalo2Andando2.png", "../img/bandidoCavalo2Andando3.png", "../img/bandidoCavalo2Andando4.png", "../img/bandidoCavalo2Andando5.png", "../img/bandidoCavalo2Andando6.png"], atirando: ["../img/bandidoCavalo2Atirando1.png", "../img/bandidoCavalo2Atirando2.png", "../img/bandidoCavalo2Atirando3.png"] },
+    bandidoCavalo2: { andando: ["../img/bandidoCavalo2Andando1.png", "../img/bandidoCavalo2Andando2.png", "../img/bandidoCavalo2Andando6.png", "../img/bandidoCavalo2Andando4.png", "../img/bandidoCavalo2Andando5.png", "../img/bandidoCavalo2Andando6.png"], atirando: ["../img/bandidoCavalo2Atirando1.png", "../img/bandidoCavalo2Atirando2.png", "../img/bandidoCavalo2Atirando3.png"] },
     fantasma:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
 
    // --- NOVOS INIMIGOS DA FASE 3 ---
@@ -1189,7 +1154,24 @@ function loopDoJogo(tempoAtual) {
 
     requestAnimationFrame(loopDoJogo);
 }
+function verificarMudancaDeFase() {
+    if (pontos >= pontosParaProximaFase) {
 
+        if (faseAtual === 1) {
+            iniciarDialogo(cenasTransicao1_2);
+        }
+        else if (faseAtual === 2) {
+            iniciarDialogo(cenasTransicao2_3);
+        }
+        else if (faseAtual < 5) {
+            avancarDeFaseLogica();
+        }
+        else {
+            alert("Parabéns! Você concluiu o jogo!");
+            location.reload();
+        }
+    }
+}
 function avancarDeFaseLogica() {
     pontos = 0 
     faseAtual++
@@ -1227,10 +1209,18 @@ function perderVida() {
     hudVidas.innerText = `Vidas: ${vidas}`;
 
     if (vidas <= 0) {
-        jogoPausado = true;
-        menuGameOver.classList.remove("oculto");
-        musicaJogo.pause();
-    } else {
+    vidas = 0;
+    hudVidas.innerText = `Vidas: ${vidas}`;
+
+    // Zera o ouro
+    ouro = 0;
+    localStorage.setItem("ouro", ouro);
+    hudOuro.innerText = `Ouro: ${ouro}`;
+
+    jogoPausado = true;
+    menuGameOver.classList.remove("oculto");
+    musicaJogo.pause();
+}else {
         // Ativa uma pequena invencibilidade temporária ao tomar dano para não morrer instantaneamente
         invencivel = true;
         
