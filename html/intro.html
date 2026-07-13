@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/intro.css">
+    <script src="../js/intro.js" defer></script>
+    <title>Introdução</title>
+</head>
+
+<body>
+    <audio id="musicaIntro" autoplay loop>
+        <source src="../music/intro.mp3" type="audio/mp3">
+    </audio>
+    <div id="cenario">
+        <img id="personagem" src="../img/morganaNormal.png" alt="Personagem">
+        <div id="dialogo">
+            <div id="nome-personagem"></div>
+            <p id="texto"></p>
+            <span class="continuar">
+                Pressione ESPAÇO para continuar
+            </span>
+            <span class="pular">
+                Pressione S para pular a história
+            </span>
+        </div>
+    </div>
+    <div id="fade"></div>
+</body>
+</html>

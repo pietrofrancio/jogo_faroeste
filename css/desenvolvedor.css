@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    color: #ffebc2;
+    overflow: hidden;
+    background: #522e14; /* troque pela cor que quiser */
+    font-family: 'Press Start 2P', cursive;
+    color: #ffebc2;
+    overflow: hidden;
+}
+
+/* ==========================
+    VÍDEO
+========================== */
+
+.video-background {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+}
+
+#bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(.35) brightness(.75);
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 10, 0, .45);
+}
+
+/* ==========================
+        CONTAINER
+========================== */
+
+.container {
+    width: 92%;
+    height: 100vh;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ==========================
+        TITULO
+========================== */
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 60px;
+    color: #ffd27a;
+    text-shadow:
+        4px 4px 0 #2a1207,
+        7px 7px 0 #000;
+}
+
+/* ==========================
+      CARDS
+========================== */
+
+.devs {
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 35px;
+}
+.devs{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    gap:40px;
+    flex-wrap:wrap;
+}
+
+.dev-card{
+    width:260px;
+    background:linear-gradient(#d9be82,#cda869,#b88d4c);
+    border:6px solid #5b3418;
+    outline:3px solid #8d5d2f;
+    padding:18px;
+    text-align:center;
+    box-shadow:8px 8px 0 #1a0a04;
+    transition:.2s;
+    transform:rotate(-2deg);
+}
+
+.dev-card:nth-child(even){
+    transform:rotate(2deg);
+}
+
+.dev-card:hover{
+    transform:translateY(-10px) scale(1.03) rotate(0deg);
+}
+
+.dev-card::before{
+    content:"PROCURADO";
+    display:block;
+    margin-bottom:15px;
+    font-size:1rem;
+    color:#4a1e08;
+    text-shadow:2px 2px #f5d99a;
+}
+
+.dev-card img{
+    width:170px;
+    height:190px;
+    object-fit:cover;
+    border:4px solid #6b3d18;
+    margin-bottom:18px;
+    filter:sepia(.45) contrast(1.15);
+    image-rendering:pixelated;
+}
+
+.dev-card h2{
+    font-size:.72rem;
+    line-height:20px;
+    color:#4a1e08;
+    margin-bottom:18px;
+}
+
+.dev-card p{
+    font-size:.6rem;
+    color:#4a1e08;
+    margin-bottom:14px;
+}
+
+.dev-card span{
+    display:block;
+    font-size:.55rem;
+    color:#5d2c10;
+}
+
+.dev-card::after{
+    content:"RECOMPENSA: 9999 OUROS";
+    display:block;
+    margin-top:18px;
+    padding-top:15px;
+    border-top:3px dashed #6b3d18;
+    font-size:.55rem;
+    color:#4a1e08;
+}
+/* ==========================
+        FOTO
+========================== */
+
+.dev-card img {
+    width: 170px;
+    height: 170px;
+    border: 4px solid #d4a55a;
+    object-fit: cover;
+    margin-bottom: 20px;
+    image-rendering: pixelated;
+    background: #2b190d;
+}
+
+/* ==========================
+        TEXTO
+========================== */
+
+.dev-card h2 {
+    font-size: .72rem;
+    line-height: 22px;
+    margin-bottom: 18px;
+    color: #ffd27a;
+}
+
+.dev-card p {
+    font-size: .62rem;
+    margin-bottom: 16px;
+    color: #fff2d3;
+}
+.dev-card span {
+    display: block;
+    font-size: .55rem;
+    color: #d8b882;
+}
+
+/* ==========================
+      BOTÃO
+========================== */
+
+.voltar {
+
+    margin-top: 55px;
+    text-decoration: none;
+    color: #ffebc2;
+    background: rgba(94, 47, 29, .95);
+    border: 3px solid #a07040;
+    padding: 18px 42px;
+    box-shadow: 5px 5px 0 #1a0a04;
+    transition: .15s;
+}
+
+.voltar:hover {
+    background: #d4a55a;
+    color: #3a1a06;
+    border-color: #3a1a06;
+    transform: translate(-2px, -2px);
+}
+
+.voltar:active {
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 #1a0a04;
+}
+
+/* ==========================
+      RESPONSIVO
+========================== */
+
+@media(max-width:1300px) {
+    .devs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    body {
+        overflow: auto;
+    }
+    .container {
+        height: auto;
+        padding: 60px 0;
+    }
+}
+@media(max-width:700px) {
+    .devs {
+        grid-template-columns: 1fr;
+    }
+    h1 {
+        font-size: 1.2rem;
+    }
+    .dev-card {
+        width: 290px;
+    }
+}
