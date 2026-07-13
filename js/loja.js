@@ -3,7 +3,7 @@
 // ================================
 
 // Ouro
-let ouro = Number(localStorage.getItem("ouro")) || Number(localStorage.getItem("ouroEstoque")) || 0;
+let ouro = Number(localStorage.getItem("ouroEstoque")) || 0;
 const ouroInsuficiente = new Audio('../efeitos_sonoros/ouro_insuficiente.mp3');
 
 // Personagens
@@ -41,9 +41,9 @@ if(!armasCompradas.includes("arma Inicial")){
 }
 
 // ================================
+const displayOuro = document.getElementById("ouroLoja")
 
 // Verifica qual o ID do HTML que está sendo usado no momento
-const displayOuro = document.getElementById("ouroLoja") || document.getElementById("ouro");
 
 const personagens = [
     { nome: "morgana", preco: 0, botao: document.getElementById("btn-morgana") },
@@ -71,17 +71,14 @@ const armas = [
 // ================================
 
 function atualizarOuro() {
-    if (displayOuro) {
-        displayOuro.innerText = `Ouro: ${ouro}`;
+        displayOuro.innerText = `Ouro: ${ouro}`
     }
-}
 
 // ================================
 
 function atualizarPersonagens() {
     personagens.forEach(personagem => {
         const btn = personagem.botao;
-        if (!btn) return;
 
         if (personagem.nome === personagemSelecionado) {
             btn.innerText = "Equipado";
@@ -99,7 +96,6 @@ function atualizarPersonagens() {
 function atualizarPersonagensP2() {
     personagensP2.forEach(personagem => {
         const btn = personagem.botao;
-        if (!btn) return;
 
         if (personagem.nome === personagemSelecionadoP2) {
             btn.innerText = "Equipado";
@@ -119,7 +115,6 @@ function atualizarPersonagensP2() {
 function atualizarMusicas() {
     musicas.forEach(musica => {
         const btn = musica.botao;
-        if (!btn) return;
 
         if (musica.caminho === musicaSelecionada) {
             btn.innerText = "Equipada";
@@ -169,8 +164,6 @@ function clicarPersonagem(nome) {
         ouro -= personagem.preco;
         personagensComprados.push(nome);
 
-        localStorage.setItem("ouro", ouro);
-        // Atualiza a key antiga por precaução, se você ainda usar em outros lugares do código
         localStorage.setItem("ouroEstoque", ouro); 
         localStorage.setItem("personagensComprados", JSON.stringify(personagensComprados));
     }
@@ -200,7 +193,6 @@ function clicarPersonagemP2(nome) {
         ouro -= personagem.preco;
         personagensComprados.push(nome);
 
-        localStorage.setItem("ouro", ouro);
         localStorage.setItem("ouroEstoque", ouro);
         localStorage.setItem("personagensComprados", JSON.stringify(personagensComprados));
     }
@@ -230,7 +222,6 @@ function clicarMusica(caminho) {
         ouro -= musica.preco;
         musicasCompradas.push(caminho);
 
-        localStorage.setItem("ouro", ouro);
         localStorage.setItem("ouroEstoque", ouro);
         localStorage.setItem("musicasCompradas", JSON.stringify(musicasCompradas));
     }
@@ -259,7 +250,6 @@ function clicarArma(tipo) {
         ouro -= arma.preco;
         armasCompradas.push(tipo);
 
-        localStorage.setItem("ouro", ouro);
         localStorage.setItem("ouroEstoque", ouro);
         localStorage.setItem("armasCompradas", JSON.stringify(armasCompradas));
     }
@@ -277,35 +267,31 @@ function clicarArma(tipo) {
 // CONFIGURAÇÃO DOS EVENTOS (Garantindo que os elementos existem na tela)
 // ================================
 
-const configurarClique = (id, callback) => {
-    const el = document.getElementById(id);
-    if (el) el.onclick = callback;
-};
 
 // P1
-configurarClique("btn-morgana", () => clicarPersonagem("morgana"));
-configurarClique("btn-ruby", () => clicarPersonagem("ruby"));
-configurarClique("btn-jack", () => clicarPersonagem("jack"));
+document.getElementById("btn-morgana").onclick = () => clicarPersonagem("morgana")
+document.getElementById("btn-ruby").onclick = () => clicarPersonagem("ruby")
+document.getElementById("btn-jack").onclick = () => clicarPersonagem("jack")
+
 
 // P2
-configurarClique("btn-morgana-p2", () => clicarPersonagemP2("morgana"));
-configurarClique("btn-ruby-p2", () => clicarPersonagemP2("ruby"));
-configurarClique("btn-jack-p2", () => clicarPersonagemP2("jack"));
+document.getElementById("btn-morgana-p2").onclick = () => clicarPersonagemP2("morgana")
+document.getElementById("btn-ruby-p2").onclick = () => clicarPersonagemP2("ruby")
+document.getElementById("btn-jack-p2").onclick = () => clicarPersonagemP2("jack")
 
 // Músicas
-configurarClique("btn-musica1", () => clicarMusica("../music/musica_fundo1.mp3"));
-configurarClique("btn-musica2", () => clicarMusica("../music/duelo_epico.mp3"));
-configurarClique("btn-musica3", () => clicarMusica("../music/duelo_final.mp3"));
+document.getElementById("btn-musica1").onclick = () => clicarMusica("../music/musica_fundo1.mp3")
+document.getElementById("btn-musica2").onclick = () => clicarMusica("../music/musica2.mp3")
+document.getElementById("btn-musica3").onclick = () => clicarMusica("../music/musica3.mp3")
 
 // Armas
-configurarClique("btn-revolver", () => clicarArma("revolver"));
-configurarClique("btn-armaInicial", () => clicarArma("arma Inicial"));
+document.getElementById("btn-armaInicial").onclick = () => clicarArma("arma Inicial")
+document.getElementById("btn-revolver").onclick = () => clicarArma("revolver")
 
 
 // ================================
 // INICIALIZAÇÃO DA INTERFACE
 // ================================
-
 atualizarOuro();
 atualizarPersonagens();
 atualizarPersonagensP2();
