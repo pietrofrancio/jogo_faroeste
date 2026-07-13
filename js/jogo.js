@@ -436,7 +436,7 @@ const personagens = {
 // SEGURANÇA: SÓ USAR PERSONAGENS COM SPRITES 100% PRONTOS 
 // ==========================================
 
-const PERSONAGENS_COM_SPRITES_COMPLETOS = ["morgana"];
+const PERSONAGENS_COM_SPRITES_COMPLETOS = ["morgana","jack"];
 
 function resolverPersonagemSeguro(nomeEscolhido) {
     return PERSONAGENS_COM_SPRITES_COMPLETOS.includes(nomeEscolhido)
