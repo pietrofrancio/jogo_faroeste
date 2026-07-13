@@ -99,6 +99,7 @@
     transition: .1s;
     image-rendering: pixelated;
 }
+
 #pauseTela {
     position: fixed;
     inset: 0;
@@ -108,6 +109,7 @@
     background: rgba(20,10,5,.85);
     z-index: 9999;
 }
+
 #painelPause {
     width: 600px;
     padding: 35px;
@@ -144,6 +146,12 @@
 
 #protagonista.olhando-esquerda {
     transform: scaleX(-1) !important; 
+}
+
+#protagonista.agachado {
+    /* Diminui a altura do elemento para ela descer fisicamente */
+    height: 110px;
+    bottom: 50px; 
 }
 
 /* ==========================================
@@ -194,7 +202,7 @@
 }
 
 /* ==========================================
-   INIMIGOS GIGANTES (BANDIDOS A CAVALO)
+   BANDIDOS A CAVALO
    ========================================== */
 .inimigo-cavalo {
     position: absolute;
@@ -227,7 +235,7 @@
 }
 
 /* ==========================================
-   BOLA DE FENO / COIOTES OBSTÁCULOS
+   BOLA DE FENO / COIOTES / OBSTÁCULOS
    ========================================== */
 .bola-feno {
     position: absolute;
@@ -256,7 +264,7 @@
     z-index: 6;     /* Mesma camada dos obstáculos terrestres */
     object-fit: contain;
     image-rendering: pixelated;
-    bottom: 250px;  /* Altura padrão de voo */
+    bottom: 20px;  /* Altura padrão de voo */
     transform: scaleX(1);
 }
 
