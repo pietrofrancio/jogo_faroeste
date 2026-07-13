@@ -22,10 +22,14 @@
             <span id="vidas">Vidas: 5 <span class="coracao-vida"></span></span>
         </div>
         <div id="cenario">
-            <img id="protagonista" src="../img/morganaNormal.png" alt="Protagonista">
+            <!-- Jogador 1 -->
+            <img id="protagonista" src="../img/morganaNormal.png" alt="Protagonista 1">
+         
+            <!-- Jogador 2 (Inicialmente oculto, ativado via JavaScript no modo 2 Jogadores) -->
+            <img id="protagonista2" src="../img/morganaNormal.png" alt="Protagonista 2" class="oculto">
         </div>
-            <div id="texto"></div>
-            <div id="fade"></div>
+        <div id="texto"></div>
+        <div id="fade"></div>
     </div>
     <div id="gameOverMenu" class="oculto">
         <div class="painelGameOver">
@@ -43,4 +47,5 @@
         </div>
     </div>
 </body>
+
 </html>
