@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lojinha do Oeste</title>
+
+    <link rel="stylesheet" href="../css/loja.css">
+</head>
+
+<body>
+
+    <div class="video-background">
+        <video autoplay loop muted playsinline id="bg-video">
+            <source src="../video/tela_inicial.mp4" type="video/mp4">
+        </video>
+        <div class="overlay"></div>
+    </div>
+
+    <main class="loja-container">
+
+        <h1>LOJINHA DO OESTE</h1>
+
+        <div id="ouro" class="ouro-display">
+            Ouro: 0
+        </div>
+
+        <h2>Personagens</h2>
+
+        <div class="cards">
+
+            <!-- Morgana -->
+            <div class="card">
+                <img src="../img/morganaParada.png" alt="Morgana">
+
+                <h3>Morgana</h3>
+
+                <p>Grátis</p>
+
+                <button id="btn-morgana">
+                    Equipado
+                </button>
+            </div>
+
+            <!-- Ruby -->
+            <div class="card">
+                <img src="../img/rubyParada.png" alt="Ruby">
+
+                <h3>Pistoleira Ruby</h3>
+
+                <p>15 Ouro</p>
+
+                <button id="btn-ruby">
+                    Comprar
+                </button>
+            </div>
+
+            <!-- Jack -->
+            <div class="card">
+                <img src="../img/jackParada.png" alt="Jack">
+
+                <h3>Xerife Jack</h3>
+
+                <p>25 Ouro</p>
+
+                <button id="btn-jack">
+                    Comprar
+                </button>
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+             PERSONAGEM DO JOGADOR 2  (NOVO - modo cooperativo)
+             ==========================================
+             Reaproveita os MESMOS personagens comprados acima: uma vez
+             comprada, a Ruby (por exemplo) fica disponível tanto para o
+             Jogador 1 quanto para o Jogador 2. Essa seção só define QUAL
+             personagem o Jogador 2 vai usar quando o modo "2 Jogadores" for
+             escolhido no menu inicial. -->
+        <h2>Personagem do Jogador 2</h2>
+        <p style="opacity:.75; font-size:.85rem; margin-top:-10px;">
+            (usado apenas no modo Cooperativo / 2 Jogadores)
+        </p>
+
+        <div class="cards">
+
+            <!-- Morgana (Jogador 2) -->
+            <div class="card">
+                <img src="../img/morganaParada.png" alt="Morgana">
+
+                <h3>Morgana</h3>
+
+                <p>Grátis</p>
+
+                <button id="btn-morgana-p2">
+                    Equipado
+                </button>
+            </div>
+
+            <!-- Ruby (Jogador 2) -->
+            <div class="card">
+                <img src="../img/rubyParada.png" alt="Ruby">
+
+                <h3>Pistoleira Ruby</h3>
+
+                <p>15 Ouro</p>
+
+                <button id="btn-ruby-p2">
+                    Comprar
+                </button>
+            </div>
+
+            <!-- Jack (Jogador 2) -->
+            <div class="card">
+                <img src="../img/jackParada.png" alt="Jack">
+
+                <h3>Xerife Jack</h3>
+
+                <p>25 Ouro</p>
+
+                <button id="btn-jack-p2">
+                    Comprar
+                </button>
+            </div>
+
+        </div>
+
+        <h2>Músicas</h2>
+
+        <div class="cards">
+
+            <!-- Música 1 -->
+            <div class="card">
+
+                <h3>Trilha Clássica</h3>
+
+                <p>Grátis</p>
+
+                <button id="btn-musica1">
+                    Equipada
+                </button>
+
+            </div>
+
+            <!-- Música 2 -->
+            <div class="card">
+
+                <h3>Saloon</h3>
+
+                <p>10 Ouro</p>
+
+                <button id="btn-musica2">
+                    Comprar
+                </button>
+
+            </div>
+
+            <!-- Música 3 -->
+            <div class="card">
+
+                <h3>Duelo Final</h3>
+
+                <p>20 Ouro</p>
+
+                <button id="btn-musica3">
+                    Comprar
+                </button>
+
+            </div>
+
+        </div>
+
+        <a href="../index.html" class="voltar">
+            Voltar ao Menu
+        </a>
+
+    </main>
+
+    <script src="../js/loja.js"></script>
+
+</body>
+
+</html>
