@@ -12,6 +12,7 @@
 
 <body>
     <audio id="musicaJogo" loop></audio>
+    
     <div class="game-container">
         <div id="hud">
             <div class="coluna-central">
@@ -21,12 +22,20 @@
             <button id="btnPause">⏸ Pausar</button>
             <span id="vidas">Vidas: 5 <span class="coracao-vida"></span></span>
         </div>
+        
         <div id="cenario">
-            <img id="protagonista" src="../img/morganaNormal.png" alt="Protagonista">
+            <!-- Jogador 1 -->
+            <img id="protagonista" src="../img/morganaNormal.png" alt="Protagonista 1">
+         
+            <!-- Jogador 2 (Inicialmente oculto, ativado via JavaScript no modo 2 Jogadores) -->
+            <img id="protagonista2" src="../img/morganaNormal.png" alt="Protagonista 2" class="oculto">
         </div>
-            <div id="texto"></div>
-            <div id="fade"></div>
+        
+        <div id="texto"></div>
+        <div id="fade"></div>
     </div>
+
+    <!-- Menu de Game Over -->
     <div id="gameOverMenu" class="oculto">
         <div class="painelGameOver">
             <h1>GAME OVER</h1>
@@ -42,6 +51,8 @@
             </button>
         </div>
     </div>
+
+    <!-- Tela de Pause -->
     <div id="pauseTela" class="oculto">
         <div id="painelPause">
             <h1>Jogo Pausado</h1><br><br><br>
@@ -50,4 +61,5 @@
         </div>
     </div>
 </body>
+
 </html>

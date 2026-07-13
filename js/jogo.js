@@ -7,19 +7,34 @@ const btnPause      = document.getElementById("btnPause")
 const hudVidas      = document.getElementById("vidas")
 const hudOuro       = document.getElementById("ouro")       
 const hudPontos     = document.getElementById("hudPontos")  
-const menuGameOver = document.getElementById("gameOverMenu")
-const pauseTela = document.getElementById("pauseTela")
-const painelPause = document.getElementById("painelPause")
+const menuGameOver  = document.getElementById("gameOverMenu")
+const pauseTela     = document.getElementById("pauseTela")
+const painelPause   = document.getElementById("painelPause")
 
 cenario.setAttribute("tabindex", "0"); 
 cenario.style.outline = "none";
 
 // ---------------- LocalStorage -----------------
 let ouroEstoque = parseInt(localStorage.getItem("ouroEstoque")) || 0;
-// (clarice se puder coloca as variaveis aq do localstorage pra ficar organizado)
 
 let armaSelecionada = localStorage.getItem("armaSelecionada") || "";
 let velocidadeBala = armaSelecionada === "revolver" ? 28 : 18;
+
+// ==========================================
+// MODO DE JOGO: 1 OU 2 JOGADORES 
+// ==========================================
+
+const modoDoisJogadores = localStorage.getItem("modoJogo") === "2";
+const protagonista2 = document.getElementById("protagonista2");
+
+if (protagonista2) {
+    if (modoDoisJogadores) {
+        protagonista2.classList.remove("oculto");
+    } else {
+        protagonista2.classList.add("oculto");
+    }
+}
+
 // ==========================================
 // 2. SISTEMA DE ÁUDIO (MÚSICA E EFEITOS)
 // ==========================================
@@ -208,8 +223,8 @@ function mostrarCena() {
 
     if (nomeEl) nomeEl.innerText = cena.nome;
     if (textoEl) textoEl.innerText = cena.fala;
-    
-    // CORREÇÃO: Tratamento seguro para aplicar a imagem de fundo da transição
+
+    // Tratamento seguro para aplicar a imagem de fundo da transição
     if (cenarioElemento && cena.fundo) {
         cenarioElemento.style.backgroundImage = `url('${cena.fundo}')`;
     }
@@ -268,11 +283,19 @@ let ouro = 0
 let pontos = 0
 let faseAtual = 1 // Declarada aqui primeiro!
 
-// CORREÇÃO: Calcula dinamicamente antes de exibir no HUD pela primeira vez
+// Calcula dinamicamente antes de exibir no HUD pela primeira vez
 let pontosParaProximaFase = faseAtual * 40 
 
 hudOuro.innerText = `Ouro: ${ouro}`
 hudPontos.innerText = `Pontos: 0/${pontosParaProximaFase}`
+
+// ==========================================
+// TEXTO DO HUD DE VIDAS  
+// ==========================================
+
+function textoVidas() {
+    return modoDoisJogadores ? `Vidas da Equipe: ${vidas}` : `Vidas: ${vidas}`;
+}
 
 function iniciarMusica(){
     musicaJogo.play()
@@ -340,7 +363,7 @@ btnPause.addEventListener("click", () => {
         const ultimoElemento = hud.lastElementChild
         hud.insertBefore(btnPause, ultimoElemento);
         
-        // CORREÇÃO MÁSTER: Força o navegador a focar no cenário do jogo
+        // Força o navegador a focar no cenário do jogo
         cenario.focus()
         
         // Só reinicia o loop se não houver outra instância rodando
@@ -408,28 +431,63 @@ const personagens = {
     ruby: criarSprites("ruby"),
     jack: criarSprites("jack")
 }
+
+// ==========================================
+// SEGURANÇA: SÓ USAR PERSONAGENS COM SPRITES 100% PRONTOS 
+// ==========================================
+
+const PERSONAGENS_COM_SPRITES_COMPLETOS = ["morgana"];
+
+function resolverPersonagemSeguro(nomeEscolhido) {
+    return PERSONAGENS_COM_SPRITES_COMPLETOS.includes(nomeEscolhido)
+        ? nomeEscolhido
+        : "morgana";
+}
+
 const spritesMorgana =
-    personagens[personagemSelecionado] || personagens.morgana
-console.log("Personagem salvo:", personagemSelecionado);
+    personagens[resolverPersonagemSeguro(personagemSelecionado)] || personagens.morgana
+
+const personagemSelecionadoP2 =
+    localStorage.getItem("personagemSelecionadoP2") || "morgana"
+
+const spritesJogador2 =
+    personagens[resolverPersonagemSeguro(personagemSelecionadoP2)] || personagens.morgana
+
+console.log("Personagem salvo (Jogador 1):", personagemSelecionado);
+console.log("Personagem salvo (Jogador 2):", personagemSelecionadoP2);
 console.log(personagens);
 
-let frameCorrendo = 0; let framePulo = 0; let frameAtirando = 0; let frameAgachado = 0; // <-- Corrigido aqui para frameCorrendo
+let frameCorrendo = 0; let framePulo = 0; let frameAtirando = 0; let frameAgachado = 0;
 let estaAtirando = false; let timerAnimacao = 0;
 const velocidadFrame = 14; const velocidadTiro = 10;
 
 // ==========================================
-// VARIÁVEIS DE CONTROLE DO JOGO (AJUSTADAS)
+// VARIÁVEIS DE CONTROLO DO JOGO (AJUSTADAS)
 // ==========================================
 let vidas = 5
+
+hudVidas.innerText = textoVidas();
+
 const chao = 100
 let protaX = 50; let protaY = chao; let velY = 0
 let pulando = false
-let agachado = false; // <-- ADICIONE ESSA LINHA
+let agachado = false;
 
 // Aumentamos a velocidade, o pulo e a gravidade para o jogo responder melhor a 60 FPS:
 const gravidade = 1.4;         // Antes era 0.5
 const forcaPulo = 26;         // Antes era 18
 const velocidadeAndar = 10;     // Antes era 4
+
+// ==========================================
+// VARIÁVEIS DO JOGADOR 2
+// ==========================================
+
+let frameCorrendo2 = 0; let framePulo2 = 0; let frameAtirando2 = 0; let frameAgachado2 = 0;
+let estaAtirando2 = false; let timerAnimacao2 = 0;
+
+let protaX2 = 220; let protaY2 = chao; let velY2 = 0; // Nasce um pouco à frente do Jogador 1
+let pulando2 = false;
+let agachado2 = false;
 
 // ==========================================
 // CONTROLES (Teclado e Mouse)
@@ -442,9 +500,12 @@ window.addEventListener("keydown", (e) => {
 
     teclas[e.code] = true;
 
-    // Se pressionar Seta para Baixo ou S e NÃO estiver pulando, ela agacha
-    if ((e.code === "ArrowDown" || e.code === "KeyS") && !pulando) {
-        // Se ela acabou de agachar agora, reseta o frame da animação
+    const teclaAgacharJogador1 = modoDoisJogadores
+        ? e.code === "KeyS"
+        : (e.code === "ArrowDown" || e.code === "KeyS");
+
+    if (teclaAgacharJogador1 && !pulando) {
+        // Se ele acabou de agachar agora, reseta o frame da animação
         if (!agachado) {
             frameAgachado = 0;
             timerAnimacao = 0;
@@ -452,6 +513,7 @@ window.addEventListener("keydown", (e) => {
         agachado = true;
     }
 
+    // Tiro do Jogador 1: tecla ESPAÇO (funciona igual nos dois modos).
     if (e.code === "Space" && !estaAtirando) {
         estaAtirando = true;
         frameAtirando = 0;
@@ -460,6 +522,30 @@ window.addEventListener("keydown", (e) => {
         somTiro.currentTime = 0;
         somTiro.play().catch(() => {});
     }
+
+    // ==========================================
+    // CONTROLES DO JOGADOR 2 
+    // ==========================================
+    if (modoDoisJogadores) {
+        // Agachar: Seta pra baixo
+        if (e.code === "ArrowDown" && !pulando2) {
+            if (!agachado2) {
+                frameAgachado2 = 0;
+                timerAnimacao2 = 0;
+            }
+            agachado2 = true;
+        }
+
+        // Atirar: tecla ENTER 
+        if (e.code === "Enter" && !estaAtirando2) {
+            estaAtirando2 = true;
+            frameAtirando2 = 0;
+            timerAnimacao2 = 0;
+            criarBala2();
+            somTiro.currentTime = 0;
+            somTiro.play().catch(() => {});
+        }
+    }
 });
 
 // --- NO EVENTO KEYUP ---
@@ -467,11 +553,37 @@ window.addEventListener("keyup", (e) => {
     if (emTransicaoDeFase) return;
     teclas[e.code] = false;
 
-    // Quando soltar a Seta para Baixo ou S, ela levanta
-    if (e.code === "ArrowDown" || e.code === "KeyS") {
+    const teclaAgacharJogador1 = modoDoisJogadores
+        ? e.code === "KeyS"
+        : (e.code === "ArrowDown" || e.code === "KeyS");
+
+    if (teclaAgacharJogador1) {
         agachado = false;
         frameAgachado = 0; // Reseta para a próxima vez que agachar
     }
+
+    // Jogador 2 levanta 
+    if (modoDoisJogadores && e.code === "ArrowDown") {
+        agachado2 = false;
+        frameAgachado2 = 0;
+    }
+});
+
+// ==========================================
+// TIRO DO JOGADOR 1 COM O MOUSE  
+// ==========================================
+
+cenario.addEventListener("mousedown", () => {
+    if (!modoDoisJogadores) return;
+    if (emTransicaoDeFase || jogoPausado || naContagem) return;
+    if (estaAtirando) return;
+
+    estaAtirando = true;
+    frameAtirando = 0;
+    timerAnimacao = 0;
+    criarBala();
+    somTiro.currentTime = 0;
+    somTiro.play().catch(() => {});
 });
 
 let balas = [] 
@@ -504,8 +616,7 @@ function criarBolaFeno() {
         // --- ABUTRES DA FASE 3 ---
         // Sorteia entre o tipo 1 e o tipo 2
         const tipoAbutre = Math.random() > 0.5 ? 1 : 2;
-        
-        // CORREÇÃO CRÍTICA: Vincula direto aos arrays certos e corrigidos lá do topo!
+
         if (tipoAbutre === 1) {
             asSprites = spritesAbutre1;
         } else {
@@ -572,6 +683,32 @@ function criarBala() {
     })
 }
 
+// ==========================================
+// TIRO DO JOGADOR 2 
+// ==========================================
+
+function criarBala2() {
+    const balaElemento = document.createElement("div")
+    balaElemento.classList.add("bala")
+
+    const olhandoParaDireita = protagonista2.style.transform !== "scaleX(-1)"
+
+    let balaX = protaX2 + (olhandoParaDireita ? 100 : 20)
+    let balaY = protaY2 + 75
+
+    balaElemento.style.left = `${balaX}px`
+    balaElemento.style.bottom = `${balaY}px`
+
+    cenario.appendChild(balaElemento)
+
+    balas.push({
+        elemento: balaElemento,
+        x: balaX,
+        y: balaY,
+        direcao: olhandoParaDireita ? 1 : -1
+    })
+}
+
 function criarMoeda(x, y) {
     const moeda = document.createElement("img")
 
@@ -600,6 +737,24 @@ function criarMoeda(x, y) {
 }
 
 // ==========================================
+// COLISÃO JOGADOR <-> BOLA DE FENO/OBSTÁCULO  
+// ==========================================
+
+function jogadorColidiuComObstaculo(px, py, estaAgachado, bola) {
+    let distX = Math.abs(px - bola.x);
+    let distY = Math.abs(py - bola.y);
+    let limiteX = (faseAtual === 2) ? 90 : 60;
+
+    if (bola.spritesAnimacao) {
+        // Abutres (obstáculo que voa): caixa de colisão fixa, não importa se está agachado
+        return distX < 60 && distY < 60;
+    }
+
+    // Feno normal ou coiotes altos: se o jogador estiver agachado, passa reto sem tirar vida!
+    return distX < limiteX && py <= chao + 40 && !estaAgachado;
+}
+
+// ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
 faseAtual = 1  // aqui muda em q faze começa o jogoooo 
@@ -621,7 +776,6 @@ const dadosInimigos = {
     camelo:       { andando: ["../img/camelo1.png", "../img/camelo2.png", "../img/camelo3.png", "../img/camelo4.png", "../img/camelo5.png", "../img/camelo6.png"] },
 }
 
-// CORRIGIDO: Removido a duplicidade das fases e corrigido o "host2" da fase 3
 const configuracaoFases = {
     1: { nome: "Cidade Empoeirada", inimigos: ["hostil1", "hostil2", "hostil3"], fundo: "url('../img/cenario1.png')" },
     2: { nome: "Sob Um Sol Escaldante", inimigos: ["bandidoCavalo1", "bandidoCavalo2", "fantasma"], fundo: "url('../img/cenario2.png')" },
@@ -693,7 +847,7 @@ function criarInimigo() {
 
     cenario.appendChild(inimigoElemento);
 
-    // 5 e 6. Definição unificada de Velocidade e Vida (CORRIGIDO: usando 'tipoSorteado')
+    // 5 e 6. Definição unificada de Velocidade e Vida 
     let vidaInimigo = 1;
     let velocidadeInimigo = 3; // Velocidade padrão de caminhada dos inimigos
 
@@ -709,7 +863,7 @@ function criarInimigo() {
         velocidadeInimigo = 12; // Coiotes continuam super rápidos
     }
 
-    // 7. Salva o inimigo no array principal (CORRIGIDO: trocado 'tipo: tipo' por 'tipo: tipoSorteado')
+    // 7. Salva o inimigo no array principal 
     inimigos.push({
         elemento: inimigoElemento,
         x: posX,
@@ -750,12 +904,20 @@ function iniciarContagemFase() {
     telaIntro.style.color = "#ffebc2"; 
 
     const dadosFase = configuracaoFases[faseAtual];
-    
+
+    const dicaControles = (modoDoisJogadores && faseAtual === 1)
+        ? `<p style="font-size: 12px; color:#d4a55a; margin-top:20px; line-height:1.8; text-align:center;">
+               Jogador 1: WASD para mover/pular/agachar • Clique do mouse (ou Espaço) para atirar<br>
+               Jogador 2: Setas para mover/pular/agachar • Enter para atirar
+           </p>`
+        : "";
+
     telaIntro.innerHTML = `
         <h1 style="font-size: 30px; margin-bottom: 40px; color: #ffebc2; text-align: center; line-height: 1.8;">
             Fase ${faseAtual}: ${dadosFase.nome}
         </h1>
         <h2 id="textoContagem" style="font-size: 50px; color: #ffebc2;">3</h2>
+        ${dicaControles}
     `;
     
     cenario.appendChild(telaIntro);
@@ -773,7 +935,7 @@ function iniciarContagemFase() {
             clearInterval(intervalo);
             telaIntro.remove(); 
             
-            // CORREÇÃO: Garante que o estado do jogo volte ao normal e reativa o loop
+            // Garante que o estado do jogo volte ao normal e reativa o loop
             naContagem = false;
             jogoPausado = false; 
             loopDoJogo(); 
@@ -819,28 +981,29 @@ function loopDoJogo(tempoAtual) {
     // Atualiza o tempo do último quadro descontando o excesso para manter a precisão
     ultimoTempoQuadro = tempoAtual - (tempoDecorrido % intervaloQuadro);
 
-    // =========================================================================
-    // DAQUI PARA BAIXO RODA A 60 FPS CRAVADOS
-    // =========================================================================
-
     // --- 1. MOVIMENTO E ANIMAÇÃO DA PROTAGONISTA ---
     let estaAndando = false;
 
     // SÓ PERMITE ANDAR E PULAR SE NÃO ESTIVER AGACHADO
     if (!agachado) {
-        if (teclas["ArrowRight"] || teclas["KeyD"]) { 
+
+        const direita1 = modoDoisJogadores ? teclas["KeyD"] : (teclas["ArrowRight"] || teclas["KeyD"]);
+        const esquerda1 = modoDoisJogadores ? teclas["KeyA"] : (teclas["ArrowLeft"] || teclas["KeyA"]);
+        const pular1 = modoDoisJogadores ? teclas["KeyW"] : (teclas["ArrowUp"] || teclas["KeyW"]);
+
+        if (direita1) { 
             protaX += velocidadeAndar; 
             protagonista.style.transform = "scaleX(1)"; 
             estaAndando = true; 
         }
-        if (teclas["ArrowLeft"] || teclas["KeyA"]) { 
+        if (esquerda1) { 
             protaX -= velocidadeAndar; 
             protagonista.style.transform = "scaleX(-1)"; 
             estaAndando = true; 
         }
         if (protaX < 0) protaX = 0;
 
-        if ((teclas["ArrowUp"] || teclas["KeyW"]) && !pulando) { 
+        if (pular1 && !pulando) { 
             velY = forcaPulo; 
             pulando = true; 
         }
@@ -851,7 +1014,7 @@ function loopDoJogo(tempoAtual) {
     if (protaY > chao) velY -= gravidade;
     if (protaY <= chao) { protaY = chao; pulando = false; velY = 0; framePulo = 0; }
 
-    // --- ATUALIZAÇÃO DO SPRITE VISUAL (CORRIGIDO PARA SUPORTAR O ARRAY AGACHADA) ---
+    // --- ATUALIZAÇÃO DO SPRITE VISUAL ---
     if (estaAtirando) {
         timerAnimacao++;
         if (timerAnimacao >= 5) {
@@ -904,6 +1067,87 @@ function loopDoJogo(tempoAtual) {
     protagonista.style.left = `${protaX}px`;
     protagonista.style.bottom = `${protaY}px`;
 
+    // --- 1B. MOVIMENTO E ANIMAÇÃO DO JOGADOR 2 ---
+    if (modoDoisJogadores) {
+        let estaAndando2 = false;
+
+        if (!agachado2) {
+            if (teclas["ArrowRight"]) {
+                protaX2 += velocidadeAndar;
+                protagonista2.style.transform = "scaleX(1)";
+                estaAndando2 = true;
+            }
+            if (teclas["ArrowLeft"]) {
+                protaX2 -= velocidadeAndar;
+                protagonista2.style.transform = "scaleX(-1)";
+                estaAndando2 = true;
+            }
+            if (protaX2 < 0) protaX2 = 0;
+
+            if (teclas["ArrowUp"] && !pulando2) {
+                velY2 = forcaPulo;
+                pulando2 = true;
+            }
+        }
+
+        // Física (gravidade/pulo) idêntica à do Jogador 1
+        protaY2 += velY2;
+        if (protaY2 > chao) velY2 -= gravidade;
+        if (protaY2 <= chao) { protaY2 = chao; pulando2 = false; velY2 = 0; framePulo2 = 0; }
+
+        // Sprite visual do Jogador 2 
+        if (estaAtirando2) {
+            timerAnimacao2++;
+            if (timerAnimacao2 >= 5) {
+                timerAnimacao2 = 0;
+                frameAtirando2++;
+                if (frameAtirando2 >= spritesJogador2.atirando.length) {
+                    estaAtirando2 = false;
+                    frameAtirando2 = 0;
+                }
+            }
+            if (estaAtirando2) {
+                protagonista2.src = spritesJogador2.atirando[frameAtirando2];
+            }
+        }
+        else if (agachado2) {
+            timerAnimacao2++;
+            if (timerAnimacao2 >= 6) {
+                timerAnimacao2 = 0;
+                frameAgachado2++;
+                if (frameAgachado2 >= spritesJogador2.agachada.length) {
+                    frameAgachado2 = spritesJogador2.agachada.length - 1;
+                }
+            }
+            protagonista2.src = spritesJogador2.agachada[frameAgachado2];
+        }
+        else if (pulando2) {
+            timerAnimacao2++;
+            if (timerAnimacao2 >= 6) {
+                timerAnimacao2 = 0;
+                framePulo2++;
+                if (framePulo2 >= spritesJogador2.pulo.length) {
+                    framePulo2 = spritesJogador2.pulo.length - 1;
+                }
+            }
+            protagonista2.src = spritesJogador2.pulo[framePulo2];
+        }
+        else if (estaAndando2) {
+            timerAnimacao2++;
+            if (timerAnimacao2 >= 6) {
+                timerAnimacao2 = 0;
+                frameCorrendo2 = (frameCorrendo2 + 1) % spritesJogador2.correndo.length;
+            }
+            protagonista2.src = spritesJogador2.correndo[frameCorrendo2];
+        }
+        else {
+            protagonista2.src = spritesJogador2.parada;
+        }
+
+        protagonista2.style.left = `${protaX2}px`;
+        protagonista2.style.bottom = `${protaY2}px`;
+    }
+
     // --- 2. LÓGICA E ANIMAÇÃO DOS INIMIGOS ---
     for (let i = inimigos.length - 1; i >= 0; i--) {
         let ini = inimigos[i];
@@ -911,8 +1155,25 @@ function loopDoJogo(tempoAtual) {
         let velInimigoAtual = (ini.velocidade !== undefined) ? ini.velocidade : 3;
         let direcaoX = 1;
 
+        // ==========================================
+        // ALVO DO INIMIGO (jogador mais próximo, no modo 2 jogadores)
+        // ==========================================
+        let alvoX = protaX;
+        let alvoPulando = pulando;
+        let alvoAgachado = agachado;
+
+        if (modoDoisJogadores) {
+            const distAteJogador1 = Math.abs(protaX - ini.x);
+            const distAteJogador2 = Math.abs(protaX2 - ini.x);
+            if (distAteJogador2 < distAteJogador1) {
+                alvoX = protaX2;
+                alvoPulando = pulando2;
+                alvoAgachado = agachado2;
+            }
+        }
+
         if (ini.estado === "andando") {
-            if (protaX > ini.x) {
+            if (alvoX > ini.x) {
                 ini.x += velInimigoAtual; 
                 direcaoX = 1;
             } else {
@@ -920,7 +1181,7 @@ function loopDoJogo(tempoAtual) {
                 direcaoX = -1;
             }
         } else {
-            direcaoX = protaX > ini.x ? 1 : -1;
+            direcaoX = alvoX > ini.x ? 1 : -1;
         }
 
         ini.timer++;
@@ -930,7 +1191,7 @@ function loopDoJogo(tempoAtual) {
             ini.frame = (ini.frame + 1) % listaSprites.length;
             ini.elemento.src = listaSprites[ini.frame];
 
-            // --- CONTROLE DE TAMANHO ABSOLUTO (Corrigido para 'cameloZumbi') ---
+            // --- CONTROLE DE TAMANHO ABSOLUTO ---
             if (ini.tipo === "bandidoCavalo1" || ini.tipo === "bandidoCavalo2" || ini.tipo === "cavaloZombie" || ini.tipo === "cavaloEsqueleto1" || ini.tipo === "cavaloEsqueleto2") {
                 ini.elemento.style.width = "220px";  
                 ini.elemento.style.height = "160px";
@@ -948,7 +1209,7 @@ function loopDoJogo(tempoAtual) {
             
             if (atiradores.includes(ini.tipo)) {
                 ini.timerAtaque++;
-                let distanciaX = Math.abs(protaX - ini.x);
+                let distanciaX = Math.abs(alvoX - ini.x);
 
                 if (distanciaX < 450) {
                     if (ini.timerAtaque >= 80 && ini.estado === "andando") {
@@ -957,7 +1218,7 @@ function loopDoJogo(tempoAtual) {
                         ini.frame = 0;
 
                         // SISTEMA DE ESQUIVA: Não toma dano se estiver pulando OU agachada!
-                        if (!pulando && !agachado) perderVida();
+                        if (!alvoPulando && !alvoAgachado) perderVida();
 
                         setTimeout(() => {
                             ini.estado = "andando";
@@ -969,10 +1230,24 @@ function loopDoJogo(tempoAtual) {
                 }
             }
 
-            let distFisicaX = Math.abs(protaX - ini.x);
-            let distFisicaY = Math.abs(protaY - chao); 
+            // --- COLISÃO FÍSICA (INIMIGO ENCOSTOU NO JOGADOR) ---
+            let colidiuFisicamente = false;
 
-            if (distFisicaX < 50 && distFisicaY < 70) {
+            let distFisica1X = Math.abs(protaX - ini.x);
+            let distFisica1Y = Math.abs(protaY - chao);
+            if (distFisica1X < 50 && distFisica1Y < 70) {
+                colidiuFisicamente = true;
+            }
+
+            if (!colidiuFisicamente && modoDoisJogadores) {
+                let distFisica2X = Math.abs(protaX2 - ini.x);
+                let distFisica2Y = Math.abs(protaY2 - chao);
+                if (distFisica2X < 50 && distFisica2Y < 70) {
+                    colidiuFisicamente = true;
+                }
+            }
+
+            if (colidiuFisicamente) {
                 ini.elemento.remove();
                 inimigos.splice(i, 1);
                 perderVida(); 
@@ -990,7 +1265,6 @@ function loopDoJogo(tempoAtual) {
     }
 
     // --- 3. LÓGICA DOS PROJÉTEIS (MOVIMENTO E COLISÃO) ---
-    let balaVelocidade = 18
     for (let b = balas.length - 1; b >= 0; b--) {
         let bala = balas[b];
         bala.x += (velocidadeBala * bala.direcao);
@@ -1018,7 +1292,7 @@ function loopDoJogo(tempoAtual) {
                         pontosGanhos = 5;
                     } else if (ini.tipo === "bandidoCavalo1" || ini.tipo === "bandidoCavalo2" || ini.tipo === "cavaloEsqueleto1" || ini.tipo === "cavaloEsqueleto2") {
                         pontosGanhos = 7; 
-                    } else if (ini.tipo === "cameloZumbi") { // CORRIGIDO: Nome ajustado para dar os 10 pontos corretamente
+                    } else if (ini.tipo === "cameloZumbi") { 
                         pontosGanhos = 10; 
                     } else if (ini.tipo === "chefao") {
                         pontosGanhos = 20;
@@ -1078,15 +1352,25 @@ function loopDoJogo(tempoAtual) {
         moeda.elemento.style.left = `${moeda.x}px`;
         moeda.elemento.style.bottom = `${moeda.y}px`;
 
-        let distanciaX = Math.abs(protaX - moeda.x);
-        let distanciaY = Math.abs(protaY - moeda.y);
+        let pegouMoeda = false;
 
-        if (distanciaX < 50 && distanciaY < 80) {
+        let distanciaX1 = Math.abs(protaX - moeda.x);
+        let distanciaY1 = Math.abs(protaY - moeda.y);
+        if (distanciaX1 < 50 && distanciaY1 < 80) pegouMoeda = true;
+
+        if (!pegouMoeda && modoDoisJogadores) {
+            let distanciaX2 = Math.abs(protaX2 - moeda.x);
+            let distanciaY2 = Math.abs(protaY2 - moeda.y);
+            if (distanciaX2 < 50 && distanciaY2 < 80) pegouMoeda = true;
+        }
+
+        if (pegouMoeda) {
             ouro++
             hudOuro.innerText = `Ouro: ${ouro}`;
             moeda.elemento.remove();
             moedas.splice(i, 1);
-            somMoeda.play()
+            somMoeda.currentTime = 0;
+            somMoeda.play().catch(() => {});
         }
     }
 
@@ -1138,21 +1422,9 @@ function loopDoJogo(tempoAtual) {
         bola.elemento.style.left = `${bola.x}px`;
         bola.elemento.style.bottom = `${bola.y}px`;
 
-        let distanciaX = Math.abs(protaX - bola.x);
-        let distanciaY = Math.abs(protaY - bola.y);
-        
-        let limiteColisaoX = (faseAtual === 2) ? 90 : 60; 
-        let colidiu = false;
-
-        if (bola.spritesAnimacao) {
-            if (distanciaX < 60 && distanciaY < 60) {
-                colidiu = true;
-            }
-        } else {
-            // Se estiver agachada (agachado === true), feno normal ou coiotes altos passam reto sem tirar vida!
-            if (distanciaX < limiteColisaoX && protaY <= chao + 40 && !agachado) {
-                colidiu = true;
-            }
+        let colidiu = jogadorColidiuComObstaculo(protaX, protaY, agachado, bola);
+        if (!colidiu && modoDoisJogadores) {
+            colidiu = jogadorColidiuComObstaculo(protaX2, protaY2, agachado2, bola);
         }
 
         if (colidiu) {
@@ -1205,37 +1477,45 @@ function avancarDeFaseLogica() {
     }
 
     carregarCenarioDaFase()
-    hudPontos.innerText = `Points: 0/${pontosParaProximaFase}`
+    hudPontos.innerText = `Pontos: 0/${pontosParaProximaFase}`
 
     protaX = 50;
     protaY = chao;
     protagonista.style.left = `${protaX}px`;
     protagonista.style.bottom = `${protaY}px`;
 
+    // Reposiciona também o Jogador 2 
+    if (modoDoisJogadores) {
+        protaX2 = 220;
+        protaY2 = chao;
+        protagonista2.style.left = `${protaX2}px`;
+        protagonista2.style.bottom = `${protaY2}px`;
+    }
+
     iniciarContagemFase()
 }
 
 // ==========================================
-// FUNÇÃO DE DANO (FALTAVA NO CÓDIGO)
+// FUNÇÃO DE DANO 
 // ==========================================
 function perderVida() {
     if (invencivel) return; // Se estiver no tempo de piscar, ignora o dano
 
     vidas--;
-    hudVidas.innerText = `Vidas: ${vidas}`;
+    hudVidas.innerText = textoVidas();
 
     if (vidas <= 0) {
         vidas = 0;
-        hudVidas.innerText = `Vidas: ${vidas}`;
+        hudVidas.innerText = textoVidas();
 
-        // 4. Zera apenas o ouro da gameplay atual
+        // Zera apenas o ouro da gameplay atual
         ouro = 0;
         hudOuro.innerText = `Ouro: ${ouro}`;
 
         jogoPausado = true;
         menuGameOver.classList.remove("oculto");
         musicaJogo.pause();
-}else {
+    } else {
         // Ativa uma pequena invencibilidade temporária ao tomar dano para não morrer instantaneamente
         invencivel = true;
         
@@ -1245,12 +1525,18 @@ function perderVida() {
 
         const piscar = setInterval(() => {
             protagonista.style.opacity = protagonista.style.opacity === "0.3" ? "1" : "0.3";
+            if (modoDoisJogadores && protagonista2) {
+                protagonista2.style.opacity = protagonista.style.opacity;
+            }
         }, 150);
 
         setTimeout(() => {
             invencivel = false;
             clearInterval(piscar);
             protagonista.style.opacity = "1";
+            if (modoDoisJogadores && protagonista2) {
+                protagonista2.style.opacity = "1";
+            }
         }, 1500); // 1 segundo e meio de invencibilidade piscando
     }
 }
@@ -1304,5 +1590,5 @@ setInterval(() => {
 
 // 5. Temporizador para criar as bolas de feno rolando a cada 4 segundos
 setInterval(() => {
-    criarBolaFeno(); // Adicionado os parênteses e o final do nome correto
+    criarBolaFeno();
 }, 4000);

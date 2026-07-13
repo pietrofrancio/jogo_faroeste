@@ -137,4 +137,9 @@ function gameLoop() {
 // 5. Inicia o Jogo
 gameLoop();
 
- module.exports = Jogador
+// ---------------------------------------------------------
+// 6. Exportação (caso use em ambiente Node.js / Testes)
+// ---------------------------------------------------------
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Jogador;
+}

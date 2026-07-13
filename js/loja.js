@@ -3,249 +3,214 @@
 // ================================
 
 // Ouro
-let ouroEstoque = Number(localStorage.getItem("ouroEstoque")) || 0
-const ouroInsuficiente = new Audio('../efeitos_sonoros/ouro_insuficiente.mp3')
-// Personagens
-let personagensComprados =
-    JSON.parse(localStorage.getItem("personagensComprados")) || []
+let ouro = Number(localStorage.getItem("ouro")) || Number(localStorage.getItem("ouroEstoque")) || 0;
+const ouroInsuficiente = new Audio('../efeitos_sonoros/ouro_insuficiente.mp3');
 
-let personagemSelecionado =
-    localStorage.getItem("personagemSelecionado") || "morgana"
+// Personagens
+let personagensComprados = JSON.parse(localStorage.getItem("personagensComprados")) || [];
+let personagemSelecionado = localStorage.getItem("personagemSelecionado") || "morgana";
+
+// Personagem do Jogador 2 (usado no modo Cooperativo / 2 Jogadores)
+let personagemSelecionadoP2 = localStorage.getItem("personagemSelecionadoP2") || "morgana";
 
 // Músicas
-let musicasCompradas =
-    JSON.parse(localStorage.getItem("musicasCompradas")) || []
-
-let musicaSelecionada =
-    localStorage.getItem("musicaJogo") || "../music/musica_fundo1.mp3"
+let musicasCompradas = JSON.parse(localStorage.getItem("musicasCompradas")) || [];
+let musicaSelecionada = localStorage.getItem("musicaJogo") || "../music/musica_fundo1.mp3";
 
 // Armas
-let armasCompradas = JSON.parse(localStorage.getItem("armasCompradas")) || []
-let velocidadeBala = 18
-let armaSelecionada = localStorage.getItem("armaSelecionada") || "arma Inicial"
+let armasCompradas = JSON.parse(localStorage.getItem("armasCompradas")) || [];
+let velocidadeBala = 18;
+let armaSelecionada = localStorage.getItem("armaSelecionada") || "arma Inicial";
 
 // Morgana sempre disponível
 if (!personagensComprados.includes("morgana")) {
-    personagensComprados.push("morgana")
-    localStorage.setItem(
-        "personagensComprados",
-        JSON.stringify(personagensComprados)
-    )
+    personagensComprados.push("morgana");
+    localStorage.setItem("personagensComprados", JSON.stringify(personagensComprados));
 }
 
 // Música padrão sempre disponível
 if (!musicasCompradas.includes("../music/musica_fundo1.mp3")) {
-    musicasCompradas.push("../music/musica_fundo1.mp3")
-
-    localStorage.setItem(
-        "musicasCompradas",
-        JSON.stringify(musicasCompradas)
-    )
+    musicasCompradas.push("../music/musica_fundo1.mp3");
+    localStorage.setItem("musicasCompradas", JSON.stringify(musicasCompradas));
 }
 
 // Arma Inicial sempre disponível
 if(!armasCompradas.includes("arma Inicial")){
-    armasCompradas.push("arma Inicial")
-
-    localStorage.setItem(
-        "armasCompradas",
-        JSON.stringify(armasCompradas)
-    )
+    armasCompradas.push("arma Inicial");
+    localStorage.setItem("armasCompradas", JSON.stringify(armasCompradas));
 }
 
 // ================================
 
-const displayOuro = document.getElementById("ouroLoja")
+// Verifica qual o ID do HTML que está sendo usado no momento
+const displayOuro = document.getElementById("ouroLoja") || document.getElementById("ouro");
 
 const personagens = [
-    {
-        nome: "morgana",
-        preco: 0,
-        botao: document.getElementById("btn-morgana")
-    },
-    {
-        nome: "ruby",
-        preco: 15,
-        botao: document.getElementById("btn-ruby")
-    },
-    {
-        nome: "jack",
-        preco: 25,
-        botao: document.getElementById("btn-jack")
-    }
-]
+    { nome: "morgana", preco: 0, botao: document.getElementById("btn-morgana") },
+    { nome: "ruby", preco: 15, botao: document.getElementById("btn-ruby") },
+    { nome: "jack", preco: 25, botao: document.getElementById("btn-jack") }
+];
+
+const personagensP2 = [
+    { nome: "morgana", preco: 0, botao: document.getElementById("btn-morgana-p2") },
+    { nome: "ruby", preco: 15, botao: document.getElementById("btn-ruby-p2") },
+    { nome: "jack", preco: 25, botao: document.getElementById("btn-jack-p2") }
+];
 
 const musicas = [
-    {
-        caminho: "../music/musica_fundo1.mp3",
-        preco: 0,
-        botao: document.getElementById("btn-musica1")
-    },
-    {
-        caminho: "../music/duelo_epico.mp3",
-        preco: 10,
-        botao: document.getElementById("btn-musica2")
-    },
-    {
-        caminho: "../music/duelo_final.mp3",
-        preco: 20,
-        botao: document.getElementById("btn-musica3")
-    }
-]
+    { caminho: "../music/musica_fundo1.mp3", preco: 0, botao: document.getElementById("btn-musica1") },
+    { caminho: "../music/duelo_epico.mp3", preco: 10, botao: document.getElementById("btn-musica2") },
+    { caminho: "../music/duelo_final.mp3", preco: 20, botao: document.getElementById("btn-musica3") }
+];
+
 const armas = [
-    {
-        tipo: "revolver",
-        preco: 20,
-        botao: document.getElementById('btn-revolver')
-    },
-    {
-        tipo: "arma Inicial",
-        preco: 0,
-        botao: document.getElementById('btn-armaInicial')
-    }
-]
+    { tipo: "revolver", preco: 20, botao: document.getElementById('btn-revolver') },
+    { tipo: "arma Inicial", preco: 0, botao: document.getElementById('btn-armaInicial') }
+];
 
 // ================================
 
 function atualizarOuro() {
-    displayOuro.innerText = `Ouro: ${ouroEstoque}`
+    if (displayOuro) {
+        displayOuro.innerText = `Ouro: ${ouro}`;
+    }
 }
 
 // ================================
 
 function atualizarPersonagens() {
-
     personagens.forEach(personagem => {
-
-        const btn = personagem.botao
+        const btn = personagem.botao;
+        if (!btn) return;
 
         if (personagem.nome === personagemSelecionado) {
-
-            btn.innerText = "Equipado"
-            btn.disabled = true
-
+            btn.innerText = "Equipado";
+            btn.disabled = true;
+        } else if (personagensComprados.includes(personagem.nome)) {
+            btn.innerText = "Selecionar";
+            btn.disabled = false;
+        } else {
+            btn.innerText = `Comprar (${personagem.preco})`;
+            btn.disabled = false;
         }
+    });
+}
 
-        else if (personagensComprados.includes(personagem.nome)) {
+function atualizarPersonagensP2() {
+    personagensP2.forEach(personagem => {
+        const btn = personagem.botao;
+        if (!btn) return;
 
-            btn.innerText = "Selecionar"
-            btn.disabled = false
-
+        if (personagem.nome === personagemSelecionadoP2) {
+            btn.innerText = "Equipado";
+            btn.disabled = true;
+        } else if (personagensComprados.includes(personagem.nome)) {
+            btn.innerText = "Selecionar";
+            btn.disabled = false;
+        } else {
+            btn.innerText = `Comprar (${personagem.preco})`;
+            btn.disabled = false;
         }
-
-        else {
-
-            btn.innerText = `Comprar (${personagem.preco})`
-            btn.disabled = false
-
-        }
-
-    })
-
+    });
 }
 
 // ================================
 
 function atualizarMusicas() {
-
     musicas.forEach(musica => {
-
-        const btn = musica.botao
+        const btn = musica.botao;
+        if (!btn) return;
 
         if (musica.caminho === musicaSelecionada) {
-
-            btn.innerText = "Equipada"
-            btn.disabled = true
-
+            btn.innerText = "Equipada";
+            btn.disabled = true;
+        } else if (musicasCompradas.includes(musica.caminho)) {
+            btn.innerText = "Selecionar";
+            btn.disabled = false;
+        } else {
+            btn.innerText = `Comprar (${musica.preco})`;
+            btn.disabled = false;
         }
-
-        else if (musicasCompradas.includes(musica.caminho)) {
-
-            btn.innerText = "Selecionar"
-            btn.disabled = false
-
-        }
-
-        else {
-
-            btn.innerText = `Comprar (${musica.preco})`
-            btn.disabled = false
-
-        }
-
-    })
-
+    });
 }
+
 function atualizarArmas() {
-
     armas.forEach(arma => {
-
-        const btn = arma.botao
+        const btn = arma.botao;
+        if (!btn) return;
 
         if (arma.tipo === armaSelecionada) {
-
-            btn.innerText = "Equipada"
-            btn.disabled = true
-
+            btn.innerText = "Equipada";
+            btn.disabled = true;
+        } else if (armasCompradas.includes(arma.tipo)) {
+            btn.innerText = "Selecionar";
+            btn.disabled = false;
+        } else {
+            btn.innerText = `Comprar (${arma.preco})`;
+            btn.disabled = false;
         }
-
-        else if (armasCompradas.includes(arma.tipo)) {
-
-            btn.innerText = "Selecionar"
-            btn.disabled = false
-
-        }
-
-        else {
-
-            btn.innerText = `Comprar (${arma.preco})`
-            btn.disabled = false
-
-        }
-
-    })
-
+    });
 }
 
 // ================================
-// PERSONAGENS
+// PERSONAGENS P1
 // ================================
 
 function clicarPersonagem(nome) {
-
-    const personagem = personagens.find(p => p.nome === nome)
+    const personagem = personagens.find(p => p.nome === nome);
 
     if (!personagensComprados.includes(nome)) {
-
-        if (ouroEstoque < personagem.preco) {
-            ouroInsuficiente.play()
-            alert("Ouro insuficiente!")
-            return
+        if (ouro < personagem.preco) {
+            ouroInsuficiente.play().catch(e => console.log(e)); // Adicionado o .catch para evitar problemas na DOM
+            alert("Ouro insuficiente!");
+            return;
         }
 
-        ouroEstoque-= personagem.preco
+        ouro -= personagem.preco;
+        personagensComprados.push(nome);
 
-        personagensComprados.push(nome)
-
-        localStorage.setItem("ouroEstoque", ouroEstoque)
-
-        localStorage.setItem(
-            "personagensComprados",
-            JSON.stringify(personagensComprados)
-        )
-
+        localStorage.setItem("ouro", ouro);
+        // Atualiza a key antiga por precaução, se você ainda usar em outros lugares do código
+        localStorage.setItem("ouroEstoque", ouro); 
+        localStorage.setItem("personagensComprados", JSON.stringify(personagensComprados));
     }
 
-    personagemSelecionado = nome
+    personagemSelecionado = nome;
+    localStorage.setItem("personagemSelecionado", nome);
 
-    localStorage.setItem(
-        "personagemSelecionado",
-        nome
-    )
+    atualizarOuro();
+    atualizarPersonagens();
+    atualizarPersonagensP2();
+}
 
-    atualizarOuro()
-    atualizarPersonagens()
+// ================================
+// PERSONAGENS P2  
+// ================================
 
+function clicarPersonagemP2(nome) {
+    const personagem = personagensP2.find(p => p.nome === nome);
+
+    if (!personagensComprados.includes(nome)) {
+        if (ouro < personagem.preco) {
+            ouroInsuficiente.play().catch(e => console.log(e));
+            alert("Ouro insuficiente!");
+            return;
+        }
+
+        ouro -= personagem.preco;
+        personagensComprados.push(nome);
+
+        localStorage.setItem("ouro", ouro);
+        localStorage.setItem("ouroEstoque", ouro);
+        localStorage.setItem("personagensComprados", JSON.stringify(personagensComprados));
+    }
+
+    personagemSelecionadoP2 = nome;
+    localStorage.setItem("personagemSelecionadoP2", nome);
+
+    atualizarOuro();
+    atualizarPersonagens();
+    atualizarPersonagensP2();
 }
 
 // ================================
@@ -253,41 +218,28 @@ function clicarPersonagem(nome) {
 // ================================
 
 function clicarMusica(caminho) {
-
-    const musica = musicas.find(m => m.caminho === caminho)
+    const musica = musicas.find(m => m.caminho === caminho);
 
     if (!musicasCompradas.includes(caminho)) {
-
-        if (ouroEstoque < musica.preco) {
-            ouroInsuficiente.play()
-            alert("Ouro insuficiente!")
-            return
-
+        if (ouro < musica.preco) {
+            ouroInsuficiente.play().catch(e => console.log(e));
+            alert("Ouro insuficiente!");
+            return;
         }
 
-        ouroEstoque -= musica.preco
+        ouro -= musica.preco;
+        musicasCompradas.push(caminho);
 
-        musicasCompradas.push(caminho)
-
-        localStorage.setItem("ouroEstoque", ouroEstoque)
-
-        localStorage.setItem(
-            "musicasCompradas",
-            JSON.stringify(musicasCompradas)
-        )
-
+        localStorage.setItem("ouro", ouro);
+        localStorage.setItem("ouroEstoque", ouro);
+        localStorage.setItem("musicasCompradas", JSON.stringify(musicasCompradas));
     }
 
-    musicaSelecionada = caminho
+    musicaSelecionada = caminho;
+    localStorage.setItem("musicaJogo", caminho);
 
-    localStorage.setItem(
-        "musicaJogo",
-        caminho
-    )
-
-    atualizarOuro()
-    atualizarMusicas()
-
+    atualizarOuro();
+    atualizarMusicas();
 }
 
 // ================================
@@ -295,64 +247,67 @@ function clicarMusica(caminho) {
 // ================================
 
 function clicarArma(tipo) {
-
-    const arma = armas.find(m => m.tipo === tipo)
+    const arma = armas.find(m => m.tipo === tipo);
 
     if (!armasCompradas.includes(tipo)) {
-
-        if (ouroEstoque < arma.preco) {
-            ouroInsuficiente.play()
-            alert("Ouro insuficiente!")
-            return
-
+        if (ouro < arma.preco) {
+            ouroInsuficiente.play().catch(e => console.log(e));
+            alert("Ouro insuficiente!");
+            return;
         }
 
-        ouroEstoque -= arma.preco
+        ouro -= arma.preco;
+        armasCompradas.push(tipo);
 
-        armasCompradas.push(tipo)
-
-        localStorage.setItem("ouroEstoque", ouroEstoque)
-
-        localStorage.setItem(
-            "armasCompradas",
-            JSON.stringify(armasCompradas)
-        )
-
+        localStorage.setItem("ouro", ouro);
+        localStorage.setItem("ouroEstoque", ouro);
+        localStorage.setItem("armasCompradas", JSON.stringify(armasCompradas));
     }
 
-    armaSelecionada = tipo
-
-    localStorage.setItem(
-        "armaSelecionada",
-        tipo
-    )
+    armaSelecionada = tipo;
+    localStorage.setItem("armaSelecionada", tipo);
 
     velocidadeBala = armaSelecionada === "revolver" ? 28 : 18;
-    velocidadeBala = armaSelecionada === "arma Inicial" ? 18 : 18;
     
-    atualizarOuro()
-    atualizarArmas()
-
+    atualizarOuro();
+    atualizarArmas();
 }
 
 // ================================
-// EVENTOS
+// CONFIGURAÇÃO DOS EVENTOS (Garantindo que os elementos existem na tela)
 // ================================
 
-document.getElementById("btn-morgana").onclick = () => clicarPersonagem("morgana")
-document.getElementById("btn-ruby").onclick = () => clicarPersonagem("ruby")
-document.getElementById("btn-jack").onclick = () => clicarPersonagem("jack")
+const configurarClique = (id, callback) => {
+    const el = document.getElementById(id);
+    if (el) el.onclick = callback;
+};
 
-document.getElementById("btn-musica1").onclick = () => clicarMusica("../music/musica_fundo1.mp3")
-document.getElementById("btn-musica2").onclick = () => clicarMusica("../music/duelo_epico.mp3")
-document.getElementById("btn-musica3").onclick = () => clicarMusica("../music/duelo_final.mp3")
+// P1
+configurarClique("btn-morgana", () => clicarPersonagem("morgana"));
+configurarClique("btn-ruby", () => clicarPersonagem("ruby"));
+configurarClique("btn-jack", () => clicarPersonagem("jack"));
 
-document.getElementById("btn-revolver").onclick = ()=> clicarArma("revolver")
-document.getElementById("btn-armaInicial").onclick = ()=> clicarArma("arma Inicial")
+// P2
+configurarClique("btn-morgana-p2", () => clicarPersonagemP2("morgana"));
+configurarClique("btn-ruby-p2", () => clicarPersonagemP2("ruby"));
+configurarClique("btn-jack-p2", () => clicarPersonagemP2("jack"));
+
+// Músicas
+configurarClique("btn-musica1", () => clicarMusica("../music/musica_fundo1.mp3"));
+configurarClique("btn-musica2", () => clicarMusica("../music/duelo_epico.mp3"));
+configurarClique("btn-musica3", () => clicarMusica("../music/duelo_final.mp3"));
+
+// Armas
+configurarClique("btn-revolver", () => clicarArma("revolver"));
+configurarClique("btn-armaInicial", () => clicarArma("arma Inicial"));
+
 
 // ================================
+// INICIALIZAÇÃO DA INTERFACE
+// ================================
 
-atualizarOuro()
-atualizarPersonagens()
-atualizarMusicas()
-atualizarArmas()
+atualizarOuro();
+atualizarPersonagens();
+atualizarPersonagensP2();
+atualizarMusicas();
+atualizarArmas();

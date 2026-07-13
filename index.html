@@ -18,10 +18,10 @@
     <main class="menu-container">
         <img src="./img/logo.png" alt="Sombras do Oeste" class="game-logo">
 
-        <div class="button-group">
+        <div class="button-group" id="main-menu-buttons">
 
-            <!-- JOGAR -->
-            <a href="./html/intro.html" class="btn-western btn-play">
+            <!-- JOGAR (Abre o Modal) -->
+            <button id="btnIniciarFluxo" class="btn-western btn-play">
                 <span class="btn-icon">
                     <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                         <!-- Porta de saloon / portão estilo faroeste -->
@@ -33,10 +33,9 @@
                         <rect x="6" y="7" width="4" height="2" fill="currentColor"/>
                     </svg>
                 </span>
-                <span class="btn-arrows-left">▶</span>
                 <span class="btn-label">Jogar</span>
                 <span class="btn-arrows-right">▶▶</span>
-        </a>
+            </button>
 
             <!-- COMO JOGAR -->
             <a href="./html/sobreJogo.html" class="btn-western btn_como_jogar">
@@ -55,8 +54,10 @@
                 </span>
                 <span class="btn-label">Como Jogar</span>
             </a>
+
             <!-- SISTEMA DE MÚSICA -->
-<a href="./html/musica.html" class="btn-western" id="btn_musica">                <span class="btn-icon">
+            <a href="./html/musica.html" class="btn-western" id="btn_musica">
+                <span class="btn-icon">
                     <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                         <!-- Piano / acordeom pixel -->
                         <rect x="1" y="3" width="14" height="10" fill="none" stroke="currentColor" stroke-width="1.5"/>
@@ -97,7 +98,6 @@
                 <span class="btn-icon">
                     <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                         <!-- Xerife / chapéu de cowboy -->
-                        <!-- corpo -->
                         <ellipse cx="8" cy="7" rx="4" ry="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
                         <!-- chapéu -->
                         <rect x="5" y="2" width="6" height="3" fill="currentColor"/>
@@ -112,11 +112,91 @@
                 </span>
                 <span class="btn-label">Sobre os Desenvolvedores</span>
             </a>
+        </div>
 
+        <!-- MODAL MODO DE JOGO -->
+        <div id="modalModo" class="modal-western">
+            <div class="modal-content">
+                <div id="etapaEscolha">
+                    <h2 class="modal-title">Selecione o Modo</h2>
+                    <div class="button-group">
+                        <button id="btnOpcao1" class="btn-western">
+                            <span class="btn-label" style="text-align: center;">1 Jogador</span>
+                        </button>
+                        <button id="btnOpcao2" class="btn-western">
+                            <span class="btn-label" style="text-align: center;">2 Jogadores</span>
+                        </button>
+                        <button id="btnFecharModal" class="btn-western btn-back">
+                            <span class="btn-label" style="text-align: center;">Voltar ao Menu</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="etapaConfirmacao" style="display: none;">
+                    <h2 class="modal-title" id="textoConfirmacao">Confirmar?</h2>
+                    <div class="button-group">
+                        <button id="btnConfirmarSim" class="btn-western btn-play">
+                            <span class="btn-label" style="text-align: center;">Confirmar</span>
+                        </button>
+                        <button id="btnConfirmarVoltar" class="btn-western btn-back">
+                            <span class="btn-label" style="text-align: center;">Voltar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
+
+    <script>
+        const modalModo = document.getElementById("modalModo");
+        const etapaEscolha = document.getElementById("etapaEscolha");
+        const etapaConfirmacao = document.getElementById("etapaConfirmacao");
+        const textoConfirmacao = document.getElementById("textoConfirmacao");
+
+        let modoSelecionado = "";
+
+        // Abrir Modal ao clicar em Jogar
+        document.getElementById("btnIniciarFluxo").addEventListener("click", () => {
+            modalModo.classList.add("active");
+            irParaEtapaEscolha();
+        });
+
+        // Fechar Modal (Voltar ao menu)
+        document.getElementById("btnFecharModal").addEventListener("click", () => {
+            modalModo.classList.remove("active");
+        });
+
+        // Seleção de 1 Jogador
+        document.getElementById("btnOpcao1").addEventListener("click", () => {
+            modoSelecionado = "1";
+            mostrarConfirmacao("Iniciar com 1 Jogador?");
+        });
+
+        // Seleção de 2 Jogadores
+        document.getElementById("btnOpcao2").addEventListener("click", () => {
+            modoSelecionado = "2";
+            mostrarConfirmacao("Iniciar com 2 Jogadores?");
+        });
+
+        // Voltar da confirmação para a escolha de jogadores
+        document.getElementById("btnConfirmarVoltar").addEventListener("click", irParaEtapaEscolha);
+
+        // Confirmar e iniciar o jogo
+        document.getElementById("btnConfirmarSim").addEventListener("click", () => {
+            localStorage.setItem("modoJogo", modoSelecionado);
+            window.location.href = "./html/intro.html"; // Redireciona para a introdução do jogo
+        });
+
+        function mostrarConfirmacao(mensagem) {
+            etapaEscolha.style.display = "none";
+            etapaConfirmacao.style.display = "block";
+            textoConfirmacao.textContent = mensagem;
+        }
+
+        function irParaEtapaEscolha() {
+            etapaConfirmacao.style.display = "none";
+            etapaEscolha.style.display = "block";
+        }
+    </script>
 </body>
 </html>
-apps-fileview.texmex_20260610.09_p0
-index.html
-Exibindo index.html…
