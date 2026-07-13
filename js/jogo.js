@@ -1,30 +1,21 @@
-const cenario = document.getElementById("cenario")
-const protagonista = document.getElementById("protagonista")
-const btnPause = document.getElementById("btnPause")
-const hudVidas = document.getElementById("vidas")
-const hudOuro = document.getElementById("ouro")
-const hudPontos = document.getElementById("hudPontos")
+// ==========================================
+// 1. ELEMENTOS DO DOM (HTML)
+// ==========================================
+const cenario      = document.getElementById("cenario")
+const protagonista  = document.getElementById("protagonista")
+const btnPause      = document.getElementById("btnPause")
+const hudVidas      = document.getElementById("vidas")
+const hudOuro       = document.getElementById("ouro")       
+const hudPontos     = document.getElementById("hudPontos")  
 
-cenario.setAttribute("tabindex", "0");
+cenario.setAttribute("tabindex", "0"); 
 cenario.style.outline = "none";
-
-// ==========================================
-// MODO DE JOGO: 1 OU 2 JOGADORES  (NOVO)
-// ==========================================
-const modoDoisJogadores = localStorage.getItem("modoJogo") === "2";
-const protagonista2 = document.getElementById("protagonista2");
-
-if (modoDoisJogadores) {
-    protagonista2.classList.remove("oculto");
-} else {
-    protagonista2.classList.add("oculto");
-}
 
 // ==========================================
 // 2. SISTEMA DE ÁUDIO (MÚSICA E EFEITOS)
 // ==========================================
 const musicaJogo = document.getElementById("musicaJogo")
-const somTiro = document.createElement("audio")
+const somTiro    = document.createElement("audio")
 
 // Configuração do Tiro
 somTiro.src = "../efeitos_sonoros/efeito_sonoro_tiro.mp3"
@@ -39,10 +30,10 @@ musicaJogo.volume = 0.2
 // 3. ESTADOS E CONTROLES DO JOGO
 // ==========================================
 let jogoPausado = false
-let naContagem = false
+let naContagem  = false 
 
 let indiceCenaAtual = 0;
-let listaCenasAtiva = [];
+let listaCenasAtiva = []; 
 let emTransicaoDeFase = false;
 
 // ==========================================
@@ -55,21 +46,21 @@ const cenasTransicao1_2 = [
         fundo: "../img/cenario1.png",
         nome: "Protagonista",
         fala: "Essa cidade já viu dias melhores",
-        imagem: "../img/morganaNormal.png",
+        imagem: "../img/morganaNormal.png", 
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario1.png",
         nome: "Protagonista",
         fala: "Se aqui já está assim, imagina o que vem pela frente",
-        imagem: "../img/morganaNormal.png",
+        imagem: "../img/morganaNormal.png", 
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario1.png",
         nome: "Protagonista",
         fala: "Algo me diz que esse trabalho vai longe demais...",
-        imagem: "../img/morganaNormal.png",
+        imagem: "../img/morganaNormal.png", 
         posicao: "esquerda"
     },
 ];
@@ -79,21 +70,21 @@ const cenasTransicao2_3 = [
         fundo: "../img/cenario2.png",
         nome: "Protagonista",
         fala: "O que era aquela coisa!?",
-        imagem: "../img/morganaSeria.png",
+        imagem: "../img/morganaSeria.png", 
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario2.png",
         nome: "Protagonista",
         fala: "Coiotes eu entendo… mas pistoleiros fantasmas? Isso não é normal",
-        imagem: "../img/morganaSeria.png",
+        imagem: "../img/morganaSeria.png", 
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario2.png",
         nome: "Protagonista",
         fala: "Mas não importa, vou seguir em frente, eu preciso encontrar todo aquele ouro",
-        imagem: "../img/morganaNormal.png",
+        imagem: "../img/morganaNormal.png", 
         posicao: "esquerda"
     },
 ];
@@ -148,7 +139,7 @@ function iniciarDialogo(listaDeCenas) {
         painel.id = "dialogo";
         cenarioElemento.appendChild(painel);
     }
-
+    
     painel.style.display = "block";
     painel.innerHTML = `
         <div id="nome-personagem"></div>
@@ -166,8 +157,8 @@ function iniciarDialogo(listaDeCenas) {
 function gerenciarTeclasDialogo(e) {
     if (emTransicaoDeFase) {
         if (e.code === "Space") {
-            e.preventDefault();
-
+            e.preventDefault(); 
+            
             // Trava o clique se já estiver escurecendo para evitar bugs de avançar duplo
             if (telaTransicaoElemento.classList.contains("escuro")) return;
 
@@ -177,7 +168,7 @@ function gerenciarTeclasDialogo(e) {
             // 2. Espera a tela apagar completamente (400ms) para trocar o texto escondido
             setTimeout(() => {
                 indiceCenaAtual++;
-
+                
                 if (indiceCenaAtual < listaCenasAtiva.length) {
                     mostrarCena();
                     // 3. Abre a tela suavemente revelando a nova fala
@@ -186,9 +177,9 @@ function gerenciarTeclasDialogo(e) {
                     telaTransicaoElemento.classList.remove("escuro");
                     removerControlesEFechar();
                 }
-            }, 700);
+            }, 700); 
         }
-
+        
         if (e.code === "KeyS") {
             e.preventDefault();
             if (telaTransicaoElemento) telaTransicaoElemento.classList.remove("escuro");
@@ -208,43 +199,43 @@ function mostrarCena() {
 
     if (nomeEl) nomeEl.innerText = cena.nome;
     if (textoEl) textoEl.innerText = cena.fala;
-
+    
     // CORREÇÃO: Tratamento seguro para aplicar a imagem de fundo da transição
     if (cenarioElemento && cena.fundo) {
         cenarioElemento.style.backgroundImage = `url('${cena.fundo}')`;
     }
 
     if (imgAvatar) {
-        if (cena.imagem) {
-            imgAvatar.src = cena.imagem;
-            imgAvatar.style.display = "block";
-
-            // Limpa os estilos antigos antes de aplicar os novos para evitar conflito
-            imgAvatar.style.left = "";
-            imgAvatar.style.right = "";
-
-            if (cena.posicao === "direita") {
-                imgAvatar.style.right = "50px";
-                imgAvatar.style.transform = "scaleX(-1)";
-            } else {
-                imgAvatar.style.left = "50px";
-                imgAvatar.style.transform = "scaleX(1)";
-            }
+    if (cena.imagem) {
+        imgAvatar.src = cena.imagem;
+        imgAvatar.style.display = "block";
+        
+        // Limpa os estilos antigos antes de aplicar os novos para evitar conflito
+        imgAvatar.style.left = "";
+        imgAvatar.style.right = "";
+        
+        if (cena.posicao === "direita") {
+            imgAvatar.style.right = "50px";
+            imgAvatar.style.transform = "scaleX(-1)";
         } else {
-            imgAvatar.style.display = "none";
+            imgAvatar.style.left = "50px";
+            imgAvatar.style.transform = "scaleX(1)";
+        }
+    } else {
+        imgAvatar.style.display = "none";
         }
     }
 }
 
 function removerControlesEFechar() {
     window.removeEventListener("keydown", gerenciarTeclasDialogo);
-
+    
     const dialogoEl = document.getElementById("dialogo");
     if (dialogoEl) dialogoEl.style.display = "none";
-
+    
     const imgAvatar = document.getElementById("personagem");
     if (imgAvatar) imgAvatar.style.display = "none";
-
+    
     finalizarDialogo();
 }
 
@@ -254,10 +245,10 @@ function finalizarDialogo() {
         musicaJogo.volume = 0.2;
     }
     if (listaCenasAtiva === cenasTransicao1_2) {
-        avancarDeFaseLogica();
+        avancarDeFaseLogica(); 
     }
     if (listaCenasAtiva === cenasTransicao2_3) {
-        avancarDeFaseLogica();
+        avancarDeFaseLogica(); 
     }
 }
 
@@ -268,17 +259,13 @@ let ouro = Number(localStorage.getItem("ouro")) || 0
 let pontos = 0
 let faseAtual = 1 // Declarada aqui primeiro!
 
-let pontosParaProximaFase = faseAtual * 40
+// CORREÇÃO: Calcula dinamicamente antes de exibir no HUD pela primeira vez
+let pontosParaProximaFase = faseAtual * 40 
 
 hudOuro.innerText = `Ouro: ${ouro}`
 hudPontos.innerText = `Pontos: 0/${pontosParaProximaFase}`
 
-
-function textoVidas() {
-    return modoDoisJogadores ? `Vidas da Equipe: ${vidas}` : `Vidas: ${vidas}`;
-}
-
-function iniciarMusica() {
+function iniciarMusica(){
     musicaJogo.play()
     window.removeEventListener("keydown", iniciarMusica)
     window.removeEventListener("mousedown", iniciarMusica)
@@ -286,7 +273,7 @@ function iniciarMusica() {
 
 window.addEventListener("keydown", iniciarMusica)
 window.addEventListener("mousedown", iniciarMusica)
-musicaJogo.play().catch(() => { })
+musicaJogo.play().catch(() => {})
 const menuGameOver = document.getElementById("gameOverMenu")
 const btnRecusar = document.getElementById("recusar")
 let invencivel = false
@@ -302,11 +289,11 @@ const spritesMoeda = [
     "../img/moeda7.png"
 ]
 
-let bolasFeno = []
+let bolasFeno = [] 
 const spritesFeno = []
-const totalSpritesFeno = 35
+const totalSpritesFeno = 35 
 
-let abutres = []
+let abutres = [] 
 const spritesAbutre1 = [
     "../img/abutre1voando1.png", "../img/abutre1voando2.png", "../img/abutre1voando3.png",
     "../img/abutre1voando4.png", "../img/abutre1voando5.png", "../img/abutre1voando6.png",
@@ -327,9 +314,9 @@ for (let i = 1; i <= totalSpritesFeno; i++) {
 // ==========================================
 btnPause.addEventListener("click", () => {
     jogoPausado = !jogoPausado;
-
+    
     // Remove o foco do botão para não dar o bug do Espaço
-    btnPause.blur();
+    btnPause.blur(); 
 
     if (jogoPausado) {
         btnPause.innerText = "▶ Continuar";
@@ -337,10 +324,10 @@ btnPause.addEventListener("click", () => {
     } else {
         btnPause.innerText = "⏸ Pausar";
         musicaJogo.play();
-
+        
         // CORREÇÃO MÁSTER: Força o navegador a focar no cenário do jogo
-        cenario.focus();
-
+        cenario.focus(); 
+        
         // Só reinicia o loop se não houver outra instância rodando
         // Como o requestAnimationFrame já roda continuamente se emTransicaoDeFase for checado,
         // remover a chamada direta do loopDoJogo() aqui evita duplicações!
@@ -357,17 +344,17 @@ btnRecusar.addEventListener("click", () => {
 const personagemSelecionado =
     localStorage.getItem("personagemSelecionado") || "morgana"
 
-function criarSprites(nome) {
+function criarSprites(nome){
 
-    return {
+    return{
 
-        parada: `../img/${nome}Parada.png`,
+        parada:`../img/${nome}Parada.png`,
 
-        agachada: [
+        agachada:[
             `../img/${nome}Agachada.png`
         ],
 
-        pulo: [
+        pulo:[
             `../img/${nome}Pulando1.png`,
             `../img/${nome}Pulando2.png`,
             `../img/${nome}Pulando3.png`,
@@ -376,7 +363,7 @@ function criarSprites(nome) {
             `../img/${nome}Pulando6.png`
         ],
 
-        correndo: [
+        correndo:[
             `../img/${nome}Correndo1.png`,
             `../img/${nome}Correndo2.png`,
             `../img/${nome}Correndo3.png`,
@@ -390,7 +377,7 @@ function criarSprites(nome) {
             `../img/${nome}Correndo11.png`
         ],
 
-        atirando: [
+        atirando:[
             `../img/${nome}Atirando1.png`,
             `../img/${nome}Atirando2.png`,
             `../img/${nome}Atirando3.png`,
@@ -406,57 +393,28 @@ const personagens = {
     ruby: criarSprites("ruby"),
     jack: criarSprites("jack")
 }
-
-const PERSONAGENS_COM_SPRITES_COMPLETOS = ["morgana"];
-
-function resolverPersonagemSeguro(nomeEscolhido) {
-    return PERSONAGENS_COM_SPRITES_COMPLETOS.includes(nomeEscolhido)
-        ? nomeEscolhido
-        : "morgana";
-}
-
 const spritesMorgana =
-    personagens[resolverPersonagemSeguro(personagemSelecionado)] || personagens.morgana
-
-const personagemSelecionadoP2 =
-    localStorage.getItem("personagemSelecionadoP2") || "morgana"
-
-const spritesJogador2 =
-    personagens[resolverPersonagemSeguro(personagemSelecionadoP2)] || personagens.morgana
-
-console.log("Personagem salvo (Jogador 1):", personagemSelecionado);
-console.log("Personagem salvo (Jogador 2):", personagemSelecionadoP2);
+    personagens[personagemSelecionado] || personagens.morgana
+console.log("Personagem salvo:", personagemSelecionado);
 console.log(personagens);
 
-let frameCorrendo = 0; let framePulo = 0; let frameAtirando = 0; let frameAgachado = 0;
+let frameCorrendo = 0; let framePulo = 0; let frameAtirando = 0; let frameAgachado = 0; // <-- Corrigido aqui para frameCorrendo
 let estaAtirando = false; let timerAnimacao = 0;
 const velocidadFrame = 14; const velocidadTiro = 10;
 
-
+// ==========================================
+// VARIÁVEIS DE CONTROLE DO JOGO (AJUSTADAS)
+// ==========================================
 let vidas = 5
-
-hudVidas.innerText = textoVidas();
-
 const chao = 100
 let protaX = 50; let protaY = chao; let velY = 0
 let pulando = false
-let agachado = false;
+let agachado = false; // <-- ADICIONE ESSA LINHA
 
-
-const gravidade = 1.4;
-const forcaPulo = 26;
-const velocidadeAndar = 10;
-
-// ==========================================
-// VARIÁVEIS DO JOGADOR 2  (NOVO - MODO 2 JOGADORES)
-// ==========================================
-
-let frameCorrendo2 = 0; let framePulo2 = 0; let frameAtirando2 = 0; let frameAgachado2 = 0;
-let estaAtirando2 = false; let timerAnimacao2 = 0;
-
-let protaX2 = 220; let protaY2 = chao; let velY2 = 0;
-let pulando2 = false;
-let agachado2 = false;
+// Aumentamos a velocidade, o pulo e a gravidade para o jogo responder melhor a 60 FPS:
+const gravidade = 1.4;         // Antes era 0.5
+const forcaPulo = 26;         // Antes era 18
+const velocidadeAndar = 10;     // Antes era 4
 
 // ==========================================
 // CONTROLES (Teclado e Mouse)
@@ -469,13 +427,9 @@ window.addEventListener("keydown", (e) => {
 
     teclas[e.code] = true;
 
-
-    const teclaAgacharJogador1 = modoDoisJogadores
-        ? e.code === "KeyS"
-        : (e.code === "ArrowDown" || e.code === "KeyS");
-
-    if (teclaAgacharJogador1 && !pulando) {
-
+    // Se pressionar Seta para Baixo ou S e NÃO estiver pulando, ela agacha
+    if ((e.code === "ArrowDown" || e.code === "KeyS") && !pulando) {
+        // Se ela acabou de agachar agora, reseta o frame da animação
         if (!agachado) {
             frameAgachado = 0;
             timerAnimacao = 0;
@@ -483,89 +437,37 @@ window.addEventListener("keydown", (e) => {
         agachado = true;
     }
 
-    // Tiro do Jogador 1: tecla ESPAÇO (funciona igual nos dois modos).
     if (e.code === "Space" && !estaAtirando) {
         estaAtirando = true;
         frameAtirando = 0;
         timerAnimacao = 0;
         criarBala();
         somTiro.currentTime = 0;
-        somTiro.play().catch(() => { });
-    }
-
-    // ==========================================
-    // CONTROLES DO JOGADOR 2  
-    // ==========================================
-    if (modoDoisJogadores) {
-        // Agachar: Seta pra baixo
-        if (e.code === "ArrowDown" && !pulando2) {
-            if (!agachado2) {
-                frameAgachado2 = 0;
-                timerAnimacao2 = 0;
-            }
-            agachado2 = true;
-        }
-
-
-        if (e.code === "Enter" && !estaAtirando2) {
-            estaAtirando2 = true;
-            frameAtirando2 = 0;
-            timerAnimacao2 = 0;
-            criarBala2();
-            somTiro.currentTime = 0;
-            somTiro.play().catch(() => { });
-        }
+        somTiro.play().catch(() => {});
     }
 });
 
-
+// --- NO EVENTO KEYUP ---
 window.addEventListener("keyup", (e) => {
     if (emTransicaoDeFase) return;
     teclas[e.code] = false;
 
-
-    const teclaAgacharJogador1 = modoDoisJogadores
-        ? e.code === "KeyS"
-        : (e.code === "ArrowDown" || e.code === "KeyS");
-
-    if (teclaAgacharJogador1) {
+    // Quando soltar a Seta para Baixo ou S, ela levanta
+    if (e.code === "ArrowDown" || e.code === "KeyS") {
         agachado = false;
-        frameAgachado = 0;
-    }
-
-
-    if (modoDoisJogadores && e.code === "ArrowDown") {
-        agachado2 = false;
-        frameAgachado2 = 0;
+        frameAgachado = 0; // Reseta para a próxima vez que agachar
     }
 });
 
-// ==========================================
-// TIRO DO JOGADOR 1 COM O MOUSE 
-// ==========================================
+let balas = [] 
 
-cenario.addEventListener("mousedown", () => {
-    if (!modoDoisJogadores) return;
-    if (emTransicaoDeFase || jogoPausado || naContagem) return;
-    if (estaAtirando) return;
-
-    estaAtirando = true;
-    frameAtirando = 0;
-    timerAnimacao = 0;
-    criarBala();
-    somTiro.currentTime = 0;
-    somTiro.play().catch(() => { });
-});
-
-let balas = []
-
-function criarBolaFeno() {
+function criarBolaFeno() { 
     if (emTransicaoDeFase || jogoPausado) return;
     const fenoElemento = document.createElement("img")
     fenoElemento.className = "bola-feno"
 
-    let posY = chao;
-    let asSprites = null;
+    let posY = chao; // Altura padrão (no chão)
+    let asSprites = null; // Guardará o array de animação se for abutre
 
     if (faseAtual === 2) {
         // --- COIOTES DA FASE 2 ---
@@ -575,19 +477,19 @@ function criarBolaFeno() {
         ];
         const skinSorteada = skinsCoiote[Math.floor(Math.random() * skinsCoiote.length)];
         fenoElemento.src = skinSorteada;
-
-        fenoElemento.style.width = "180px";
+        
+        fenoElemento.style.width = "180px";  
         fenoElemento.style.height = "120px";
-
+        
         if (skinSorteada.includes("coioteCinza") || skinSorteada.includes("coioteLaranja")) {
-            fenoElemento.style.transform = "scaleX(-1)";
+            fenoElemento.style.transform = "scaleX(-1)"; 
         }
-    }
+    } 
     else if (faseAtual === 3) {
         // --- ABUTRES DA FASE 3 ---
         // Sorteia entre o tipo 1 e o tipo 2
         const tipoAbutre = Math.random() > 0.5 ? 1 : 2;
-
+        
         // CORREÇÃO CRÍTICA: Vincula direto aos arrays certos e corrigidos lá do topo!
         if (tipoAbutre === 1) {
             asSprites = spritesAbutre1;
@@ -602,18 +504,18 @@ function criarBolaFeno() {
 
         // Faz ele voar: Sorteia uma altura no céu (entre 220px e 320px)
         posY = Math.floor(Math.random() * (320 - 220 + 1)) + 220;
-    }
+    } 
     else {
         // --- BOLA DE FENO PADRÃO (FASE 1 E DEMAIS) ---
         fenoElemento.src = spritesFeno[0];
-        fenoElemento.style.width = "60px";
+        fenoElemento.style.width = "60px";  
         fenoElemento.style.height = "60px";
         fenoElemento.style.transform = "none";
-    }
-
+    } 
+    
     fenoElemento.style.position = "absolute";
     fenoElemento.style.zIndex = "4";
-
+    
     let posX = window.innerWidth + 50;
 
     fenoElemento.style.bottom = `${posY}px`;
@@ -625,8 +527,8 @@ function criarBolaFeno() {
         elemento: fenoElemento,
         x: posX,
         y: posY,
-        velocidade: 10,
-        frame: 0,
+        velocidade: 10, 
+        frame: 0,      
         timer: 0,
         skinOriginal: fenoElemento.src,
         spritesAnimacao: asSprites // Passa o array de 7 imagens certinho
@@ -640,33 +542,7 @@ function criarBala() {
     const olhandoParaDireita = protagonista.style.transform !== "scaleX(-1)"
 
     let balaX = protaX + (olhandoParaDireita ? 100 : 20)
-    let balaY = protaY + 75
-
-    balaElemento.style.left = `${balaX}px`
-    balaElemento.style.bottom = `${balaY}px`
-
-    cenario.appendChild(balaElemento)
-
-    balas.push({
-        elemento: balaElemento,
-        x: balaX,
-        y: balaY,
-        direcao: olhandoParaDireita ? 1 : -1
-    })
-}
-
-// ==========================================
-// TIRO DO JOGADOR 2  (NOVO)
-// ==========================================
-
-function criarBala2() {
-    const balaElemento = document.createElement("div")
-    balaElemento.classList.add("bala")
-
-    const olhandoParaDireita = protagonista2.style.transform !== "scaleX(-1)"
-
-    let balaX = protaX2 + (olhandoParaDireita ? 100 : 20)
-    let balaY = protaY2 + 75
+    let balaY = protaY + 75 
 
     balaElemento.style.left = `${balaX}px`
     balaElemento.style.bottom = `${balaY}px`
@@ -684,7 +560,7 @@ function criarBala2() {
 function criarMoeda(x, y) {
     const moeda = document.createElement("img")
 
-    moeda.src = spritesMoeda[0]
+    moeda.src = spritesMoeda[0] 
     moeda.style.position = "absolute"
     moeda.style.width = "25px"
     moeda.style.height = "25px"
@@ -700,29 +576,12 @@ function criarMoeda(x, y) {
         elemento: moeda,
         x: x,
         y: y,
-        velY: 12,
-        velX: direcaoX,
-        noChao: false,
-        frame: 0,
-        timer: 0
+        velY: 12,        
+        velX: direcaoX,  
+        noChao: false,   
+        frame: 0,        
+        timer: 0         
     })
-}
-
-// ==========================================
-// COLISÃO JOGADOR <-> BOLA DE FENO/OBSTÁCULO  
-// ==========================================
-function jogadorColidiuComObstaculo(px, py, estaAgachado, bola) {
-    let distX = Math.abs(px - bola.x);
-    let distY = Math.abs(py - bola.y);
-    let limiteX = (faseAtual === 2) ? 90 : 60;
-
-    if (bola.spritesAnimacao) {
-
-        return distX < 60 && distY < 60;
-    }
-
-
-    return distX < limiteX && py <= chao + 40 && !estaAgachado;
 }
 
 // ==========================================
@@ -735,19 +594,19 @@ const dadosInimigos = {
     hostil1: { andando: ["../img/bandido1Andando1.png", "../img/bandido1Andando2.png", "../img/bandido1Andando3.png", "../img/bandido1Andando4.png", "../img/bandido1Andando5.png", "../img/bandido1Andando6.png", "../img/bandido1Andando7.png"], atirando: ["../img/bandido1Atirando1.png", "../img/bandido1Atirando2.png", "../img/bandido1Atirando3.png", "../img/bandido1Atirando4.png"] },
     hostil2: { andando: ["../img/bandido2Andando1.png", "../img/bandido2Andando2.png", "../img/bandido2Andando3.png", "../img/bandido2Andando4.png", "../img/bandido2Andando5.png", "../img/bandido2Andando6.png", "../img/bandido2Andando7.png"], atirando: ["../img/bandido2Atirando1.png", "../img/bandido2Atirando2.png", "../img/bandido2Atirando3.png", "../img/bandido2Atirando4.png", "../img/bandido2Atirando5.png"] },
     hostil3: { andando: ["../img/xerifeAndando1.png", "../img/xerifeAndando2.png", "../img/xerifeAndando3.png", "../img/xerifeAndando4.png", "../img/xerifeAndando5.png", "../img/xerifeAndando6.png", "../img/xerifeAndando7.png"], atirando: ["../img/xerifeAtirando1.png", "../img/xerifeAtirando2.png", "../img/xerifeAtirando3.png", "../img/xerifeAtirando4.png", "../img/xerifeAtirando5.png"] },
-
-    // --- NOVOS INIMIGOS DA FASE 2 ---
+    
+   // --- NOVOS INIMIGOS DA FASE 2 ---
     bandidoCavalo1: { andando: ["../img/bandidoCavalo1Andando1.png", "../img/bandidoCavalo1Andando2.png", "../img/bandidoCavalo1Andando3.png", "../img/bandidoCavalo1Andando4.png", "../img/bandidoCavalo1Andando5.png", "../img/bandidoCavalo1Andando6.png"], atirando: ["../img/bandidoCavalo1Atirando1.png", "../img/bandidoCavalo1Atirando2.png", "../img/bandidoCavalo1Atirando3.png"] },
     bandidoCavalo2: { andando: ["../img/bandidoCavalo2Andando1.png", "../img/bandidoCavalo2Andando2.png", "../img/bandidoCavalo2Andando6.png", "../img/bandidoCavalo2Andando4.png", "../img/bandidoCavalo2Andando5.png", "../img/bandidoCavalo2Andando6.png"], atirando: ["../img/bandidoCavalo2Atirando1.png", "../img/bandidoCavalo2Atirando2.png", "../img/bandidoCavalo2Atirando3.png"] },
-    fantasma: { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"], atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png",] },
+    fantasma:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
 
-    // --- NOVOS INIMIGOS DA FASE 3 ---
-    cavaloEsqueleto1: { andando: ["../img/cavaloEsqueleto1andando1.png", "../img/cavaloEsqueleto1andando2.png", "../img/cavaloEsqueleto1andando3.png", "../img/cavaloEsqueleto1andando4.png", "../img/cavaloEsqueleto1andando5.png"], atirando: ["../img/cavaloEsqueleto1atirando1.png", "../img/cavaloEsqueleto1atirando2.png", "cavaloEsqueleto1atirando3"] },
-    cavaloEsqueleto2: { andando: ["../img/cavaloEsqueleto2andando1.png", "../img/cavaloEsqueleto2andando2.png", "../img/cavaloEsqueleto2andando3.png", "../img/cavaloEsqueleto2andando4.png", "../img/cavaloEsqueleto2andando5.png"], atirando: ["../img/cavaloEsqueleto2atirando1.png", "../img/cavaloEsqueleto2atirando2.png", "../img/cavaloEsqueleto2atirando2.png"] },
-    camelo: { andando: ["../img/camelo1.png", "../img/camelo2.png", "../img/camelo3.png", "../img/camelo4.png", "../img/camelo5.png", "../img/camelo6.png"] },
+   // --- NOVOS INIMIGOS DA FASE 3 ---
+    cavaloEsqueleto1:       { andando: ["../img/cavaloEsqueleto1andando1.png", "../img/cavaloEsqueleto1andando2.png", "../img/cavaloEsqueleto1andando3.png", "../img/cavaloEsqueleto1andando4.png", "../img/cavaloEsqueleto1andando5.png"],  atirando: ["../img/cavaloEsqueleto1atirando1.png", "../img/cavaloEsqueleto1atirando2.png", "cavaloEsqueleto1atirando3"] },
+    cavaloEsqueleto2:       { andando: ["../img/cavaloEsqueleto2andando1.png", "../img/cavaloEsqueleto2andando2.png", "../img/cavaloEsqueleto2andando3.png", "../img/cavaloEsqueleto2andando4.png", "../img/cavaloEsqueleto2andando5.png"],  atirando: ["../img/cavaloEsqueleto2atirando1.png", "../img/cavaloEsqueleto2atirando2.png", "../img/cavaloEsqueleto2atirando2.png"] },
+    camelo:       { andando: ["../img/camelo1.png", "../img/camelo2.png", "../img/camelo3.png", "../img/camelo4.png", "../img/camelo5.png", "../img/camelo6.png"] },
 }
 
-
+// CORRIGIDO: Removido a duplicidade das fases e corrigido o "host2" da fase 3
 const configuracaoFases = {
     1: { nome: "Cidade Empoeirada", inimigos: ["hostil1", "hostil2", "hostil3"], fundo: "url('../img/cenario1.png')" },
     2: { nome: "Sob Um Sol Escaldante", inimigos: ["bandidoCavalo1", "bandidoCavalo2", "fantasma"], fundo: "url('../img/cenario2.png')" },
@@ -764,7 +623,7 @@ function carregarCenarioDaFase() {
 
 function criarInimigo() {
     if (jogoPausado || naContagem || emTransicaoDeFase) return;
-
+    
     // 1. Sorteia qual inimigo vai nascer baseado na fase atual
     const listaInimigosDaFase = configuracaoFases[faseAtual].inimigos;
     const tipoSorteado = listaInimigosDaFase[Math.floor(Math.random() * listaInimigosDaFase.length)];
@@ -773,7 +632,7 @@ function criarInimigo() {
     if (!dadosInimigos[tipoSorteado]) return;
 
     const inimigoElemento = document.createElement("img");
-
+    
     // 2. Define a classe CSS correta de acordo com o tipo
     if (tipoSorteado === "bandidoCavalo1" || tipoSorteado === "bandidoCavalo2" || tipoSorteado === "cavaloEsqueleto1" || tipoSorteado === "cavaloEsqueleto2") {
         inimigoElemento.classList.add("inimigo-cavalo");
@@ -787,7 +646,7 @@ function criarInimigo() {
     if (tipoSorteado === "chefao") {
         inimigoElemento.style.width = "200px";
         inimigoElemento.style.height = "200px";
-    }
+    } 
     else if (tipoSorteado === "bandidoCavalo1" || tipoSorteado === "bandidoCavalo2" || tipoSorteado === "cavaloEsqueleto1" || tipoSorteado === "cavaloEsqueleto2") {
         inimigoElemento.style.width = "230px";  // Força o tamanho desde o nascimento
         inimigoElemento.style.height = "170px";
@@ -819,14 +678,14 @@ function criarInimigo() {
 
     cenario.appendChild(inimigoElemento);
 
-    // 5 e 6. Definição unificada de Velocidade e Vida 
+    // 5 e 6. Definição unificada de Velocidade e Vida (CORRIGIDO: usando 'tipoSorteado')
     let vidaInimigo = 1;
     let velocidadeInimigo = 3; // Velocidade padrão de caminhada dos inimigos
 
     if (tipoSorteado === "bandidoCavalo1" || tipoSorteado === "bandidoCavalo2" || tipoSorteado === "cavaloEsqueleto1" || tipoSorteado === "cavaloEsqueleto2") {
         vidaInimigo = 2;       // Precisam de 2 tiros
         velocidadeInimigo = 6; // Velocidade de corrida normal
-    }
+    } 
     else if (tipoSorteado === "camelo") {
         vidaInimigo = 3;       // Precisa de 2 tiros
         velocidadeInimigo = 2.5; // Bem mais devagar que os demais!
@@ -835,17 +694,17 @@ function criarInimigo() {
         velocidadeInimigo = 12; // Coiotes continuam super rápidos
     }
 
-    // 7. Salva o inimigo no array principal 
+    // 7. Salva o inimigo no array principal (CORRIGIDO: trocado 'tipo: tipo' por 'tipo: tipoSorteado')
     inimigos.push({
         elemento: inimigoElemento,
         x: posX,
-        tipo: tipoSorteado,
+        tipo: tipoSorteado, 
         estado: "andando",
         frame: 0,
         timer: 0,
         timerAtaque: 0,
-        vida: vidaInimigo,
-        velocidade: velocidadeInimigo
+        vida: vidaInimigo,        
+        velocidade: velocidadeInimigo 
     });
 }
 
@@ -860,7 +719,7 @@ function iniciarContagemFase() {
 
     const telaIntro = document.createElement("div");
     telaIntro.id = "telaIntroFase";
-
+    
     telaIntro.style.position = "absolute";
     telaIntro.style.top = "0";
     telaIntro.style.left = "0";
@@ -870,29 +729,20 @@ function iniciarContagemFase() {
     telaIntro.style.flexDirection = "column";
     telaIntro.style.justifyContent = "center";
     telaIntro.style.alignItems = "center";
-    telaIntro.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
+    telaIntro.style.backgroundColor = "rgba(0, 0, 0, 0.85)"; 
     telaIntro.style.zIndex = "10";
-    telaIntro.style.fontFamily = "'Press Start 2P', cursive";
-    telaIntro.style.color = "#ffebc2";
+    telaIntro.style.fontFamily = "'Press Start 2P', cursive"; 
+    telaIntro.style.color = "#ffebc2"; 
 
     const dadosFase = configuracaoFases[faseAtual];
-
-
-    const dicaControles = (modoDoisJogadores && faseAtual === 1)
-        ? `<p style="font-size: 12px; color:#d4a55a; margin-top:20px; line-height:1.8; text-align:center;">
-               Jogador 1: WASD para mover/pular/agachar • Clique do mouse (ou Espaço) para atirar<br>
-               Jogador 2: Setas para mover/pular/agachar • Enter para atirar
-           </p>`
-        : "";
-
+    
     telaIntro.innerHTML = `
         <h1 style="font-size: 30px; margin-bottom: 40px; color: #ffebc2; text-align: center; line-height: 1.8;">
             Fase ${faseAtual}: ${dadosFase.nome}
         </h1>
         <h2 id="textoContagem" style="font-size: 50px; color: #ffebc2;">3</h2>
-        ${dicaControles}
     `;
-
+    
     cenario.appendChild(telaIntro);
 
     let contador = 3;
@@ -903,15 +753,15 @@ function iniciarContagemFase() {
         if (contador > 0) {
             if (textoContagem) textoContagem.innerText = contador;
         } else if (contador === 0) {
-            if (textoContagem) textoContagem.innerText = "ATIRE!";
+            if (textoContagem) textoContagem.innerText = "ATIRE!"; 
         } else {
             clearInterval(intervalo);
-            telaIntro.remove();
-
-
+            telaIntro.remove(); 
+            
+            // CORREÇÃO: Garante que o estado do jogo volte ao normal e reativa o loop
             naContagem = false;
-            jogoPausado = false;
-            loopDoJogo();
+            jogoPausado = false; 
+            loopDoJogo(); 
             console.log("Contagem finalizada! Jogo rodando.");
         }
     }, 1000);
@@ -925,7 +775,7 @@ const fpsAlvo = 60;
 const intervaloQuadro = 1000 / fpsAlvo; // ~16.66ms por quadro
 
 // ==========================================
-// GAME LOOP (
+// GAME LOOP (VERSÃO COM FPS CORRIGIDO)
 // ==========================================
 function loopDoJogo(tempoAtual) {
     // Garante que o loop continue rodando mesmo se estiver em transição
@@ -933,7 +783,7 @@ function loopDoJogo(tempoAtual) {
         requestAnimationFrame(loopDoJogo);
         return;
     }
-
+    
     if (jogoPausado || naContagem) {
         requestAnimationFrame(loopDoJogo);
         return;
@@ -954,33 +804,30 @@ function loopDoJogo(tempoAtual) {
     // Atualiza o tempo do último quadro descontando o excesso para manter a precisão
     ultimoTempoQuadro = tempoAtual - (tempoDecorrido % intervaloQuadro);
 
-
+    // =========================================================================
+    // DAQUI PARA BAIXO RODA A 60 FPS CRAVADOS
+    // =========================================================================
 
     // --- 1. MOVIMENTO E ANIMAÇÃO DA PROTAGONISTA ---
     let estaAndando = false;
 
     // SÓ PERMITE ANDAR E PULAR SE NÃO ESTIVER AGACHADO
     if (!agachado) {
-
-        const direita1 = modoDoisJogadores ? teclas["KeyD"] : (teclas["ArrowRight"] || teclas["KeyD"]);
-        const esquerda1 = modoDoisJogadores ? teclas["KeyA"] : (teclas["ArrowLeft"] || teclas["KeyA"]);
-        const pular1 = modoDoisJogadores ? teclas["KeyW"] : (teclas["ArrowUp"] || teclas["KeyW"]);
-
-        if (direita1) {
-            protaX += velocidadeAndar;
-            protagonista.style.transform = "scaleX(1)";
-            estaAndando = true;
+        if (teclas["ArrowRight"] || teclas["KeyD"]) { 
+            protaX += velocidadeAndar; 
+            protagonista.style.transform = "scaleX(1)"; 
+            estaAndando = true; 
         }
-        if (esquerda1) {
-            protaX -= velocidadeAndar;
-            protagonista.style.transform = "scaleX(-1)";
-            estaAndando = true;
+        if (teclas["ArrowLeft"] || teclas["KeyA"]) { 
+            protaX -= velocidadeAndar; 
+            protagonista.style.transform = "scaleX(-1)"; 
+            estaAndando = true; 
         }
         if (protaX < 0) protaX = 0;
 
-        if (pular1 && !pulando) {
-            velY = forcaPulo;
-            pulando = true;
+        if ((teclas["ArrowUp"] || teclas["KeyW"]) && !pulando) { 
+            velY = forcaPulo; 
+            pulando = true; 
         }
     }
 
@@ -989,6 +836,7 @@ function loopDoJogo(tempoAtual) {
     if (protaY > chao) velY -= gravidade;
     if (protaY <= chao) { protaY = chao; pulando = false; velY = 0; framePulo = 0; }
 
+    // --- ATUALIZAÇÃO DO SPRITE VISUAL (CORRIGIDO PARA SUPORTAR O ARRAY AGACHADA) ---
     if (estaAtirando) {
         timerAnimacao++;
         if (timerAnimacao >= 5) {
@@ -1002,7 +850,7 @@ function loopDoJogo(tempoAtual) {
         if (estaAtirando) {
             protagonista.src = spritesMorgana.atirando[frameAtirando];
         }
-    }
+    } 
     else if (agachado) {
         timerAnimacao++;
         if (timerAnimacao >= 6) {
@@ -1014,7 +862,7 @@ function loopDoJogo(tempoAtual) {
             }
         }
         protagonista.src = spritesMorgana.agachada[frameAgachado];
-    }
+    } 
     else if (pulando) {
         timerAnimacao++;
         if (timerAnimacao >= 6) {
@@ -1025,7 +873,7 @@ function loopDoJogo(tempoAtual) {
             }
         }
         protagonista.src = spritesMorgana.pulo[framePulo];
-    }
+    } 
     else if (estaAndando) {
         timerAnimacao++;
         if (timerAnimacao >= 6) {
@@ -1033,7 +881,7 @@ function loopDoJogo(tempoAtual) {
             frameCorrendo = (frameCorrendo + 1) % spritesMorgana.correndo.length;
         }
         protagonista.src = spritesMorgana.correndo[frameCorrendo];
-    }
+    } 
     else {
         protagonista.src = spritesMorgana.parada;
     }
@@ -1041,121 +889,23 @@ function loopDoJogo(tempoAtual) {
     protagonista.style.left = `${protaX}px`;
     protagonista.style.bottom = `${protaY}px`;
 
-
-    if (modoDoisJogadores) {
-        let estaAndando2 = false;
-
-        if (!agachado2) {
-            if (teclas["ArrowRight"]) {
-                protaX2 += velocidadeAndar;
-                protagonista2.style.transform = "scaleX(1)";
-                estaAndando2 = true;
-            }
-            if (teclas["ArrowLeft"]) {
-                protaX2 -= velocidadeAndar;
-                protagonista2.style.transform = "scaleX(-1)";
-                estaAndando2 = true;
-            }
-            if (protaX2 < 0) protaX2 = 0;
-
-            if (teclas["ArrowUp"] && !pulando2) {
-                velY2 = forcaPulo;
-                pulando2 = true;
-            }
-        }
-
-
-        protaY2 += velY2;
-        if (protaY2 > chao) velY2 -= gravidade;
-        if (protaY2 <= chao) { protaY2 = chao; pulando2 = false; velY2 = 0; framePulo2 = 0; }
-
-
-        if (estaAtirando2) {
-            timerAnimacao2++;
-            if (timerAnimacao2 >= 5) {
-                timerAnimacao2 = 0;
-                frameAtirando2++;
-                if (frameAtirando2 >= spritesJogador2.atirando.length) {
-                    estaAtirando2 = false;
-                    frameAtirando2 = 0;
-                }
-            }
-            if (estaAtirando2) {
-                protagonista2.src = spritesJogador2.atirando[frameAtirando2];
-            }
-        }
-        else if (agachado2) {
-            timerAnimacao2++;
-            if (timerAnimacao2 >= 6) {
-                timerAnimacao2 = 0;
-                frameAgachado2++;
-                if (frameAgachado2 >= spritesJogador2.agachada.length) {
-                    frameAgachado2 = spritesJogador2.agachada.length - 1;
-                }
-            }
-            protagonista2.src = spritesJogador2.agachada[frameAgachado2];
-        }
-        else if (pulando2) {
-            timerAnimacao2++;
-            if (timerAnimacao2 >= 6) {
-                timerAnimacao2 = 0;
-                framePulo2++;
-                if (framePulo2 >= spritesJogador2.pulo.length) {
-                    framePulo2 = spritesJogador2.pulo.length - 1;
-                }
-            }
-            protagonista2.src = spritesJogador2.pulo[framePulo2];
-        }
-        else if (estaAndando2) {
-            timerAnimacao2++;
-            if (timerAnimacao2 >= 6) {
-                timerAnimacao2 = 0;
-                frameCorrendo2 = (frameCorrendo2 + 1) % spritesJogador2.correndo.length;
-            }
-            protagonista2.src = spritesJogador2.correndo[frameCorrendo2];
-        }
-        else {
-            protagonista2.src = spritesJogador2.parada;
-        }
-
-        protagonista2.style.left = `${protaX2}px`;
-        protagonista2.style.bottom = `${protaY2}px`;
-    }
-
     // --- 2. LÓGICA E ANIMAÇÃO DOS INIMIGOS ---
     for (let i = inimigos.length - 1; i >= 0; i--) {
         let ini = inimigos[i];
-
+        
         let velInimigoAtual = (ini.velocidade !== undefined) ? ini.velocidade : 3;
         let direcaoX = 1;
 
-        // ==========================================
-        // ALVO DO INIMIGO  
-        // ==========================================
-        let alvoX = protaX;
-        let alvoPulando = pulando;
-        let alvoAgachado = agachado;
-
-        if (modoDoisJogadores) {
-            const distAteJogador1 = Math.abs(protaX - ini.x);
-            const distAteJogador2 = Math.abs(protaX2 - ini.x);
-            if (distAteJogador2 < distAteJogador1) {
-                alvoX = protaX2;
-                alvoPulando = pulando2;
-                alvoAgachado = agachado2;
-            }
-        }
-
         if (ini.estado === "andando") {
-            if (alvoX > ini.x) {
-                ini.x += velInimigoAtual;
+            if (protaX > ini.x) {
+                ini.x += velInimigoAtual; 
                 direcaoX = 1;
             } else {
-                ini.x -= velInimigoAtual;
+                ini.x -= velInimigoAtual; 
                 direcaoX = -1;
             }
         } else {
-            direcaoX = alvoX > ini.x ? 1 : -1;
+            direcaoX = protaX > ini.x ? 1 : -1;
         }
 
         ini.timer++;
@@ -1165,13 +915,13 @@ function loopDoJogo(tempoAtual) {
             ini.frame = (ini.frame + 1) % listaSprites.length;
             ini.elemento.src = listaSprites[ini.frame];
 
-            // --- CONTROLE DE TAMANHO ABSOLUTO 
+            // --- CONTROLE DE TAMANHO ABSOLUTO (Corrigido para 'cameloZumbi') ---
             if (ini.tipo === "bandidoCavalo1" || ini.tipo === "bandidoCavalo2" || ini.tipo === "cavaloZombie" || ini.tipo === "cavaloEsqueleto1" || ini.tipo === "cavaloEsqueleto2") {
-                ini.elemento.style.width = "220px";
+                ini.elemento.style.width = "220px";  
                 ini.elemento.style.height = "160px";
-            }
+            } 
             else if (ini.tipo === "cameloZumbi") {
-                ini.elemento.style.width = "240px";
+                ini.elemento.style.width = "240px"; 
                 ini.elemento.style.height = "180px";
             }
         }
@@ -1180,10 +930,10 @@ function loopDoJogo(tempoAtual) {
 
         if (ini.tipo !== "chefao") {
             const atiradores = ["hostil1", "hostil2", "hostil3", "bandidoCavalo1", "bandidoCavalo2", "fantasma"];
-
+            
             if (atiradores.includes(ini.tipo)) {
                 ini.timerAtaque++;
-                let distanciaX = Math.abs(alvoX - ini.x);
+                let distanciaX = Math.abs(protaX - ini.x);
 
                 if (distanciaX < 450) {
                     if (ini.timerAtaque >= 80 && ini.estado === "andando") {
@@ -1191,9 +941,8 @@ function loopDoJogo(tempoAtual) {
                         ini.estado = "atirando";
                         ini.frame = 0;
 
-                        // SISTEMA DE ESQUIVA: não toma dano se o jogador alvejado
-                        // estiver pulando OU agachado! (agora considera o alvo certo)
-                        if (!alvoPulando && !alvoAgachado) perderVida();
+                        // SISTEMA DE ESQUIVA: Não toma dano se estiver pulando OU agachada!
+                        if (!pulando && !agachado) perderVida();
 
                         setTimeout(() => {
                             ini.estado = "andando";
@@ -1205,27 +954,13 @@ function loopDoJogo(tempoAtual) {
                 }
             }
 
-            // --- COLISÃO FÍSICA (INIMIGO ENCOSTOU NO JOGADOR) ---
-            let colidiuFisicamente = false;
+            let distFisicaX = Math.abs(protaX - ini.x);
+            let distFisicaY = Math.abs(protaY - chao); 
 
-            let distFisica1X = Math.abs(protaX - ini.x);
-            let distFisica1Y = Math.abs(protaY - chao);
-            if (distFisica1X < 50 && distFisica1Y < 70) {
-                colidiuFisicamente = true;
-            }
-
-            if (!colidiuFisicamente && modoDoisJogadores) {
-                let distFisica2X = Math.abs(protaX2 - ini.x);
-                let distFisica2Y = Math.abs(protaY2 - chao);
-                if (distFisica2X < 50 && distFisica2Y < 70) {
-                    colidiuFisicamente = true;
-                }
-            }
-
-            if (colidiuFisicamente) {
+            if (distFisicaX < 50 && distFisicaY < 70) {
                 ini.elemento.remove();
                 inimigos.splice(i, 1);
-                perderVida();
+                perderVida(); 
                 continue;
             }
         }
@@ -1249,7 +984,7 @@ function loopDoJogo(tempoAtual) {
         for (let i = inimigos.length - 1; i >= 0; i--) {
             let ini = inimigos[i];
             let distBalaX = Math.abs(bala.x - ini.x);
-            let distBalaY = Math.abs(bala.y - (chao + 75));
+            let distBalaY = Math.abs(bala.y - (chao + 75)); 
 
             if (distBalaX < 50 && distBalaY < 75) {
                 bala.elemento.remove();
@@ -1266,9 +1001,9 @@ function loopDoJogo(tempoAtual) {
                     } else if (ini.tipo === "hostil3" || ini.tipo === "fantasma") {
                         pontosGanhos = 5;
                     } else if (ini.tipo === "bandidoCavalo1" || ini.tipo === "bandidoCavalo2" || ini.tipo === "cavaloEsqueleto1" || ini.tipo === "cavaloEsqueleto2") {
-                        pontosGanhos = 7;
-                    } else if (ini.tipo === "cameloZumbi") {
-                        pontosGanhos = 10;
+                        pontosGanhos = 7; 
+                    } else if (ini.tipo === "cameloZumbi") { // CORRIGIDO: Nome ajustado para dar os 10 pontos corretamente
+                        pontosGanhos = 10; 
                     } else if (ini.tipo === "chefao") {
                         pontosGanhos = 20;
                     }
@@ -1277,7 +1012,7 @@ function loopDoJogo(tempoAtual) {
                     hudPontos.innerText = `Pontos: ${pontos}/${pontosParaProximaFase}`;
 
                     criarMoeda(ini.x + 40, chao + 20);
-
+                    
                     ini.elemento.remove();
                     inimigos.splice(i, 1);
 
@@ -1288,7 +1023,7 @@ function loopDoJogo(tempoAtual) {
                         location.reload();
                     }
                 }
-                break;
+                break; 
             }
         }
 
@@ -1305,20 +1040,20 @@ function loopDoJogo(tempoAtual) {
         let moeda = moedas[i];
 
         if (!moeda.noChao) {
-            moeda.velY -= 0.6;
+            moeda.velY -= 0.6; 
             moeda.y += moeda.velY;
-            moeda.x += moeda.velX;
+            moeda.x += moeda.velX; 
 
-            if (moeda.y <= chao + 20) {
-                moeda.y = chao + 20;
+            if (moeda.y <= chao + 20) { 
+                moeda.y = chao + 20; 
                 moeda.velY = 0;
                 moeda.velX = 0;
-                moeda.noChao = true;
+                moeda.noChao = true; 
             }
         }
 
         moeda.timer++;
-        if (moeda.timer >= 8) {
+        if (moeda.timer >= 8) { 
             moeda.timer = 0;
             moeda.frame = (moeda.frame + 1) % spritesMoeda.length;
             moeda.elemento.src = spritesMoeda[moeda.frame];
@@ -1327,20 +1062,10 @@ function loopDoJogo(tempoAtual) {
         moeda.elemento.style.left = `${moeda.x}px`;
         moeda.elemento.style.bottom = `${moeda.y}px`;
 
-        // MODIFICADO: qualquer um dos 2 jogadores pode pegar a moeda
-        let pegouMoeda = false;
+        let distanciaX = Math.abs(protaX - moeda.x);
+        let distanciaY = Math.abs(protaY - moeda.y);
 
-        let distanciaX1 = Math.abs(protaX - moeda.x);
-        let distanciaY1 = Math.abs(protaY - moeda.y);
-        if (distanciaX1 < 50 && distanciaY1 < 80) pegouMoeda = true;
-
-        if (!pegouMoeda && modoDoisJogadores) {
-            let distanciaX2 = Math.abs(protaX2 - moeda.x);
-            let distanciaY2 = Math.abs(protaY2 - moeda.y);
-            if (distanciaX2 < 50 && distanciaY2 < 80) pegouMoeda = true;
-        }
-
-        if (pegouMoeda) {
+        if (distanciaX < 50 && distanciaY < 80) {
             ouro++;
             localStorage.setItem("ouro", ouro);
             hudOuro.innerText = `Ouro: ${ouro}`;
@@ -1352,26 +1077,26 @@ function loopDoJogo(tempoAtual) {
     // --- 4. LÓGICA E ANIMAÇÃO DAS BOLAS DE FENO (OBSTÁCULOS/COIOTES/ABUTRES) ---
     for (let i = bolasFeno.length - 1; i >= 0; i--) {
         let bola = bolasFeno[i];
-
+        
         bola.x -= bola.velocidade;
 
-        if (bola.spritesAnimacao) {
+        if (bola.spritesAnimacao) { 
             bola.timer++;
-            if (bola.timer >= 6) {
+            if (bola.timer >= 6) { 
                 bola.timer = 0;
-                bola.frame = (bola.frame + 1) % bola.spritesAnimacao.length;
+                bola.frame = (bola.frame + 1) % bola.spritesAnimacao.length; 
                 bola.elemento.src = bola.spritesAnimacao[bola.frame];
             }
             bola.elemento.style.width = "120px";
             bola.elemento.style.height = "120px";
             bola.elemento.style.transform = "none";
-        }
+        } 
         else if (faseAtual === 2) {
             bola.timer++;
-            if (bola.timer >= 5) {
+            if (bola.timer >= 5) { 
                 bola.timer = 0;
-                bola.frame = (bola.frame + 1) % 6;
-
+                bola.frame = (bola.frame + 1) % 6; 
+                
                 if (bola.skinOriginal.includes("coioteCinza")) {
                     bola.elemento.src = `../img/coioteCinzaAndando${bola.frame + 1}.png`;
                 } else if (bola.skinOriginal.includes("coioteLaranja")) {
@@ -1381,10 +1106,10 @@ function loopDoJogo(tempoAtual) {
             bola.elemento.style.width = "180px";
             bola.elemento.style.height = "120px";
             bola.elemento.style.transform = "scaleX(1)";
-        }
+        } 
         else {
             bola.timer++;
-            if (bola.timer >= 5) {
+            if (bola.timer >= 5) { 
                 bola.timer = 0;
                 bola.frame = (bola.frame + 1) % spritesFeno.length;
                 bola.elemento.src = spritesFeno[bola.frame];
@@ -1397,10 +1122,21 @@ function loopDoJogo(tempoAtual) {
         bola.elemento.style.left = `${bola.x}px`;
         bola.elemento.style.bottom = `${bola.y}px`;
 
+        let distanciaX = Math.abs(protaX - bola.x);
+        let distanciaY = Math.abs(protaY - bola.y);
+        
+        let limiteColisaoX = (faseAtual === 2) ? 90 : 60; 
+        let colidiu = false;
 
-        let colidiu = jogadorColidiuComObstaculo(protaX, protaY, agachado, bola);
-        if (!colidiu && modoDoisJogadores) {
-            colidiu = jogadorColidiuComObstaculo(protaX2, protaY2, agachado2, bola);
+        if (bola.spritesAnimacao) {
+            if (distanciaX < 60 && distanciaY < 60) {
+                colidiu = true;
+            }
+        } else {
+            // Se estiver agachada (agachado === true), feno normal ou coiotes altos passam reto sem tirar vida!
+            if (distanciaX < limiteColisaoX && protaY <= chao + 40 && !agachado) {
+                colidiu = true;
+            }
         }
 
         if (colidiu) {
@@ -1437,7 +1173,7 @@ function verificarMudancaDeFase() {
     }
 }
 function avancarDeFaseLogica() {
-    pontos = 0
+    pontos = 0 
     faseAtual++
 
     inimigos.forEach(ini => ini.elemento.remove())
@@ -1460,60 +1196,46 @@ function avancarDeFaseLogica() {
     protagonista.style.left = `${protaX}px`;
     protagonista.style.bottom = `${protaY}px`;
 
-    // Reposiciona também o Jogador 2 (NOVO - só faz sentido no modo dupla)
-    if (modoDoisJogadores) {
-        protaX2 = 220;
-        protaY2 = chao;
-        protagonista2.style.left = `${protaX2}px`;
-        protagonista2.style.bottom = `${protaY2}px`;
-    }
-
     iniciarContagemFase()
 }
 
-
+// ==========================================
+// FUNÇÃO DE DANO (FALTAVA NO CÓDIGO)
+// ==========================================
 function perderVida() {
     if (invencivel) return; // Se estiver no tempo de piscar, ignora o dano
 
     vidas--;
-    hudVidas.innerText = textoVidas();
+    hudVidas.innerText = `Vidas: ${vidas}`;
 
     if (vidas <= 0) {
-        vidas = 0;
-        hudVidas.innerText = textoVidas();
+    vidas = 0;
+    hudVidas.innerText = `Vidas: ${vidas}`;
 
-        // Zera o ouro
-        ouro = 0;
-        localStorage.setItem("ouro", ouro);
-        hudOuro.innerText = `Ouro: ${ouro}`;
+    // Zera o ouro
+    ouro = 0;
+    localStorage.setItem("ouro", ouro);
+    hudOuro.innerText = `Ouro: ${ouro}`;
 
-        jogoPausado = true;
-        menuGameOver.classList.remove("oculto");
-        musicaJogo.pause();
-    } else {
+    jogoPausado = true;
+    menuGameOver.classList.remove("oculto");
+    musicaJogo.pause();
+}else {
         // Ativa uma pequena invencibilidade temporária ao tomar dano para não morrer instantaneamente
         invencivel = true;
-
+        
         // Garante que o jogo não trave e que o controle do teclado continue ativo
         jogoPausado = false;
-        cenario.focus();
+        cenario.focus(); 
 
         const piscar = setInterval(() => {
             protagonista.style.opacity = protagonista.style.opacity === "0.3" ? "1" : "0.3";
-            // NOVO: como a vida é da equipe (compartilhada), o Jogador 2 também
-            // fica invencível/piscando junto durante essa janela de tempo.
-            if (modoDoisJogadores) {
-                protagonista2.style.opacity = protagonista.style.opacity;
-            }
         }, 150);
 
         setTimeout(() => {
             invencivel = false;
             clearInterval(piscar);
             protagonista.style.opacity = "1";
-            if (modoDoisJogadores) {
-                protagonista2.style.opacity = "1";
-            }
         }, 1500); // 1 segundo e meio de invencibilidade piscando
     }
 }
