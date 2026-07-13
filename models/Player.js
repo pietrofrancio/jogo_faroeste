@@ -5,7 +5,7 @@ const des = canvas.getContext('2d');
 const chao_y = 600; // Posição Y onde fica o chão
 
 // ---------------------------------------------------------
-// 2. Definição das Classes
+// 2. Definição das Classes (Sempre no início!)
 // ---------------------------------------------------------
 class ObjetoJogo {
     constructor(x, y, w, h, cor) {
@@ -77,7 +77,7 @@ class Obstaculo extends ObjetoJogo {
 }
 
 // ---------------------------------------------------------
-// 3. Inicialização dos Objetos
+// 3. Inicialização dos Objetos (Agora o JS já conhece as classes)
 // ---------------------------------------------------------
 const player = new Jogador(100, chao_y - 80, 60, 80, "blue"); 
 const inimigos = [];
@@ -137,7 +137,9 @@ function gameLoop() {
 // 5. Inicia o Jogo
 gameLoop();
 
+// ---------------------------------------------------------
 // 6. Exportação (caso use em ambiente Node.js / Testes)
+// ---------------------------------------------------------
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = Jogador;
 }

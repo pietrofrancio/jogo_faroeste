@@ -7,9 +7,18 @@ const btnPause      = document.getElementById("btnPause")
 const hudVidas      = document.getElementById("vidas")
 const hudOuro       = document.getElementById("ouro")       
 const hudPontos     = document.getElementById("hudPontos")  
+const menuGameOver  = document.getElementById("gameOverMenu")
+const pauseTela     = document.getElementById("pauseTela")
+const painelPause   = document.getElementById("painelPause")
 
 cenario.setAttribute("tabindex", "0"); 
 cenario.style.outline = "none";
+
+// ---------------- LocalStorage -----------------
+let ouroEstoque = parseInt(localStorage.getItem("ouroEstoque")) || 0;
+
+let armaSelecionada = localStorage.getItem("armaSelecionada") || "";
+let velocidadeBala = armaSelecionada === "revolver" ? 28 : 18;
 
 // ==========================================
 // MODO DE JOGO: 1 OU 2 JOGADORES 
@@ -18,20 +27,22 @@ cenario.style.outline = "none";
 const modoDoisJogadores = localStorage.getItem("modoJogo") === "2";
 const protagonista2 = document.getElementById("protagonista2");
 
-if (modoDoisJogadores) {
-    protagonista2.classList.remove("oculto");
-} else {
-    protagonista2.classList.add("oculto");
+if (protagonista2) {
+    if (modoDoisJogadores) {
+        protagonista2.classList.remove("oculto");
+    } else {
+        protagonista2.classList.add("oculto");
+    }
 }
 
 // ==========================================
 // 2. SISTEMA DE ÁUDIO (MÚSICA E EFEITOS)
 // ==========================================
 const musicaJogo = document.getElementById("musicaJogo")
-const somTiro    = document.createElement("audio")
+const somTiro    = new Audio('../efeitos_sonoros/efeito_sonoro_tiro.mp3')
+const somMoeda   = new Audio('../efeitos_sonoros/moeda_collect.mp3')
 
-// Configuração do Tiro
-somTiro.src = "../efeitos_sonoros/efeito_sonoro_tiro.mp3"
+// Configuração de Sons //
 somTiro.volume = 0.2
 
 // Configuração da Música de Fundo (Verifica LocalStorage)
@@ -212,6 +223,8 @@ function mostrarCena() {
 
     if (nomeEl) nomeEl.innerText = cena.nome;
     if (textoEl) textoEl.innerText = cena.fala;
+
+    // Tratamento seguro para aplicar a imagem de fundo da transição
     if (cenarioElemento && cena.fundo) {
         cenarioElemento.style.backgroundImage = `url('${cena.fundo}')`;
     }
@@ -266,9 +279,11 @@ function finalizarDialogo() {
 // ==========================================
 // 5. PROGRESSÃO, OURO E PONTOS
 // ==========================================
-let ouro = Number(localStorage.getItem("ouro")) || 0
+let ouro = 0
 let pontos = 0
-let faseAtual = 1
+let faseAtual = 1 // Declarada aqui primeiro!
+
+// Calcula dinamicamente antes de exibir no HUD pela primeira vez
 let pontosParaProximaFase = faseAtual * 40 
 
 hudOuro.innerText = `Ouro: ${ouro}`
@@ -291,7 +306,6 @@ function iniciarMusica(){
 window.addEventListener("keydown", iniciarMusica)
 window.addEventListener("mousedown", iniciarMusica)
 musicaJogo.play().catch(() => {})
-const menuGameOver = document.getElementById("gameOverMenu")
 const btnRecusar = document.getElementById("recusar")
 let invencivel = false
 
@@ -331,19 +345,26 @@ for (let i = 1; i <= totalSpritesFeno; i++) {
 // ==========================================
 btnPause.addEventListener("click", () => {
     jogoPausado = !jogoPausado;
-    
     // Remove o foco do botão para não dar o bug do Espaço
     btnPause.blur(); 
-
+    
+    // mudanças: tela de pause surgindo e botão de pause mudando de lugar
     if (jogoPausado) {
-        btnPause.innerText = "▶ Continuar";
-        musicaJogo.pause();
+        btnPause.innerText = "▶ Continuar"
+        musicaJogo.pause()
+        pauseTela.classList.remove("oculto")
+        painelPause.appendChild(btnPause)
+
     } else {
-        btnPause.innerText = "⏸ Pausar";
-        musicaJogo.play();
+        btnPause.innerText = "⏸ Pausar"
+        musicaJogo.play()
+        pauseTela.classList.add("oculto");
+        const hud = document.getElementById('hud');
+        const ultimoElemento = hud.lastElementChild
+        hud.insertBefore(btnPause, ultimoElemento);
         
-        // CORREÇÃO MÁSTER: Força o navegador a focar no cenário do jogo
-        cenario.focus(); 
+        // Força o navegador a focar no cenário do jogo
+        cenario.focus()
         
         // Só reinicia o loop se não houver outra instância rodando
         // Como o requestAnimationFrame já roda continuamente se emTransicaoDeFase for checado,
@@ -436,12 +457,12 @@ console.log("Personagem salvo (Jogador 1):", personagemSelecionado);
 console.log("Personagem salvo (Jogador 2):", personagemSelecionadoP2);
 console.log(personagens);
 
-let frameCorrendo = 0; let framePulo = 0; let frameAtirando = 0; let frameAgachado = 0; 
+let frameCorrendo = 0; let framePulo = 0; let frameAtirando = 0; let frameAgachado = 0;
 let estaAtirando = false; let timerAnimacao = 0;
 const velocidadFrame = 14; const velocidadTiro = 10;
 
 // ==========================================
-// VARIÁVEIS DE CONTROLE DO JOGO (AJUSTADAS)
+// VARIÁVEIS DE CONTROLO DO JOGO (AJUSTADAS)
 // ==========================================
 let vidas = 5
 
@@ -450,7 +471,9 @@ hudVidas.innerText = textoVidas();
 const chao = 100
 let protaX = 50; let protaY = chao; let velY = 0
 let pulando = false
-let agachado = false; 
+let agachado = false;
+
+// Aumentamos a velocidade, o pulo e a gravidade para o jogo responder melhor a 60 FPS:
 const gravidade = 1.4;         // Antes era 0.5
 const forcaPulo = 26;         // Antes era 18
 const velocidadeAndar = 10;     // Antes era 4
@@ -593,6 +616,7 @@ function criarBolaFeno() {
         // --- ABUTRES DA FASE 3 ---
         // Sorteia entre o tipo 1 e o tipo 2
         const tipoAbutre = Math.random() > 0.5 ? 1 : 2;
+
         if (tipoAbutre === 1) {
             asSprites = spritesAbutre1;
         } else {
@@ -910,6 +934,8 @@ function iniciarContagemFase() {
         } else {
             clearInterval(intervalo);
             telaIntro.remove(); 
+            
+            // Garante que o estado do jogo volte ao normal e reativa o loop
             naContagem = false;
             jogoPausado = false; 
             loopDoJogo(); 
@@ -955,7 +981,6 @@ function loopDoJogo(tempoAtual) {
     // Atualiza o tempo do último quadro descontando o excesso para manter a precisão
     ultimoTempoQuadro = tempoAtual - (tempoDecorrido % intervaloQuadro);
 
-
     // --- 1. MOVIMENTO E ANIMAÇÃO DA PROTAGONISTA ---
     let estaAndando = false;
 
@@ -989,7 +1014,7 @@ function loopDoJogo(tempoAtual) {
     if (protaY > chao) velY -= gravidade;
     if (protaY <= chao) { protaY = chao; pulando = false; velY = 0; framePulo = 0; }
 
-    // --- ATUALIZAÇÃO DO SPRITE VISUAL 
+    // --- ATUALIZAÇÃO DO SPRITE VISUAL ---
     if (estaAtirando) {
         timerAnimacao++;
         if (timerAnimacao >= 5) {
@@ -1166,7 +1191,7 @@ function loopDoJogo(tempoAtual) {
             ini.frame = (ini.frame + 1) % listaSprites.length;
             ini.elemento.src = listaSprites[ini.frame];
 
-            // --- CONTROLE DE TAMANHO ABSOLUTO 
+            // --- CONTROLE DE TAMANHO ABSOLUTO ---
             if (ini.tipo === "bandidoCavalo1" || ini.tipo === "bandidoCavalo2" || ini.tipo === "cavaloZombie" || ini.tipo === "cavaloEsqueleto1" || ini.tipo === "cavaloEsqueleto2") {
                 ini.elemento.style.width = "220px";  
                 ini.elemento.style.height = "160px";
@@ -1242,7 +1267,7 @@ function loopDoJogo(tempoAtual) {
     // --- 3. LÓGICA DOS PROJÉTEIS (MOVIMENTO E COLISÃO) ---
     for (let b = balas.length - 1; b >= 0; b--) {
         let bala = balas[b];
-        bala.x += (18 * bala.direcao);
+        bala.x += (velocidadeBala * bala.direcao);
         bala.elemento.style.left = `${bala.x}px`;
         let balaDestruida = false;
 
@@ -1340,11 +1365,12 @@ function loopDoJogo(tempoAtual) {
         }
 
         if (pegouMoeda) {
-            ouro++;
-            localStorage.setItem("ouro", ouro);
+            ouro++
             hudOuro.innerText = `Ouro: ${ouro}`;
             moeda.elemento.remove();
             moedas.splice(i, 1);
+            somMoeda.currentTime = 0;
+            somMoeda.play().catch(() => {});
         }
     }
 
@@ -1418,7 +1444,7 @@ function loopDoJogo(tempoAtual) {
 }
 function verificarMudancaDeFase() {
     if (pontos >= pontosParaProximaFase) {
-
+        salvarOuroNoEstoque()
         if (faseAtual === 1) {
             iniciarDialogo(cenasTransicao1_2);
         }
@@ -1479,18 +1505,17 @@ function perderVida() {
     hudVidas.innerText = textoVidas();
 
     if (vidas <= 0) {
-    vidas = 0;
-    hudVidas.innerText = textoVidas();
+        vidas = 0;
+        hudVidas.innerText = textoVidas();
 
-    // Zera o ouro
-    ouro = 0;
-    localStorage.setItem("ouro", ouro);
-    hudOuro.innerText = `Ouro: ${ouro}`;
+        // Zera apenas o ouro da gameplay atual
+        ouro = 0;
+        hudOuro.innerText = `Ouro: ${ouro}`;
 
-    jogoPausado = true;
-    menuGameOver.classList.remove("oculto");
-    musicaJogo.pause();
-}else {
+        jogoPausado = true;
+        menuGameOver.classList.remove("oculto");
+        musicaJogo.pause();
+    } else {
         // Ativa uma pequena invencibilidade temporária ao tomar dano para não morrer instantaneamente
         invencivel = true;
         
@@ -1500,8 +1525,7 @@ function perderVida() {
 
         const piscar = setInterval(() => {
             protagonista.style.opacity = protagonista.style.opacity === "0.3" ? "1" : "0.3";
-
-            if (modoDoisJogadores) {
+            if (modoDoisJogadores && protagonista2) {
                 protagonista2.style.opacity = protagonista.style.opacity;
             }
         }, 150);
@@ -1510,11 +1534,40 @@ function perderVida() {
             invencivel = false;
             clearInterval(piscar);
             protagonista.style.opacity = "1";
-            if (modoDoisJogadores) {
+            if (modoDoisJogadores && protagonista2) {
                 protagonista2.style.opacity = "1";
             }
         }, 1500); // 1 segundo e meio de invencibilidade piscando
     }
+}
+
+window.addEventListener("beforeunload", function() {
+    // Se o jogo não estiver pausado por Game Over (ou seja, o jogador saiu no meio)
+    // você garante que o ouro coletado até ali vá para o estoque
+    if (ouro > 0 && vidas > 0) {
+        let estoqueAtual = parseInt(localStorage.getItem("ouroEstoque")) || 0;
+        estoqueAtual += ouro;
+        localStorage.setItem("ouroEstoque", estoqueAtual);
+    }
+});
+
+
+function salvarOuroNoEstoque() {
+    // 1. Pega o estoque antigo do localStorage. Se não existir, assume 0.
+    let estoqueAtual = parseInt(localStorage.getItem("ouroEstoque")) || 0;
+    
+
+    // 2. Soma o ouro coletado nesta partida ao estoque permanente
+    estoqueAtual += ouro;
+    
+    // 3. Salva o novo total acumulado de volta no localStorage
+    localStorage.setItem("ouroEstoque", estoqueAtual);
+    
+    // 4. Zera o ouro da partida atual para não duplicar na próxima fase
+    ouro = 0;
+    hudOuro.innerText = `Ouro: ${ouro}`;
+    
+    console.log("Estoque atualizado com sucesso! Novo total: " + estoqueAtual);
 }
 
 // ==========================================
@@ -1537,5 +1590,5 @@ setInterval(() => {
 
 // 5. Temporizador para criar as bolas de feno rolando a cada 4 segundos
 setInterval(() => {
-    criarBolaFeno(); // Adicionado os parênteses e o final do nome correto
+    criarBolaFeno();
 }, 4000);

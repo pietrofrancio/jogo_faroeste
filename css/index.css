@@ -173,6 +173,7 @@ body {
     transform: translate(3px, 3px);
     box-shadow: 1px 1px 0px #1a0a04;
 }
+
 .btn-western,
 .btn-western:visited,
 .btn-western:hover {
@@ -233,6 +234,7 @@ body {
     border-color: #706555;
     color: #d5c8b5;
 }
+
 .btn-back:hover {
     background-color: #706555;
     color: #201a15;

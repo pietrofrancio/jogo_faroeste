@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../js/loja.js" defer></script>
     <title>Lojinha do Oeste</title>
 
     <link rel="stylesheet" href="../css/loja.css">
@@ -22,7 +23,7 @@
 
         <h1>LOJINHA DO OESTE</h1>
 
-        <div id="ouro" class="ouro-display">
+        <div id="ouroLoja" class="ouro-display">
             Ouro: 0
         </div>
 
@@ -167,13 +168,34 @@
 
         </div>
 
+        <h2>Armas</h2>
+        <div class="cards">
+            <div class="card">
+                <img src="" alt="">
+                
+                <h3>Arma Inicial</h3>
+
+                <p>Grátis</p>
+
+                <button id="btn-armaInicial">Equipada</button>
+            </div>
+            <div class="card">
+                <img src="../img/revolver.png" alt="Revolver">
+
+                <h3>Revolver</h3>
+
+                <p>20 Ouro</p>
+
+                <button id="btn-revolver">Comprar</button>
+            </div>
+            <div class="card"></div>
+        </div>
+
         <a href="../index.html" class="voltar">
             Voltar ao Menu
         </a>
 
     </main>
-
-    <script src="../js/loja.js"></script>
 
 </body>
 
