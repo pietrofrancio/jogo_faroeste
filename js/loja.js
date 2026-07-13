@@ -12,7 +12,7 @@ let personagensComprados =
 let personagemSelecionado =
     localStorage.getItem("personagemSelecionado") || "morgana"
 
-// Personagem do Jogador 2 (NOVO - usado no modo Cooperativo / 2 Jogadores)
+// Personagem do Jogador 2 (usado no modo Cooperativo / 2 Jogadores)
 let personagemSelecionadoP2 =
     localStorage.getItem("personagemSelecionadoP2") || "morgana"
 
@@ -64,7 +64,6 @@ const personagens = [
     }
 ]
 
-
 const personagensP2 = [
     {
         nome: "morgana",
@@ -104,186 +103,134 @@ const musicas = [
 // ================================
 
 function atualizarOuro() {
-    displayOuro.innerText = `Ouro: ${ouro}`
+    if (displayOuro) {
+        displayOuro.innerText = `Ouro: ${ouro}`
+    }
 }
 
 // ================================
 
 function atualizarPersonagens() {
-
     personagens.forEach(personagem => {
-
         const btn = personagem.botao
+        if (!btn) return
 
         if (personagem.nome === personagemSelecionado) {
-
             btn.innerText = "Equipado"
             btn.disabled = true
-
         }
-
         else if (personagensComprados.includes(personagem.nome)) {
-
             btn.innerText = "Selecionar"
             btn.disabled = false
-
         }
-
         else {
-
             btn.innerText = `Comprar (${personagem.preco})`
             btn.disabled = false
-
         }
-
     })
-
 }
 
 function atualizarPersonagensP2() {
-
     personagensP2.forEach(personagem => {
-
         const btn = personagem.botao
+        if (!btn) return
 
         if (personagem.nome === personagemSelecionadoP2) {
-
             btn.innerText = "Equipado"
             btn.disabled = true
-
         }
-
         else if (personagensComprados.includes(personagem.nome)) {
-
             btn.innerText = "Selecionar"
             btn.disabled = false
-
         }
-
         else {
-
             btn.innerText = `Comprar (${personagem.preco})`
             btn.disabled = false
-
         }
-
     })
-
 }
 
 // ================================
 
 function atualizarMusicas() {
-
     musicas.forEach(musica => {
-
         const btn = musica.botao
+        if (!btn) return
 
         if (musica.caminho === musicaSelecionada) {
-
             btn.innerText = "Equipada"
             btn.disabled = true
-
         }
-
         else if (musicasCompradas.includes(musica.caminho)) {
-
             btn.innerText = "Selecionar"
             btn.disabled = false
-
         }
-
         else {
-
             btn.innerText = `Comprar (${musica.preco})`
             btn.disabled = false
-
         }
-
     })
-
 }
 
 // ================================
-// PERSONAGENS
+// PERSONAGENS P1
 // ================================
 
 function clicarPersonagem(nome) {
-
     const personagem = personagens.find(p => p.nome === nome)
 
     if (!personagensComprados.includes(nome)) {
-
         if (ouro < personagem.preco) {
             alert("Ouro insuficiente!")
             return
         }
 
         ouro -= personagem.preco
-
         personagensComprados.push(nome)
 
         localStorage.setItem("ouro", ouro)
-
         localStorage.setItem(
             "personagensComprados",
             JSON.stringify(personagensComprados)
         )
-
     }
 
     personagemSelecionado = nome
-
-    localStorage.setItem(
-        "personagemSelecionado",
-        nome
-    )
+    localStorage.setItem("personagemSelecionado", nome)
 
     atualizarOuro()
     atualizarPersonagens()
-
     atualizarPersonagensP2()
-
 }
 
 // ================================
-// PERSONAGEM DO JOGADOR 2  
+// PERSONAGENS P2  
 
 function clicarPersonagemP2(nome) {
-
     const personagem = personagensP2.find(p => p.nome === nome)
 
     if (!personagensComprados.includes(nome)) {
-
         if (ouro < personagem.preco) {
             alert("Ouro insuficiente!")
             return
         }
 
         ouro -= personagem.preco
-
         personagensComprados.push(nome)
 
         localStorage.setItem("ouro", ouro)
-
         localStorage.setItem(
             "personagensComprados",
             JSON.stringify(personagensComprados)
         )
-
     }
 
     personagemSelecionadoP2 = nome
-
-    localStorage.setItem(
-        "personagemSelecionadoP2",
-        nome
-    )
+    localStorage.setItem("personagemSelecionadoP2", nome)
 
     atualizarOuro()
     atualizarPersonagens()
     atualizarPersonagensP2()
-
 }
 
 // ================================
@@ -291,60 +238,54 @@ function clicarPersonagemP2(nome) {
 // ================================
 
 function clicarMusica(caminho) {
-
     const musica = musicas.find(m => m.caminho === caminho)
 
     if (!musicasCompradas.includes(caminho)) {
-
         if (ouro < musica.preco) {
-
             alert("Ouro insuficiente!")
             return
-
         }
 
         ouro -= musica.preco
-
         musicasCompradas.push(caminho)
 
         localStorage.setItem("ouro", ouro)
-
         localStorage.setItem(
             "musicasCompradas",
             JSON.stringify(musicasCompradas)
         )
-
     }
 
     musicaSelecionada = caminho
-
-    localStorage.setItem(
-        "musicaJogo",
-        caminho
-    )
+    localStorage.setItem("musicaJogo", caminho)
 
     atualizarOuro()
     atualizarMusicas()
-
 }
 
 // ================================
-// EVENTOS
+// CONFIGURAÇÃO DOS EVENTOS (Garantindo que os elementos existem na tela)
 // ================================
 
-document.getElementById("btn-morgana").onclick = () => clicarPersonagem("morgana")
-document.getElementById("btn-ruby").onclick = () => clicarPersonagem("ruby")
-document.getElementById("btn-jack").onclick = () => clicarPersonagem("jack")
+const configurarClique = (id, callback) => {
+    const el = document.getElementById(id)
+    if (el) el.onclick = callback
+}
 
-// Botões da seção "Personagem do Jogador 2" (
-document.getElementById("btn-morgana-p2").onclick = () => clicarPersonagemP2("morgana")
-document.getElementById("btn-ruby-p2").onclick = () => clicarPersonagemP2("ruby")
-document.getElementById("btn-jack-p2").onclick = () => clicarPersonagemP2("jack")
+configurarClique("btn-morgana", () => clicarPersonagem("morgana"))
+configurarClique("btn-ruby", () => clicarPersonagem("ruby"))
+configurarClique("btn-jack", () => clicarPersonagem("jack"))
 
-document.getElementById("btn-musica1").onclick = () => clicarMusica("../music/musica_fundo1.mp3")
-document.getElementById("btn-musica2").onclick = () => clicarMusica("../music/musica2.mp3")
-document.getElementById("btn-musica3").onclick = () => clicarMusica("../music/musica3.mp3")
+configurarClique("btn-morgana-p2", () => clicarPersonagemP2("morgana"))
+configurarClique("btn-ruby-p2", () => clicarPersonagemP2("ruby"))
+configurarClique("btn-jack-p2", () => clicarPersonagemP2("jack"))
 
+configurarClique("btn-musica1", () => clicarMusica("../music/musica_fundo1.mp3"))
+configurarClique("btn-musica2", () => clicarMusica("../music/musica2.mp3"))
+configurarClique("btn-musica3", () => clicarMusica("../music/musica3.mp3"))
+
+// ================================
+// INICIALIZAÇÃO DA INTERFACE
 // ================================
 
 atualizarOuro()

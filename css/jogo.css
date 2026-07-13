@@ -40,7 +40,7 @@
     display: flex;
     flex-direction: column; 
     align-items: flex-start; 
-    gap: 8px;               
+    gap: 8px;              
     justify-self: start;     
 }
 
@@ -83,7 +83,7 @@
 }
 
 /* ==========================================
-   PROTAGONISTA
+   PROTAGONISTA (JOGADOR 1)
    ========================================== */
 #protagonista {
     position: absolute;
@@ -98,23 +98,13 @@
     transform: scaleX(1);
 }
 
-
 #protagonista.olhando-esquerda {
     transform: scaleX(-1) !important; 
 }
 
 /* ==========================================
-   CLASSE UTILITÁRIA PARA ESCONDER ELEMENTOS  
+   PROTAGONISTA 2 (JOGADOR 2 - MODO COOPERATIVO) 
    ========================================== */
-
-.oculto {
-    display: none;
-}
-
-/* ==========================================
-   PROTAGONISTA 2 (MODO 2 JOGADORES) 
-   ========================================== */
-
 #protagonista2 {
     position: absolute;
     width: 150px;
@@ -126,7 +116,15 @@
     object-fit: contain;
     object-position: bottom;
     transform: scaleX(1);
+    /* Distingue visualmente o P2 alterando a paleta de cores dele via filtro */
     filter: hue-rotate(190deg) saturate(1.6) brightness(1.05);
+}
+
+/* ==========================================
+   CLASSE UTILITÁRIA PARA ESCONDER ELEMENTOS  
+   ========================================== */
+.oculto {
+    display: none;
 }
 
 /* ==========================================
@@ -144,11 +142,11 @@
     transition: transform 0.1s;
 }
 
-
+/* Força o fantasma a ignorar a limitação menor */
 .inimigo.fantasma {
-    width: 160px;  
-    height: 175px;  
-    object-fit: fill; 
+    width: 160px;   /* Um pouco maior na largura para compensar as bordas transparentes da sprite */
+    height: 175px;  /* Altura que bate com a escala visual da protagonista */
+    object-fit: fill; /* Força a imagem a esticar de forma ideal até a borda */
 }
 
 /* ==========================================
@@ -156,8 +154,8 @@
    ========================================== */
 .inimigo-cavalo {
     position: absolute;
-    width: 250px;   
-    height: 230px;  
+    width: 250px;   /* Largura maior para acomodar o cavalo horizontalmente */
+    height: 230px;  /* Altura proporcional para o cavalo + bandido */
     bottom: 50px;   
     z-index: 5; 
     object-fit: contain;
@@ -185,33 +183,36 @@
 }
 
 /* ==========================================
-   BOLA DE FENO / COIOTES OBSTÁCULOS
+   COIOTES OBSTÁCULOS
    ========================================== */
 .bola-feno {
     position: absolute;
-    width: 180px;  
-    height: 120px;  
+    width: 180px;   /* Atualizado para o tamanho real do coiote gigante */
+    height: 120px;  /* Atualizado para o tamanho real do coiote gigante */
     object-fit: contain;
     object-position: bottom center; /* Alinha as patas no chão perfeitamente */
     image-rendering: pixelated; 
     image-rendering: crisp-edges;
     background-color: transparent !important; 
-    z-index: 6; 
+    z-index: 6; /* Mantido na frente da Morgana (que é z-index 5 ou 6) */
     
-
+    /* Prepara a propriedade para receber a inversão do JavaScript */
     transform: scaleX(1);
     transform-origin: center center; 
     filter: none; 
 }
 
+/* ==========================================
+   OBSTÁCULOS VOADORES (ABUTRE)
+   ========================================== */
 .abutre {
     position: absolute;
-    width: 400px;   
-    height: 400px;  
-    z-index: 6;     
+    width: 400px;   /* Ajuste conforme o tamanho da sua arte */
+    height: 400px;  /* Ajuste conforme o tamanho da sua arte */
+    z-index: 6;     /* Mesma camada dos obstáculos terrestres */
     object-fit: contain;
     image-rendering: pixelated;
-    bottom: 250px; 
+    bottom: 250px;  /* Altura padrão de voo */
     transform: scaleX(1);
 }
 
@@ -316,7 +317,7 @@ html, body {
     background: rgba(30, 15, 10, 0.95);
     border-top: 5px solid #a07040;
     color: #ffebc2;
-    padding: 30px; /* CORREÇÃO: Padding uniforme e menor na esquerda */
+    padding: 30px; /* Padding uniforme e menor na esquerda */
     z-index: 100;
     font-family: 'Press Start 2P', monospace;
 }
@@ -324,21 +325,30 @@ html, body {
 /* Personagem do Diálogo */
 #personagem {
     position: absolute;
+    /* Faz o busto subir exatamente acima da caixa de diálogo */
     bottom: 180px; 
+    
+    /* Tamanho exato controlado proporcionalmente */
     width: 350px !important;  
     height: 450px !important; 
+    
+    /* Impede que as imagens fiquem esticadas ou percam proporção */
     object-fit: contain !important; 
     object-position: bottom center !important;
+    
     z-index: 90; 
-    transition: none !important; /* Remove transições que possam dar delay na troca */
+    transition: none !important; /* Remove transições que possam dar delay na troca de expressões */
 }
 
 /* ==========================================
    AJUSTES EXCLUSIVOS DA MORGANA SÉRIA
    ========================================== */
 img[src*="morganaSeria"] {
+    /* Aumenta a escala dela ligeiramente para fins dramáticos */
     transform: scale(1.35) !important;
+    /* Define a base inferior como ponto fixo para ela não flutuar ao crescer */
     transform-origin: bottom left !important; 
+    /* Empurra ela um pouco mais para o canto esquerdo da tela */
     margin-left: -50px !important;
 }
 
@@ -359,7 +369,7 @@ img[src*="morganaSeria"] {
 #texto {
     font-size: 18px;
     line-height: 1.8;
-    margin-left: 10px; 
+    margin-left: 10px; /* Margem de segurança para não colar na borda esquerda */
     margin-top: 10px;
 }
 
@@ -379,7 +389,7 @@ img[src*="morganaSeria"] {
 /* Mensagem de pular (fica em cima, no canto esquerdo) */
 .pular {
     position: absolute;
-    bottom: 45px;             /* Mantém a distância para ficar em cima da outra */
+    bottom: 45px;              /* Mantém a distância para ficar em cima da outra */
     left: 30px !important;    /* Força o alinhamento na esquerda */
     right: auto !important;   /* Anula totalmente o comando de 'right' antigo */
     font-size: 12px;
@@ -405,7 +415,7 @@ img[src*="morganaSeria"] {
     opacity: 0;
     z-index: 200; /* Fica acima de tudo, inclusive do diálogo */
     pointer-events: none;
-    transition: opacity 0.7s ease-in-out; /* Controla a velocidade do efeito */
+    transition: opacity 0.7s ease-in-out; /* Controla a velocidade do efeito de fade */
 }
 
 /* Classe que ativa o escurecimento */
@@ -413,7 +423,7 @@ img[src*="morganaSeria"] {
     opacity: 1;
 }
 
-/* Isso intercepta qualquer imagem que tenha "fantasma" no nome do arquivo */
+/* Intercepta qualquer imagem de inimigo que tenha "fantasma" no nome do arquivo */
 img[src*="fantasma"] {
     width: 230px !important;
     height: 250px !important;
