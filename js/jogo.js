@@ -16,14 +16,12 @@ cenario.style.outline = "none";
 
 // ---------------- LocalStorage -----------------
 let ouroEstoque = parseInt(localStorage.getItem("ouroEstoque")) || 0;
-
 let armaSelecionada = localStorage.getItem("armaSelecionada") || "";
 let velocidadeBala = armaSelecionada === "revolver" ? 28 : 18;
 
 // ==========================================
 // MODO DE JOGO: 1 OU 2 JOGADORES 
 // ==========================================
-
 const modoDoisJogadores = localStorage.getItem("modoJogo") === "2";
 const protagonista2 = document.getElementById("protagonista2");
 
@@ -108,6 +106,37 @@ const cenasTransicao2_3 = [
         fundo: "../img/cenario2.png",
         nome: "Protagonista",
         fala: "Mas não importa, vou seguir em frente, eu preciso encontrar todo aquele ouro",
+        imagem: "../img/morganaNormal.png", 
+        posicao: "esquerda"
+    },
+];
+
+const cenasTransicao3_4 = [
+    {
+        fundo: "../img/cenario3.png",
+        nome: "Protagonista",
+        fala: "O que são todas essas coisas?",
+        imagem: "../img/morganaSeria.png", 
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario3.png",
+        nome: "Protagonista",
+        fala: "Antes era fantasmas, agora esqueletos e até camelos zumbis?",
+        imagem: "../img/morganaSeria.png", 
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario3.png",
+        nome: "Protagonista",
+        fala: "O deserto tá corrompido e eu tô no meio disso.",
+        imagem: "../img/morganaNormal.png", 
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario3.png",
+        nome: "Protagonista",
+        fala: "Cada passo me leva mais fundo… e eu não sei se tem volta.",
         imagem: "../img/morganaNormal.png", 
         posicao: "esquerda"
     },
@@ -281,7 +310,7 @@ function finalizarDialogo() {
 // ==========================================
 let ouro = 0
 let pontos = 0
-let faseAtual = 1 // Declarada aqui primeiro!
+let faseAtual = 2 // Declarada aqui primeiro!
 
 // Calcula dinamicamente antes de exibir no HUD pela primeira vez
 let pontosParaProximaFase = faseAtual * 40 
@@ -292,7 +321,6 @@ hudPontos.innerText = `Pontos: 0/${pontosParaProximaFase}`
 // ==========================================
 // TEXTO DO HUD DE VIDAS  
 // ==========================================
-
 function textoVidas() {
     return modoDoisJogadores ? `Vidas da Equipe: ${vidas}` : `Vidas: ${vidas}`;
 }
@@ -378,7 +406,6 @@ btnRecusar.addEventListener("click", () => {
 // ==========================================
 // PERSONAGEM SELECIONADO
 // ==========================================
-
 const personagemSelecionado =
     localStorage.getItem("personagemSelecionado") || "morgana"
 
@@ -389,7 +416,9 @@ function criarSprites(nome){
         parada:`../img/${nome}Parada.png`,
 
         agachada:[
-            `../img/${nome}Agachada.png`
+            `../img/${nome}Agachada1.png`,
+            `../img/${nome}Agachada2.png`,
+            `../img/${nome}Agachada3.png`
         ],
 
         pulo:[
@@ -435,7 +464,6 @@ const personagens = {
 // ==========================================
 // SEGURANÇA: SÓ USAR PERSONAGENS COM SPRITES 100% PRONTOS 
 // ==========================================
-
 const PERSONAGENS_COM_SPRITES_COMPLETOS = ["morgana"];
 
 function resolverPersonagemSeguro(nomeEscolhido) {
@@ -481,7 +509,6 @@ const velocidadeAndar = 10;     // Antes era 4
 // ==========================================
 // VARIÁVEIS DO JOGADOR 2
 // ==========================================
-
 let frameCorrendo2 = 0; let framePulo2 = 0; let frameAtirando2 = 0; let frameAgachado2 = 0;
 let estaAtirando2 = false; let timerAnimacao2 = 0;
 
@@ -559,20 +586,25 @@ window.addEventListener("keyup", (e) => {
 
     if (teclaAgacharJogador1) {
         agachado = false;
-        frameAgachado = 0; // Reseta para a próxima vez que agachar
+        frameAgachado = 0; 
+
+        protagonista.style.width = "";  
+        protagonista.style.height = ""; 
     }
 
     // Jogador 2 levanta 
     if (modoDoisJogadores && e.code === "ArrowDown") {
         agachado2 = false;
         frameAgachado2 = 0;
+
+        protagonista2.style.width = "";  
+        protagonista2.style.height = "";
     }
 });
 
 // ==========================================
 // TIRO DO JOGADOR 1 COM O MOUSE  
 // ==========================================
-
 cenario.addEventListener("mousedown", () => {
     if (!modoDoisJogadores) return;
     if (emTransicaoDeFase || jogoPausado || naContagem) return;
@@ -623,13 +655,21 @@ function criarBolaFeno() {
             asSprites = spritesAbutre2;
         }
 
-        fenoElemento.src = asSprites[0]; // Começa na primeira sprite
-        fenoElemento.style.width = "120px";  // Mantém o tamanho ajustado para o voo
+        fenoElemento.src = asSprites[0]; 
+        fenoElemento.style.width = "120px";  
         fenoElemento.style.height = "120px";
         fenoElemento.style.transform = "none";
 
-        // Faz ele voar: Sorteia uma altura no céu (entre 220px e 320px)
-        posY = Math.floor(Math.random() * (320 - 220 + 1)) + 220;
+        // ==========================================
+        // MODIFICADO: SISTEMA DE DUAS ALTURAS FIXAS
+        // ==========================================
+        if (Math.random() > 0.5) {
+            // ALTURA 1: Voo Baixo (Jogador é obrigado a AGACHAR)
+            posY = chao + 100; 
+        } else {
+            // ALTURA 2: Voo Rasante (Jogador é obrigado a PULAR)
+            posY = chao; 
+        }
     } 
     else {
         // --- BOLA DE FENO PADRÃO (FASE 1 E DEMAIS) ---
@@ -686,7 +726,6 @@ function criarBala() {
 // ==========================================
 // TIRO DO JOGADOR 2 
 // ==========================================
-
 function criarBala2() {
     const balaElemento = document.createElement("div")
     balaElemento.classList.add("bala")
@@ -736,28 +775,45 @@ function criarMoeda(x, y) {
     })
 }
 
-// ==========================================
-// COLISÃO JOGADOR <-> BOLA DE FENO/OBSTÁCULO  
-// ==========================================
+// ============================================================
+// FUNÇÃO DE COLISÃO COM INIMIGOS
+// ============================================================
+function jogadorColidiuComObstaculo(pX, pY, pAgachado, bolaObj) {
+    // 1. Definição da Caixa de Colisão da Morgana
+    let morgana = {
+        esquerda: pX + 15, // Margem de erro de 15px para colisão justa
+        direita: pX + 135, // Largura total de 150px - margem
+        chao: pY + 15,
+        topo: pY + 155    // Altura total de 170px - margem
+    };
 
-function jogadorColidiuComObstaculo(px, py, estaAgachado, bola) {
-    let distX = Math.abs(px - bola.x);
-    let distY = Math.abs(py - bola.y);
-    let limiteX = (faseAtual === 2) ? 90 : 60;
-
-    if (bola.spritesAnimacao) {
-        // Abutres (obstáculo que voa): caixa de colisão fixa, não importa se está agachado
-        return distX < 60 && distY < 60;
+    // 2. Ajuste Dinâmico se ela estiver AGACHADA
+    if (pAgachado) {
+        // Quando agacha, o topo dela baixa consideravelmente
+        morgana.topo = pY + 80; // Nova altura da caixa de colisão agachada
     }
 
-    // Feno normal ou coiotes altos: se o jogador estiver agachado, passa reto sem tirar vida!
-    return distX < limiteX && py <= chao + 40 && !estaAgachado;
+    // 3. Definição da Caixa de Colisão do Obstáculo (Abutre ou Feno)
+    let obstaculo = {
+        esquerda: bolaObj.x + 10,
+        direita: bolaObj.x + (bolaObj.elemento.offsetWidth || 60) - 10,
+        chao: bolaObj.y + 10, // Importante: usa o 'y' que definimos (pode ser chao ou chao + 60)
+        topo: bolaObj.y + (bolaObj.elemento.offsetHeight || 60) - 10
+    };
+
+    // 4. Lógica de Cruzamento de Caixas (AABB Collision)
+    // Checa se as caixas se sobrepõem no eixo X E no eixo Y
+    let colidiuNoEixoX = (morgana.direita > obstaculo.esquerda) && (morgana.esquerda < obstaculo.direita);
+    let colidiuNoEixoY = (morgana.topo > obstaculo.chao) && (morgana.chao < obstaculo.topo);
+
+    // Só há colisão se houver cruzamento nos dois eixos ao mesmo tempo
+    return colidiuNoEixoX && colidiuNoEixoY;
 }
 
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-faseAtual = 1  // aqui muda em q faze começa o jogoooo 
+faseAtual = 3  // aqui muda em q faze começa o jogoooo 
 let inimigos = []
 
 const dadosInimigos = {
@@ -767,21 +823,26 @@ const dadosInimigos = {
     
    // --- NOVOS INIMIGOS DA FASE 2 ---
     bandidoCavalo1: { andando: ["../img/bandidoCavalo1Andando1.png", "../img/bandidoCavalo1Andando2.png", "../img/bandidoCavalo1Andando3.png", "../img/bandidoCavalo1Andando4.png", "../img/bandidoCavalo1Andando5.png", "../img/bandidoCavalo1Andando6.png"], atirando: ["../img/bandidoCavalo1Atirando1.png", "../img/bandidoCavalo1Atirando2.png", "../img/bandidoCavalo1Atirando3.png"] },
-    bandidoCavalo2: { andando: ["../img/bandidoCavalo2Andando1.png", "../img/bandidoCavalo2Andando2.png", "../img/bandidoCavalo2Andando6.png", "../img/bandidoCavalo2Andando4.png", "../img/bandidoCavalo2Andando5.png", "../img/bandidoCavalo2Andando6.png"], atirando: ["../img/bandidoCavalo2Atirando1.png", "../img/bandidoCavalo2Atirando2.png", "../img/bandidoCavalo2Atirando3.png"] },
+    bandidoCavalo2: { andando: ["../img/bandidoCavalo2Andando1.png", "../img/bandidoCavalo2Andando2.png", "../img/bandidoCavalo2Andando3.png", "../img/bandidoCavalo2Andando4.png", "../img/bandidoCavalo2Andando5.png", "../img/bandidoCavalo2Andando6.png"], atirando: ["../img/bandidoCavalo2Atirando1.png", "../img/bandidoCavalo2Atirando2.png", "../img/bandidoCavalo2Atirando3.png"] },
     fantasma:       { andando: ["../img/pistoleiroAndando1.png", "../img/pistoleiroAndando2.png", "../img/pistoleiroAndando3.png", "../img/pistoleiroAndando4.png", "../img/pistoleiroAndando5.png", "../img/pistoleiroAndando6.png"],  atirando: ["../img/pistoleiroAtirando1.png", "../img/pistoleiroAtirando2.png", ] },
 
    // --- NOVOS INIMIGOS DA FASE 3 ---
     cavaloEsqueleto1:       { andando: ["../img/cavaloEsqueleto1andando1.png", "../img/cavaloEsqueleto1andando2.png", "../img/cavaloEsqueleto1andando3.png", "../img/cavaloEsqueleto1andando4.png", "../img/cavaloEsqueleto1andando5.png"],  atirando: ["../img/cavaloEsqueleto1atirando1.png", "../img/cavaloEsqueleto1atirando2.png", "cavaloEsqueleto1atirando3"] },
     cavaloEsqueleto2:       { andando: ["../img/cavaloEsqueleto2andando1.png", "../img/cavaloEsqueleto2andando2.png", "../img/cavaloEsqueleto2andando3.png", "../img/cavaloEsqueleto2andando4.png", "../img/cavaloEsqueleto2andando5.png"],  atirando: ["../img/cavaloEsqueleto2atirando1.png", "../img/cavaloEsqueleto2atirando2.png", "../img/cavaloEsqueleto2atirando2.png"] },
-    camelo:       { andando: ["../img/camelo1.png", "../img/camelo2.png", "../img/camelo3.png", "../img/camelo4.png", "../img/camelo5.png", "../img/camelo6.png"] },
+    camelo:                 { andando: ["../img/camelo1.png", "../img/camelo2.png", "../img/camelo3.png", "../img/camelo4.png", "../img/camelo5.png", "../img/camelo6.png"] },
+
+   // --- NOVOS INIMIGOS DA FASE 4 ---
+    cavaloEsqueleto1:       { andando: ["../img/cavaloEsqueleto1andando1.png", "../img/cavaloEsqueleto1andando2.png", "../img/cavaloEsqueleto1andando3.png", "../img/cavaloEsqueleto1andando4.png", "../img/cavaloEsqueleto1andando5.png"],  atirando: ["../img/cavaloEsqueleto1atirando1.png", "../img/cavaloEsqueleto1atirando2.png", "cavaloEsqueleto1atirando3"] },
+    cavaloEsqueleto2:       { andando: ["../img/cavaloEsqueleto2andando1.png", "../img/cavaloEsqueleto2andando2.png", "../img/cavaloEsqueleto2andando3.png", "../img/cavaloEsqueleto2andando4.png", "../img/cavaloEsqueleto2andando5.png"],  atirando: ["../img/cavaloEsqueleto2atirando1.png", "../img/cavaloEsqueleto2atirando2.png", "../img/cavaloEsqueleto2atirando2.png"] },
+    camelo:                 { andando: ["../img/camelo1.png", "../img/camelo2.png", "../img/camelo3.png", "../img/camelo4.png", "../img/camelo5.png", "../img/camelo6.png"] },
 }
 
 const configuracaoFases = {
     1: { nome: "Cidade Empoeirada", inimigos: ["hostil1", "hostil2", "hostil3"], fundo: "url('../img/cenario1.png')" },
     2: { nome: "Sob Um Sol Escaldante", inimigos: ["bandidoCavalo1", "bandidoCavalo2", "fantasma"], fundo: "url('../img/cenario2.png')" },
     3: { nome: "Vozes Que Vêm Lá Debaixo", inimigos: ["cavaloEsqueleto1", "cavaloEsqueleto2", "camelo"], fundo: "url('../img/cenario3.png')" },
-    4: { nome: "Emboscada no Saloon", inimigos: ["hostil1", "hostil2", "hostil3"], fundo: "url('../img/cenario4.png')" },
-    5: { nome: "O Confronto Final", inimigos: ["chefao"], fundo: "url('../img/cenario5.png')" }
+    4: { nome: "Aqueles que Nunca Partiram", inimigos: ["hostil1", "hostil2", "hostil3"], fundo: "url('../img/cenario4.png')" },
+    5: { nome: "Veias de Ouro", inimigos: ["chefao"], fundo: "url('../img/cenario5.png')" }
 }
 
 function carregarCenarioDaFase() {
@@ -1027,6 +1088,8 @@ function loopDoJogo(tempoAtual) {
         }
         if (estaAtirando) {
             protagonista.src = spritesMorgana.atirando[frameAtirando];
+            protagonista.style.width = "";  
+            protagonista.style.height = "";
         }
     } 
     else if (agachado) {
@@ -1040,6 +1103,8 @@ function loopDoJogo(tempoAtual) {
             }
         }
         protagonista.src = spritesMorgana.agachada[frameAgachado];
+        protagonista.style.width = "120px";  
+        protagonista.style.height = "120px";
     } 
     else if (pulando) {
         timerAnimacao++;
@@ -1051,6 +1116,8 @@ function loopDoJogo(tempoAtual) {
             }
         }
         protagonista.src = spritesMorgana.pulo[framePulo];
+        protagonista.style.width = "";  
+        protagonista.style.height = "";
     } 
     else if (estaAndando) {
         timerAnimacao++;
@@ -1059,9 +1126,15 @@ function loopDoJogo(tempoAtual) {
             frameCorrendo = (frameCorrendo + 1) % spritesMorgana.correndo.length;
         }
         protagonista.src = spritesMorgana.correndo[frameCorrendo];
+        protagonista.style.width = "120px";  
+        protagonista.style.height = "140px";
     } 
     else {
         protagonista.src = spritesMorgana.parada;
+        frameCorrendo = 0;
+
+        protagonista.style.width = "";  
+        protagonista.style.height = "";
     }
 
     protagonista.style.left = `${protaX}px`;
@@ -1120,6 +1193,8 @@ function loopDoJogo(tempoAtual) {
                 }
             }
             protagonista2.src = spritesJogador2.agachada[frameAgachado2];
+            protagonista2.style.width = "100px";  
+            protagonista2.style.height = "100px";
         }
         else if (pulando2) {
             timerAnimacao2++;
@@ -1139,9 +1214,16 @@ function loopDoJogo(tempoAtual) {
                 frameCorrendo2 = (frameCorrendo2 + 1) % spritesJogador2.correndo.length;
             }
             protagonista2.src = spritesJogador2.correndo[frameCorrendo2];
+
+            protagonista2.style.width = "120px";  
+            protagonista2.style.height = "140px";
         }
         else {
             protagonista2.src = spritesJogador2.parada;
+            frameCorrendo2 = 0;
+
+            protagonista2.style.width = "";  
+            protagonista2.style.height = "";
         }
 
         protagonista2.style.left = `${protaX2}px`;
@@ -1460,6 +1542,7 @@ function verificarMudancaDeFase() {
         }
     }
 }
+
 function avancarDeFaseLogica() {
     pontos = 0 
     faseAtual++
