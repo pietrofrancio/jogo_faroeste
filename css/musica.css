@@ -14,12 +14,7 @@ body{
     justify-content: center;
     align-items: center;
 
-    background: linear-gradient(
-        rgba(43, 19, 7, 0.75),
-        rgba(43, 19, 7, 0.75)
-    ),
-    url('../img/fundo.jpg');
-
+    background: #522e14;
     background-size: cover;
     background-position: center;
     color: #ffebc2;

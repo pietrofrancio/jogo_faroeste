@@ -481,3 +481,38 @@ img[src*="fantasma"] {
     height: 250px !important;
     object-fit: contain !important;
 }
+
+/* =======================================================
+   TRUQUE DE CSS: IDENTIFICA SE O PERSONAGEM ESTÁ NA DIREITA
+   ======================================================= */
+
+/* 1. Alinha o texto da fala do chefe/contratante para a direita */
+#personagem[style*="right"] ~ #dialogo #texto,
+#personagem[style*="right"] + #dialogo #texto {
+    text-align: right !important;
+    margin-left: 0 !important;
+    margin-right: 50px !important;
+}
+
+/* 2. Move a caixinha de nome do personagem para a direita */
+#personagem[style*="right"] ~ #dialogo #nome-personagem,
+#personagem[style*="right"] + #dialogo #nome-personagem {
+    left: auto !important;         /* Cancela o left: 30px padrão */
+    right: 80px !important;        /* Empurra para a borda direita */
+    text-align: right !important;
+}
+
+/* 3. Move os avisos de "continuar" e "pular" para a direita */
+#personagem[style*="right"] ~ #dialogo .continuar,
+#personagem[style*="right"] + #dialogo .continuar {
+    left: auto !important;
+    right: 80px !important;
+    text-align: right !important;
+}
+
+#personagem[style*="right"] ~ #dialogo .pular,
+#personagem[style*="right"] + #dialogo .pular {
+    left: auto !important;
+    right: 80px !important;
+    text-align: right !important;
+}
