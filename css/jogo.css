@@ -192,6 +192,9 @@
     object-position: bottom; 
     cursor: crosshair;
     transition: transform 0.1s;
+    border: none !important;      /* Remove bordas HTML/CSS */
+    outline: none !important;     /* Remove contornos de seleção ou foco */
+    box-shadow: none !important;  /* Garante que não há sombras lineares simulando bordas */
 }
 
 /* Força o fantasma a ignorar a limitação menor */
@@ -532,4 +535,22 @@ img[src*="fantasma"] {
     
     /* O SEGREDO ESTÁ AQUI: */
     object-position: bottom right !important; /* Força a imagem a ficar colada no canto inferior direito da caixa! */
+}
+
+/* =======================================================
+   ESTILO DO CHEFÃO GIGANTE DURANTE A GAMEPLAY
+   ======================================================= */
+.inimigo.chefao {
+    width: 280px !important;    /* Quase o dobro do tamanho de um inimigo normal! */
+    height: 320px !important;   /* Altura proporcional */
+    bottom: 50px !important;    /* Mantém os pés dele no chão do cenário */
+    z-index: 6 !important;      /* Garante que ele fique destacado */
+    image-rendering: pixelated; /* Mantém os pixels nítidos mesmo grandão */
+    border: none !important;      /* Remove bordas HTML/CSS */
+    outline: none !important;     /* Remove contornos de seleção ou foco */
+    box-shadow: none !important;  /* Garante que não há sombras lineares simulando bordas */
+    
+    /* Se a sprite dele vier virada para o lado errado na gameplay, 
+       descomente a linha abaixo para espelhar ele de frente para a Morgana: */
+    /* transform: scaleX(-1); */
 }
