@@ -7,9 +7,30 @@
     box-sizing:border-box;
 }
 
+/*==================================
+        VÍDEO DE FUNDO
+==================================*/
+
+.video-background{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+}
+
+#bg-video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.55);
+}
+
 body{
     font-family:'Press Start 2P',cursive;
-    background:linear-gradient(rgba(30,15,10,.85),rgba(30,15,10,.85)),url("../img/fundo.jpg");
     background-size:cover;
     background-position:center;
     color:#ffe6b0;

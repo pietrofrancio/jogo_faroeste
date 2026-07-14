@@ -48,13 +48,15 @@ const displayOuro = document.getElementById("ouroLoja")
 const personagens = [
     { nome: "morgana", preco: 0, botao: document.getElementById("btn-morgana") },
     { nome: "ruby", preco: 15, botao: document.getElementById("btn-ruby") },
-    { nome: "jack", preco: 25, botao: document.getElementById("btn-jack") }
+    { nome: "jack", preco: 25, botao: document.getElementById("btn-jack") },
+    { nome: "arthur", preco: 35, botao: document.getElementById("btn-arthur") }
 ];
 
 const personagensP2 = [
     { nome: "morgana", preco: 0, botao: document.getElementById("btn-morgana-p2") },
     { nome: "ruby", preco: 15, botao: document.getElementById("btn-ruby-p2") },
-    { nome: "jack", preco: 25, botao: document.getElementById("btn-jack-p2") }
+    { nome: "jack", preco: 25, botao: document.getElementById("btn-jack-p2") },
+    { nome: "arthur", preco: 35, botao: document.getElementById("btn-arthur-p2") }
 ];
 
 const musicas = [
@@ -272,12 +274,13 @@ function clicarArma(tipo) {
 document.getElementById("btn-morgana").onclick = () => clicarPersonagem("morgana")
 document.getElementById("btn-ruby").onclick = () => clicarPersonagem("ruby")
 document.getElementById("btn-jack").onclick = () => clicarPersonagem("jack")
-
+document.getElementById("btn-arthur").onclick = () => clicarPersonagem("arthur")
 
 // P2
 document.getElementById("btn-morgana-p2").onclick = () => clicarPersonagemP2("morgana")
 document.getElementById("btn-ruby-p2").onclick = () => clicarPersonagemP2("ruby")
 document.getElementById("btn-jack-p2").onclick = () => clicarPersonagemP2("jack")
+document.getElementById("btn-arthur-p2").onclick = () => clicarPersonagemP2("arthur")
 
 // Músicas
 document.getElementById("btn-musica1").onclick = () => clicarMusica("../music/musica_fundo1.mp3")
