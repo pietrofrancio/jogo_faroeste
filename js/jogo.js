@@ -400,17 +400,16 @@ function finalizarDialogo() {
         avancarDeFaseLogica(); 
     }
     // ==========================================
-    // NOVO: AÇÃO APÓS TERMINAR O DIÁLOGO DO DUELO
+    // AÇÃO APÓS TERMINAR O DIÁLOGO DO DUELO
     // ==========================================
     else if (listaCenasAtiva === cenasDueloFase5) {
-        // Libera a tela de transição tirando o escuro
-        if (telaTransicaoElemento) {
+        // Libera a tela de transição tirando o escuro (se houver)
+        if (typeof telaTransicaoElemento !== 'undefined' && telaTransicaoElemento) {
             telaTransicaoElemento.classList.remove("escuro");
         }
         
-        // Aqui você chama a função que inicia o Duelo na sua Fase 5!
-        // Exemplo:
-        iniciarDueloFase5(); 
+        // DISPARA A CONTAGEM DRAMÁTICA DA FASE 5!
+        iniciarContagemFase(); 
     }
 }
 
@@ -419,7 +418,7 @@ function finalizarDialogo() {
 // ==========================================
 let ouro = 0
 let pontos = 0
-let faseAtual = 2 // Declarada aqui primeiro!
+let faseAtual = 5 // Declarada aqui primeiro!
 
 // Calcula dinamicamente antes de exibir no HUD pela primeira vez
 let pontosParaProximaFase = faseAtual * 40
@@ -956,7 +955,7 @@ function jogadorColidiuComObstaculo(pX, pY, pAgachado, bolaObj) {
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-faseAtual = 5  // aqui muda em q faze começa o jogoooo 
+faseAtual = 4  // aqui muda em q faze começa o jogoooo 
 let inimigos = []
 
 const dadosInimigos = {
@@ -978,6 +977,9 @@ const dadosInimigos = {
     zumbi1: { andando: ["../img/zumbi1.png", "../img/zumbi2.png", "../img/zumbi3.png", "../img/zumbi4.png", "../img/zumbi5.png", "../img/zumbi6.png", "../img/zumbi7.png"]},
     zumbi2: { andando: ["../img/zumbi2_1.png", "../img/zumbi2_2.png", "../img/zumbi2_3.png", "../img/zumbi2_4.png", "../img/zumbi2_5.png", "../img/zumbi2_6.png", "../img/zumbi2_7.png"]},
     esqueleto: { andando: ["../img/esqueleto1.png", "../img/esqueleto2.png", "../img/esqueleto3.png", "../img/esqueleto4.png", "../img/esqueleto5.png", "../img/esqueleto6.png", "../img/esqueleto7.png"] },
+
+     // --- CHEFÃO DA FASE 4 ---
+    chefao: { andando: ["../img/chefao1.png", "../img/chefao2.png", "../img/chefao3.png", "../img/chefao4.png", "../img/chefao5.png", "../img/chefao6.png"], atirando: ["../img/chefaoAtacando1.png", "../img/chefaoAtacando2.png", "../img/chefaoAtacando3.png", "../img/chefaoAtacando4.png", "../img/chefaoAtacando5.png", "../img/chefaoAtacando6.png", "../img/chefaoAtacando7.png", "../img/chefaoAtacando8.png"]},
 }
 
 const configuracaoFases = {
@@ -1087,7 +1089,12 @@ function iniciarContagemFase() {
     else if (faseAtual === 3) pontosParaProximaFase = 120;
     else if (faseAtual === 4) pontosParaProximaFase = 10;
 
-    hudPontos.innerText = `Pontos: ${pontos}/${pontosParaProximaFase}`;
+    // Garante que mostre "Duelo Final!" no HUD caso seja a Fase 5
+    if (faseAtual < 5) {
+        hudPontos.innerText = `Pontos: ${pontos}/${pontosParaProximaFase}`;
+    } else {
+        hudPontos.innerText = "Duelo Final!";
+    }
 
     naContagem = true;
     jogoPausado = true; // Pausa o jogo para a contagem
@@ -1132,6 +1139,8 @@ function iniciarContagemFase() {
 
     cenario.appendChild(telaIntro);
 
+    // ... código anterior da iniciarContagemFase() ...
+
     let contador = 3;
     const textoContagem = document.getElementById("textoContagem");
 
@@ -1145,7 +1154,7 @@ function iniciarContagemFase() {
             clearInterval(intervalo);
             telaIntro.remove();
 
-            // Garante que o estado do jogo volte ao normal e reativa o loop
+            // Quando a contagem acaba, apenas inicia a gameplay!
             naContagem = false;
             jogoPausado = false;
             loopDoJogo();
@@ -1747,8 +1756,6 @@ function avancarDeFaseLogica() {
 
     carregarCenarioDaFase()
     
-    // Na Fase 5, talvez você não precise exibir a pontuação do HUD.
-    // Esse ajuste garante que o texto não quebre caso mude a lógica na Fase 5.
     if (faseAtual < 5) {
         hudPontos.innerText = `Pontos: 0/${pontosParaProximaFase}`;
     } else {
@@ -1768,15 +1775,13 @@ function avancarDeFaseLogica() {
         protagonista2.style.bottom = `${protaY2}px`;
     }
 
-    // ==========================================
-    // CONTROLE DE INÍCIO DA FASE 5 (DUELO)
-    // ==========================================
+    // ========================================================
+    // SE FOR A FASE 5, ABRE O DIÁLOGO PRIMEIRO. SE NÃO, CONTAGEM!
+    // ========================================================
     if (faseAtual === 5) {
-        // Dispara o diálogo do duelo e impede que a contagem normal do jogo comece
-        iniciarDialogo(cenasDueloFase5);
+        iniciarDialogo(cenasDueloFase5); // Começa direto conversando
     } else {
-        // Se for fase 1, 2, 3 ou 4, o jogo inicia normalmente
-        iniciarContagemFase();
+        iniciarContagemFase(); // Outras fases começam direto na contagem
     }
 }
 

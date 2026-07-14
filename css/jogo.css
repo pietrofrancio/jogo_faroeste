@@ -516,3 +516,20 @@ img[src*="fantasma"] {
     right: 80px !important;
     text-align: right !important;
 }
+
+/* =======================================================
+   AUMENTA O CHEFÃO ESPECIFICAMENTE NA TELA DE DIÁLOGO
+   ======================================================= */
+
+#dialogo ~ #personagem[style*="right"],
+#personagem[style*="right"]:has(~ #dialogo) {
+    width: 600px !important;            /* Pode aumentar bastante agora (ex: 450px, 500px, 550px) */
+    height: 650px !important;           /* Aumentamos a altura proporcionalmente para dar imponência */
+    right: -70px !important;             /* Deixa ele mais próximo da borda da tela */
+    left: auto !important;              /* Garante que não há conflitos de posicionamento */
+    bottom: 90px !important;           /* Encosta a base dele exatamente em cima da caixa de diálogo */
+    z-index: 95 !important;             /* Garante que ele fique acima de elementos do cenário */
+    
+    /* O SEGREDO ESTÁ AQUI: */
+    object-position: bottom right !important; /* Força a imagem a ficar colada no canto inferior direito da caixa! */
+}
