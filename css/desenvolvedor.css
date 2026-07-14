@@ -1,244 +1,241 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body {
-    font-family: 'Press Start 2P', cursive;
-    color: #ffebc2;
-    overflow: hidden;
-    background: #522e14; /* troque pela cor que quiser */
-    font-family: 'Press Start 2P', cursive;
-    color: #ffebc2;
-    overflow: hidden;
+body{
+    font-family:'Press Start 2P', cursive;
+    overflow:hidden;
+    color:#2b180d;
 }
 
-/* ==========================
-    VÍDEO
-========================== */
+/*==================================
+        VÍDEO DE FUNDO
+==================================*/
 
-.video-background {
-    position: fixed;
-    inset: 0;
-    z-index: -2;
+.video-background{
+    position:fixed;
+    inset:0;
+    z-index:-2;
 }
 
-#bg-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: sepia(.35) brightness(.75);
+#bg-video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 
-.overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(20, 10, 0, .45);
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.55);
 }
 
-/* ==========================
+/*==================================
         CONTAINER
-========================== */
+==================================*/
 
-.container {
-    width: 92%;
-    height: 100vh;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.container{
+    width:95%;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
 }
 
-/* ==========================
-        TITULO
-========================== */
+h1{
+    color:#f7d78b;
+    font-size:2rem;
+    margin-bottom:45px;
 
-h1 {
-    font-size: 2rem;
-    margin-bottom: 60px;
-    color: #ffd27a;
     text-shadow:
-        4px 4px 0 #2a1207,
-        7px 7px 0 #000;
+        3px 3px #3a1c0b,
+        6px 6px #000;
 }
 
-/* ==========================
-      CARDS
-========================== */
+/*==================================
+        CARTAZES
+==================================*/
 
-.devs {
-
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 35px;
-}
 .devs{
+
     display:flex;
     justify-content:center;
     align-items:flex-start;
-    gap:40px;
     flex-wrap:wrap;
+    gap:35px;
+
 }
 
 .dev-card{
-    width:260px;
-    background:linear-gradient(#d9be82,#cda869,#b88d4c);
-    border:6px solid #5b3418;
-    outline:3px solid #8d5d2f;
+
+    width:255px;
+    background-image: url(../img/papel_velho.jpg);
+    border:3px solid #5d3418;
+    box-shadow:
+        0 0 0 2px #2d170a,
+        10px 10px 18px rgba(0,0,0,.6);
+
     padding:18px;
     text-align:center;
-    box-shadow:8px 8px 0 #1a0a04;
-    transition:.2s;
-    transform:rotate(-2deg);
+    position:relative;
+    transition:.25s;
+
 }
 
-.dev-card:nth-child(even){
+.dev-card:nth-child(1){
+    transform:rotate(-3deg);
+}
+
+.dev-card:nth-child(2){
     transform:rotate(2deg);
 }
 
-.dev-card:hover{
-    transform:translateY(-10px) scale(1.03) rotate(0deg);
+.dev-card:nth-child(3){
+    transform:rotate(-2deg);
 }
 
-.dev-card::before{
-    content:"PROCURADO";
-    display:block;
-    margin-bottom:15px;
-    font-size:1rem;
-    color:#4a1e08;
-    text-shadow:2px 2px #f5d99a;
+.dev-card:nth-child(4){
+    transform:rotate(3deg);
 }
+
+.dev-card:hover{
+
+    transform:
+    translateY(-10px)
+    rotate(0deg)
+    scale(1.03);
+
+}
+
+/* efeito de papel */
+
+.dev-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+    radial-gradient(rgba(255,255,255,.18),transparent 70%);
+
+    opacity:.45;
+
+    pointer-events:none;
+
+}
+
+/*==================================
+        WANTED
+==================================*/
+
+.wanted{
+    font-size:2rem;
+    color:#231208;
+    margin-bottom:8px;
+    letter-spacing:2px;
+}
+
+.alive{
+    font-size:.55rem;
+    color:#3a1b0a;
+    margin-bottom:18px;
+}
+
+/*==================================
+        FOTO
+==================================*/
 
 .dev-card img{
     width:170px;
     height:190px;
     object-fit:cover;
-    border:4px solid #6b3d18;
+    border:3px solid #382012;
     margin-bottom:18px;
-    filter:sepia(.45) contrast(1.15);
-    image-rendering:pixelated;
+    filter:
+sepia(.45)
+brightness(1.18)
+contrast(1.05);
 }
 
+/*==================================
+        TEXTO
+==================================*/
+
 .dev-card h2{
-    font-size:.72rem;
+    font-size:.73rem;
     line-height:20px;
-    color:#4a1e08;
+    color:#241108;
     margin-bottom:18px;
 }
 
 .dev-card p{
-    font-size:.6rem;
-    color:#4a1e08;
-    margin-bottom:14px;
+    font-size:.60rem;
+    margin-bottom:15px;
+    color:#241108;
 }
 
 .dev-card span{
     display:block;
     font-size:.55rem;
-    color:#5d2c10;
+    color:#241108;
 }
 
-.dev-card::after{
-    content:"RECOMPENSA: 9999 OUROS";
-    display:block;
-    margin-top:18px;
+/*==================================
+        RECOMPENSA
+==================================*/
+.reward{
+    margin-top:20px;
+    border-top:2px solid #4a2a13; /* REMOVA ESTA LINHA */
     padding-top:15px;
-    border-top:3px dashed #6b3d18;
-    font-size:.55rem;
-    color:#4a1e08;
+    font-size:.72rem;
+    color:#241108;
 }
-/* ==========================
-        FOTO
-========================== */
+/*==================================
+        BOTÃO
+==================================*/
 
-.dev-card img {
-    width: 170px;
-    height: 170px;
-    border: 4px solid #d4a55a;
-    object-fit: cover;
-    margin-bottom: 20px;
-    image-rendering: pixelated;
-    background: #2b190d;
-}
+.voltar{
+    margin-top:45px;
+    text-decoration:none;
+    background:#5b3117;
+    color:#f5dfaa;
+    padding:18px 40px;
+    border:3px solid #d2a35e;
+    transition:.2s;
+    box-shadow:6px 6px #1a0b04;
 
-/* ==========================
-        TEXTO
-========================== */
-
-.dev-card h2 {
-    font-size: .72rem;
-    line-height: 22px;
-    margin-bottom: 18px;
-    color: #ffd27a;
 }
 
-.dev-card p {
-    font-size: .62rem;
-    margin-bottom: 16px;
-    color: #fff2d3;
+.voltar:hover{
+    background:#d2a35e;
+    color:#35180b;
+    transform:translateY(-3px);
 }
-.dev-card span {
-    display: block;
-    font-size: .55rem;
-    color: #d8b882;
-}
-
-/* ==========================
-      BOTÃO
-========================== */
-
-.voltar {
-
-    margin-top: 55px;
-    text-decoration: none;
-    color: #ffebc2;
-    background: rgba(94, 47, 29, .95);
-    border: 3px solid #a07040;
-    padding: 18px 42px;
-    box-shadow: 5px 5px 0 #1a0a04;
-    transition: .15s;
-}
-
-.voltar:hover {
-    background: #d4a55a;
-    color: #3a1a06;
-    border-color: #3a1a06;
-    transform: translate(-2px, -2px);
-}
-
-.voltar:active {
-    transform: translate(3px, 3px);
-    box-shadow: 1px 1px 0 #1a0a04;
-}
-
-/* ==========================
-      RESPONSIVO
-========================== */
-
-@media(max-width:1300px) {
-    .devs {
-        grid-template-columns: repeat(2, 1fr);
+/*==================================
+        RESPONSIVO
+==================================*/
+@media(max-width:1200px){
+    body{
+        overflow:auto;
     }
-    body {
-        overflow: auto;
-    }
-    .container {
-        height: auto;
-        padding: 60px 0;
+    .container{
+        padding:50px 20px;
     }
 }
-@media(max-width:700px) {
-    .devs {
-        grid-template-columns: 1fr;
+@media(max-width:700px){
+    h1{
+        font-size:1.2rem;
+        text-align:center;
     }
-    h1 {
-        font-size: 1.2rem;
-    }
-    .dev-card {
-        width: 290px;
+    .dev-card{
+        width:280px;
     }
 }
