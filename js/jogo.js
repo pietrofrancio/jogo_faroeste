@@ -585,15 +585,20 @@ function criarSprites(nome) {
 const personagens = {
     morgana: criarSprites("morgana"),
     ruby: criarSprites("ruby"),
-    jack: criarSprites("jack")
+    jack: criarSprites("jack"),
+    arthur: criarSprites("arthur")
 }
 
 // ==========================================
 // SEGURANÇA: SÓ USAR PERSONAGENS COM SPRITES 100% PRONTOS 
 // ==========================================
 
-const PERSONAGENS_COM_SPRITES_COMPLETOS = ["morgana"];
-
+const PERSONAGENS_COM_SPRITES_COMPLETOS = [
+    "morgana",
+    "ruby",
+    "jack",
+    "arthur"
+];
 function resolverPersonagemSeguro(nomeEscolhido) {
     return PERSONAGENS_COM_SPRITES_COMPLETOS.includes(nomeEscolhido)
         ? nomeEscolhido
