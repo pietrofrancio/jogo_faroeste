@@ -15,7 +15,7 @@ let personagemSelecionadoP2 = localStorage.getItem("personagemSelecionadoP2") ||
 
 // Músicas
 let musicasCompradas = JSON.parse(localStorage.getItem("musicasCompradas")) || [];
-let musicaSelecionada = localStorage.getItem("musicaJogo") || "../music/musica_fundo1.mp3";
+let musicaSelecionada = localStorage.getItem("musicaSelecionada") || "../music/musica_fundo1.mp3";
 
 // Armas
 let armasCompradas = JSON.parse(localStorage.getItem("armasCompradas")) || [];
@@ -284,8 +284,8 @@ document.getElementById("btn-arthur-p2").onclick = () => clicarPersonagemP2("art
 
 // Músicas
 document.getElementById("btn-musica1").onclick = () => clicarMusica("../music/musica_fundo1.mp3")
-document.getElementById("btn-musica2").onclick = () => clicarMusica("../music/musica2.mp3")
-document.getElementById("btn-musica3").onclick = () => clicarMusica("../music/musica3.mp3")
+document.getElementById("btn-musica2").onclick = () => clicarMusica("../music/duelo_epico.mp3")
+document.getElementById("btn-musica3").onclick = () => clicarMusica("../music/duelo_final.mp3")
 
 // Armas
 document.getElementById("btn-armaInicial").onclick = () => clicarArma("arma Inicial")
