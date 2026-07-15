@@ -3,13 +3,13 @@
    ========================================== */
 #cenario {
     width: 100%;
-    height: 100vh; 
-    background-image: url('../img/cenario1.png'); 
+    height: 100vh;
+    background-image: url('../img/cenario1.png');
     background-size: cover;
     background-position: center;
-    position: relative; 
-    overflow: hidden; 
-    cursor: crosshair; 
+    position: relative;
+    overflow: hidden;
+    cursor: crosshair;
 }
 
 /* ==========================================
@@ -20,17 +20,17 @@
     top: 20px;
     left: 40px;
     right: 40px;
-    
+
     display: grid;
-    grid-template-columns: 1fr auto 1fr; 
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    
+
     font-family: 'Press Start 2P', monospace;
     font-size: 16px;
     font-weight: bold;
     color: #ffebc2;
     text-shadow: 2px 2px 0px #000;
-    
+
     z-index: 10;
     pointer-events: none;
 }
@@ -38,10 +38,10 @@
 /* Caixa do canto esquerdo: empilha Pontos e Ouro alinhados à esquerda */
 .coluna-central {
     display: flex;
-    flex-direction: column; 
-    align-items: flex-start; 
-    gap: 8px;               
-    justify-self: start;     
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    justify-self: start;
 }
 
 #vidas {
@@ -52,6 +52,7 @@
 #hud span:first-child {
     text-align: left;
 }
+
 #hud span:last-child {
     text-align: right;
 }
@@ -61,7 +62,7 @@
    ========================================== */
 #btnPause {
     pointer-events: auto;
-    justify-self: center; 
+    justify-self: center;
     font-family: 'Press Start 2P', monospace;
     font-size: 11px;
     background: #6b3d18;
@@ -72,19 +73,22 @@
     font-weight: bold;
 }
 
-#btnPause:hover, #btn:hover { 
-    background: #8a542b; 
-    transform: translateY(-2px); 
+#btnPause:hover,
+#btn:hover {
+    background: #8a542b;
+    transform: translateY(-2px);
 }
 
-#btnPause:active, #btn:active {
+#btnPause:active,
+#btn:active {
     transform: translateY(0);
 }
 
 /* ==========================================
    TELA DE PAUSE
    ========================================== */
-#painelPause #btn, #painelPause #btnPause {
+#painelPause #btn,
+#painelPause #btnPause {
     text-decoration: none;
     padding: 16px;
     width: 400px;
@@ -106,7 +110,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(20,10,5,.85);
+    background: rgba(20, 10, 5, .85);
     z-index: 9999;
 }
 
@@ -123,8 +127,8 @@
     color: #fff3c2;
     font-weight: bold;
     align-items: center;
-    display: flex;       
-    gap: 5px;         
+    display: flex;
+    gap: 5px;
     flex-direction: column;
 }
 
@@ -133,25 +137,24 @@
    ========================================== */
 #protagonista {
     position: absolute;
-    width: 150px;   
-    height: 170px;  
-    bottom: 50px;   
+    width: 150px;
+    height: 170px;
+    bottom: 50px;
     left: 50px;
-    z-index: 6; 
-    transform-origin: bottom center; 
-    object-fit: contain;     
-    object-position: bottom; 
+    z-index: 6;
+    transform-origin: bottom center;
+    object-fit: contain;
+    object-position: bottom;
     transform: scaleX(1);
 }
 
 #protagonista.olhando-esquerda {
-    transform: scaleX(-1) !important; 
+    transform: scaleX(-1) !important;
 }
 
 #protagonista.agachado {
-    /* Diminui a altura do elemento para ela descer fisicamente */
     height: 110px;
-    bottom: 50px; 
+    bottom: 50px;
 }
 
 /* ==========================================
@@ -168,7 +171,6 @@
     object-fit: contain;
     object-position: bottom;
     transform: scaleX(1);
-    /* Distingue visualmente o P2 alterando a paleta de cores dele via filtro */
     filter: hue-rotate(190deg) saturate(1.6) brightness(1.05);
 }
 
@@ -184,24 +186,23 @@
    ========================================== */
 .inimigo {
     position: absolute;
-    width: 140px;   
-    height: 160px;  
-    bottom: 50px;   
-    z-index: 5; 
+    width: 140px;
+    height: 160px;
+    bottom: 50px;
+    z-index: 5;
     object-fit: contain;
-    object-position: bottom; 
+    object-position: bottom;
     cursor: crosshair;
     transition: transform 0.1s;
-    border: none !important;      /* Remove bordas HTML/CSS */
-    outline: none !important;     /* Remove contornos de seleção ou foco */
-    box-shadow: none !important;  /* Garante que não há sombras lineares simulando bordas */
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
-/* Força o fantasma a ignorar a limitação menor */
 .inimigo.fantasma {
-    width: 160px;   /* Um pouco maior na largura para compensar as bordas transparentes da sprite */
-    height: 175px;  /* Altura que bate com a escala visual da protagonista */
-    object-fit: fill; /* Força a imagem a esticar de forma ideal até a borda */
+    width: 160px;
+    height: 175px;
+    object-fit: fill;
 }
 
 /* ==========================================
@@ -209,15 +210,15 @@
    ========================================== */
 .inimigo-cavalo {
     position: absolute;
-    width: 250px;   /* Largura maior para acomodar o cavalo horizontalmente */
-    height: 230px;  /* Altura proporcional para o cavalo + bandido */
-    bottom: 50px;   
-    z-index: 5; 
+    width: 250px;
+    height: 230px;
+    bottom: 50px;
+    z-index: 5;
     object-fit: contain;
-    object-position: bottom; 
+    object-position: bottom;
     cursor: crosshair;
     transition: transform 0.1s;
-    image-rendering: pixelated; /* Mantém a arte em pixel bonita ao esticar */
+    image-rendering: pixelated;
 }
 
 /* Efeito rápido quando o inimigo for atingido */
@@ -232,29 +233,28 @@
     position: absolute;
     width: 15px;
     height: 7px;
-    background-color: #796d6d; 
-    border-radius: 50%;        
+    background-color: #796d6d;
+    border-radius: 50%;
     z-index: 3;
 }
 
 /* ==========================================
-   BOLA DE FENO / COIOTES / OBSTÁCULOS
+   BOLA DE FENO / COIOTES / ESPIRITOS
    ========================================== */
 .bola-feno {
     position: absolute;
-    width: 180px;   /* Atualizado para o tamanho real do coiote gigante */
-    height: 120px;  /* Atualizado para o tamanho real do coiote gigante */
+    width: 180px;
+    height: 120px;
     object-fit: contain;
-    object-position: bottom center; /* Alinha as patas no chão perfeitamente */
-    image-rendering: pixelated; 
+    object-position: bottom center;
+    image-rendering: pixelated;
     image-rendering: crisp-edges;
-    background-color: transparent !important; 
-    z-index: 6; /* Mantido na frente da Morgana (que é z-index 5 ou 6) */
-    
-    /* Prepara a propriedade para receber a inversão do JavaScript */
+    background-color: transparent !important;
+    z-index: 6;
+
     transform: scaleX(1);
-    transform-origin: center center; 
-    filter: none; 
+    transform-origin: center center;
+    filter: none;
 }
 
 /* ==========================================
@@ -262,12 +262,12 @@
    ========================================== */
 .abutre {
     position: absolute;
-    width: 400px;   /* Ajuste conforme o tamanho da sua arte */
-    height: 400px;  /* Ajuste conforme o tamanho da sua arte */
-    z-index: 6;     /* Mesma camada dos obstáculos terrestres */
+    width: 400px;
+    height: 400px;
+    z-index: 6;
     object-fit: contain;
     image-rendering: pixelated;
-    bottom: 20px;  /* Altura padrão de voo */
+    bottom: 20px;
     transform: scaleX(1);
 }
 
@@ -280,7 +280,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(20,10,5,.85);
+    background: rgba(20, 10, 5, .85);
     z-index: 9999;
 }
 
@@ -349,13 +349,14 @@
    ========================================== */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden; 
-    background-color: #000; 
+    overflow: hidden;
+    background-color: #000;
 }
 
 /* Caixa de diálogo */
@@ -368,7 +369,7 @@ html, body {
     background: rgba(30, 15, 10, 0.95);
     border-top: 5px solid #a07040;
     color: #ffebc2;
-    padding: 30px; /* Padding uniforme e menor na esquerda */
+    padding: 30px;
     z-index: 100;
     font-family: 'Press Start 2P', monospace;
 }
@@ -376,43 +377,30 @@ html, body {
 /* Personagem do Diálogo */
 #personagem {
     position: absolute;
-    
-    /* Faz o busto subir exatamente acima da caixa de diálogo */
-    bottom: 180px; 
-    
-    /* Tamanho exato controlado proporcionalmente */
-    width: 350px !important;  
-    height: 450px !important; 
-    
-    /* Impede que as imagens fiquem esticadas ou percam proporção */
-    object-fit: contain !important; 
+    bottom: 180px;
+    width: 350px !important;
+    height: 450px !important;
+    object-fit: contain !important;
     object-position: bottom center !important;
-    
-    /* Garante que ela fique na frente do cenário, mas atrás do texto/nome se necessário */
-    z-index: 90; 
-    transition: none !important; /* Remove transições que possam dar delay na troca de expressões */
+    z-index: 90;
+    transition: none !important;
 }
 
 /* ==========================================
    AJUSTES EXCLUSIVOS DA MORGANA SÉRIA
    ========================================== */
 img[src*="morganaSeria"] {
-    /* Aumenta a escala dela ligeiramente para fins dramáticos */
-    transform: scale(1.35) !important;
-    
-    /* Define a base inferior como ponto fixo para ela não flutuar ao crescer */
-    transform-origin: bottom left !important; 
-    
-    /* Empurra ela um pouco mais para o canto esquerdo da tela */
+    transform: scale(1.35) !important; 
+    transform-origin: bottom left !important;
     margin-left: -50px !important;
 }
 
 /* Nome do Personagem na Caixa */
 #nome-personagem {
-    position: absolute; 
-    top: -45px; 
-    left: 30px; 
-    background: rgba(30, 15, 10, 1); 
+    position: absolute;
+    top: -45px;
+    left: 30px;
+    background: rgba(30, 15, 10, 1);
     border: 5px solid #a07040;
     color: #ffebc2;
     padding: 10px 15px;
@@ -424,29 +412,29 @@ img[src*="morganaSeria"] {
 #texto {
     font-size: 18px;
     line-height: 1.8;
-    margin-left: 10px; /* Margem de segurança para não colar na borda esquerda */
+    margin-left: 10px;
     margin-top: 10px;
 }
 
 /* Mensagem de continuar (fica embaixo, no canto esquerdo) */
 .continuar {
     position: absolute;
-    bottom: 20px; 
-    left: 30px !important;    /* Força o alinhamento na esquerda */
-    right: auto !important;   /* Anula totalmente o comando de 'right' antigo */
-    font-size: 12px; 
-    color: #b0894a; 
+    bottom: 20px;
+    left: 30px !important;
+    right: auto !important;
+    font-size: 12px;
+    color: #b0894a;
     font-weight: bold;
     text-align: left;
-    animation: piscar 1.2s infinite; 
+    animation: piscar 1.2s infinite;
 }
 
 /* Mensagem de pular (fica em cima, no canto esquerdo) */
 .pular {
     position: absolute;
-    bottom: 45px;              /* Mantém a distância para ficar em cima da outra */
-    left: 30px !important;    /* Força o alinhamento na esquerda */
-    right: auto !important;   /* Anula totalmente o comando de 'right' antigo */
+    bottom: 45px;
+    left: 30px !important;
+    right: auto !important;
     font-size: 12px;
     color: #b0894a;
     font-weight: bold;
@@ -455,8 +443,15 @@ img[src*="morganaSeria"] {
 }
 
 @keyframes piscar {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.2; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.2;
+    }
 }
 
 /* Tela de Transição (Escurecimento) */
@@ -468,9 +463,9 @@ img[src*="morganaSeria"] {
     height: 100%;
     background-color: black;
     opacity: 0;
-    z-index: 200; /* Fica acima de tudo, inclusive do diálogo */
+    z-index: 200;
     pointer-events: none;
-    transition: opacity 0.7s ease-in-out; /* Controla a velocidade do efeito de fade */
+    transition: opacity 0.7s ease-in-out;
 }
 
 /* Classe que ativa o escurecimento */
@@ -490,31 +485,31 @@ img[src*="fantasma"] {
    ======================================================= */
 
 /* 1. Alinha o texto da fala do chefe/contratante para a direita */
-#personagem[style*="right"] ~ #dialogo #texto,
-#personagem[style*="right"] + #dialogo #texto {
+#personagem[style*="right"]~#dialogo #texto,
+#personagem[style*="right"]+#dialogo #texto {
     text-align: right !important;
     margin-left: 0 !important;
     margin-right: 50px !important;
 }
 
 /* 2. Move a caixinha de nome do personagem para a direita */
-#personagem[style*="right"] ~ #dialogo #nome-personagem,
-#personagem[style*="right"] + #dialogo #nome-personagem {
-    left: auto !important;         /* Cancela o left: 30px padrão */
-    right: 80px !important;        /* Empurra para a borda direita */
-    text-align: right !important;
-}
-
-/* 3. Move os avisos de "continuar" e "pular" para a direita */
-#personagem[style*="right"] ~ #dialogo .continuar,
-#personagem[style*="right"] + #dialogo .continuar {
+#personagem[style*="right"]~#dialogo #nome-personagem,
+#personagem[style*="right"]+#dialogo #nome-personagem {
     left: auto !important;
     right: 80px !important;
     text-align: right !important;
 }
 
-#personagem[style*="right"] ~ #dialogo .pular,
-#personagem[style*="right"] + #dialogo .pular {
+/* 3. Move os avisos de "continuar" e "pular" para a direita */
+#personagem[style*="right"]~#dialogo .continuar,
+#personagem[style*="right"]+#dialogo .continuar {
+    left: auto !important;
+    right: 80px !important;
+    text-align: right !important;
+}
+
+#personagem[style*="right"]~#dialogo .pular,
+#personagem[style*="right"]+#dialogo .pular {
     left: auto !important;
     right: 80px !important;
     text-align: right !important;
@@ -523,34 +518,137 @@ img[src*="fantasma"] {
 /* =======================================================
    AUMENTA O CHEFÃO ESPECIFICAMENTE NA TELA DE DIÁLOGO
    ======================================================= */
+#dialogo~#personagem[style*="right"],
 
-#dialogo ~ #personagem[style*="right"],
 #personagem[style*="right"]:has(~ #dialogo) {
-    width: 600px !important;            /* Pode aumentar bastante agora (ex: 450px, 500px, 550px) */
-    height: 650px !important;           /* Aumentamos a altura proporcionalmente para dar imponência */
-    right: -70px !important;             /* Deixa ele mais próximo da borda da tela */
-    left: auto !important;              /* Garante que não há conflitos de posicionamento */
-    bottom: 90px !important;           /* Encosta a base dele exatamente em cima da caixa de diálogo */
-    z-index: 95 !important;             /* Garante que ele fique acima de elementos do cenário */
-    
-    /* O SEGREDO ESTÁ AQUI: */
-    object-position: bottom right !important; /* Força a imagem a ficar colada no canto inferior direito da caixa! */
+    width: 600px !important;
+    height: 650px !important;
+    right: -70px !important;
+    left: auto !important;
+    bottom: 90px !important;
+    z-index: 95 !important;
+    object-position: bottom right !important;
 }
 
 /* =======================================================
    ESTILO DO CHEFÃO GIGANTE DURANTE A GAMEPLAY
    ======================================================= */
 .inimigo.chefao {
-    width: 280px !important;    /* Quase o dobro do tamanho de um inimigo normal! */
-    height: 320px !important;   /* Altura proporcional */
-    bottom: 50px !important;    /* Mantém os pés dele no chão do cenário */
-    z-index: 6 !important;      /* Garante que ele fique destacado */
-    image-rendering: pixelated; /* Mantém os pixels nítidos mesmo grandão */
-    border: none !important;      /* Remove bordas HTML/CSS */
-    outline: none !important;     /* Remove contornos de seleção ou foco */
-    box-shadow: none !important;  /* Garante que não há sombras lineares simulando bordas */
-    
-    /* Se a sprite dele vier virada para o lado errado na gameplay, 
-       descomente a linha abaixo para espelhar ele de frente para a Morgana: */
-    /* transform: scaleX(-1); */
+    width: 280px !important;
+    height: 320px !important;
+    bottom: 50px !important;
+    z-index: 6 !important;
+    image-rendering: pixelated;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* ==========================================
+   LIMPEZA DO CENÁRIO DURANTE OS DIÁLOGOS
+   ========================================== */
+body:has(#dialogo:not(.oculto)) .inimigo,
+body:has(#dialogo:not(.oculto)) .inimigo-cavalo,
+body:has(#dialogo:not(.oculto)) .bola-feno,
+body:has(#dialogo:not(.oculto)) .abutre,
+body:has(#dialogo:not(.oculto)) .bala,
+body:has(#dialogo:not(.oculto)) #hud,
+body:has(#dialogo:not(.oculto)) #protagonista,
+body:has(#dialogo:not(.oculto)) #protagonista2,
+body:has(#dialogo:not(.oculto)) .moeda,
+body:has(#dialogo:not(.oculto)) #barra-vida-chefao,
+body:has(#dialogo:not(.oculto)) .barra-chefao,
+body:has(#dialogo:not(.oculto)) #barra-chefao,
+body:has(#dialogo:not(.oculto)) #boss-bar {
+    display: none !important;
+}
+
+/* Garante que o painel do HUD ocupe toda a largura superior sem mexer os elementos */
+#hud {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Força os elementos internos do HUD a aceitarem cliques */
+#hud * {
+    pointer-events: auto;
+}
+
+#vidas,
+.vidas-container {
+    display: flex;
+    gap: 5px;
+    min-width: 120px;
+}
+
+/* ==========================================
+   ALINHAMENTO PERFEITO DO BOTÃO DE PAUSE (CENTRO DA TELA)
+   ========================================== */
+
+/* 1. Removemos as margens absolutas do grid para que o centro dele seja o centro real da janela */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100%;
+
+    /* Grid de 3 colunas idênticas para garantir simetria absoluta */
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    align-items: center !important;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+/* 2. Forçamos o botão de pause a ficar centralizado no pixel exato do meio da tela */
+#btnPause {
+    pointer-events: auto;
+    justify-self: center !important;
+    margin: 0 !important;
+    position: relative;
+    width: 140px;
+    text-align: center;
+}
+
+/* 3. Ajustamos as colunas da esquerda e direita para não "empurrarem" o meio */
+.coluna-central {
+    justify-self: start !important;
+    padding-left: 40px;
+}
+
+#vidas {
+    justify-self: end !important;
+    padding-right: 40px;
+}
+
+/* ==========================================
+   TELA DE FIM DE JOGO DE VERDADE
+   ========================================== */
+#tela-fim-jogo {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 99999;
+    cursor: pointer;
+    animation: fadeInFim 1.5s ease-in-out;
+}
+
+@keyframes fadeInFim {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }

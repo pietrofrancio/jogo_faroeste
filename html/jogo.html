@@ -12,7 +12,7 @@
 
 <body>
     <audio id="musicaJogo" loop></audio>
-    
+
     <div class="game-container">
         <div id="hud">
             <div class="coluna-central">
@@ -22,15 +22,15 @@
             <button id="btnPause">⏸ Pausar</button>
             <span id="vidas">Vidas: 5 <span class="coracao-vida"></span></span>
         </div>
-        
+
         <div id="cenario">
             <!-- Jogador 1 -->
-                     <img id="protagonista" src="../img/morganaNormal.png" alt="Protagonista 1">
+            <img id="protagonista" src="../img/morganaNormal.png" alt="Protagonista 1">
 
             <!-- Jogador 2 (Inicialmente oculto, ativado via JavaScript no modo 2 Jogadores) -->
             <img id="protagonista2" src="../img/morganaNormal.png" alt="Protagonista 2" class="oculto">
         </div>
-        
+
         <div id="texto"></div>
         <div id="fade"></div>
     </div>
@@ -39,7 +39,7 @@
     <div id="gameOverMenu" class="oculto">
         <div class="painelGameOver">
             <h1>GAME OVER</h1>
-            
+
             <p class="textoGameOver">
                 O espírito da Morgana ainda resiste...
                 <br><br>
@@ -60,6 +60,7 @@
             <a href="../index.html" id="btn">Página Principal</a><br><br>
         </div>
     </div>
+    <img id="tela-fim-jogo" src="../img/vitoria_final.png" class="oculto" alt="Fim de Jogo">
 </body>
 
 </html>

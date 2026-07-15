@@ -231,6 +231,103 @@ const cenasDueloFase5 = [
     },
 ];
 
+const cenasFimFase5 = [
+    {
+        fundo: "../img/cenario5.png",
+        nome: "Protagonista",
+        fala: "Os boatos eram verdadeiros… olha todo esse ouro!",
+        imagem: "../img/morganaNormal.png",
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario5.png",
+        nome: "Protagonista",
+        fala: "Bom, acho que se eu levar só um pouco, eles nem vão dar falta.",
+        imagem: "../img/morganaGananciosa.png",
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario5.png",
+        nome: "Protagonista",
+        fala: "É, acho que no final valeu a pena...",
+        imagem: "../img/morganaGananciosa.png",
+        posicao: "esquerda"
+    },
+];
+
+const cenasFimJogo = [
+    {
+        fundo: "../img/cenario1.png",
+        nome: "Contratante",
+        fala: "Então… ela existe?",
+        imagem: "../img/contratante.png",
+        posicao: "direita"
+    },
+    {
+        fundo: "../img/cenario1.png",
+        nome: "Protagonista",
+        fala: "Mais do que você imagina.",
+        imagem: "../img/morganaGananciosa.png",
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario1.png",
+        nome: "Narrador",
+        fala: "Mas algo parece errado...",
+        imagem: "",
+        posicao: ""
+    },
+    {
+        fundo: "../img/cenario1.png",
+        nome: "Contratante",
+        fala: "Você...",
+        imagem: "../img/contratante.png",
+        posicao: "direita"
+    },
+    {
+        fundo: "../img/cenario1.png",
+        nome: "Protagonista",
+        fala: "O que?",
+        imagem: "",
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario1.png",
+        nome: "Protagonista",
+        fala: "Espera, o que está acontecendo comigo?",
+        imagem: "",
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario1.png",
+        nome: "Protagonista",
+        fala: "Não pode ser!!!",
+        imagem: "",
+        posicao: "esquerda"
+    },
+    {
+        fundo: "../img/cenario1.png",
+        nome: "Narrador",
+        fala: "E no final, a mina nunca esteve vazia.",
+        imagem: "",
+        posicao: ""
+    },
+    {
+        fundo: "../img/cenario1.png",
+        nome: "Narrador",
+        fala: "Ela só estava esperando o seu contratante encontrar alguém para que a história se repetisse.",
+        imagem: "",
+        posicao: ""
+    },
+    {
+        fundo: "../img/cenario1.png",
+        nome: "Narrador",
+        fala: "E agora… ela tem um novo guardião.",
+        imagem: "",
+        posicao: ""
+    },
+];
+
 function iniciarDialogo(listaDeCenas) {
     if (!listaDeCenas || listaDeCenas.length === 0) {
         console.error("Erro: Nenhuma cena foi passada para iniciarDialogo().");
@@ -248,7 +345,6 @@ function iniciarDialogo(listaDeCenas) {
     const cenarioElemento = document.getElementById("cenario");
     if (!cenarioElemento) return;
 
-    // CRIAÇÃO DA TELA DE TRANSIÇÃO (Ela nasce aqui se não existir no HTML)
     telaTransicaoElemento = document.getElementById("transicao-tela");
     if (!telaTransicaoElemento) {
         telaTransicaoElemento = document.createElement("div");
@@ -256,14 +352,15 @@ function iniciarDialogo(listaDeCenas) {
         cenarioElemento.appendChild(telaTransicaoElemento);
     }
 
-    // Limpa inimigos e feno da tela de forma segura
-    if (typeof inimigos !== 'undefined' && inimigos) {
-        inimigos.forEach(ini => { if (ini.elemento) ini.elemento.remove(); });
-        inimigos = [];
-    }
-    if (typeof bolasFeno !== 'undefined' && bolasFeno) {
-        bolasFeno.forEach(bola => { if (bola.elemento) bola.elemento.remove(); });
-        bolasFeno = [];
+    if (listaDeCenas !== cenasFimFase5 && listaDeCenas !== cenasFimJogo) {
+        if (typeof inimigos !== 'undefined' && inimigos) {
+            inimigos.forEach(ini => { if (ini.elemento) ini.elemento.remove(); });
+            inimigos = [];
+        }
+        if (typeof bolasFeno !== 'undefined' && bolasFeno) {
+            bolasFeno.forEach(bola => { if (bola.elemento) bola.elemento.remove(); });
+            bolasFeno = [];
+        }
     }
 
     // Cria ou recupera o personagem direto no cenário
@@ -301,7 +398,6 @@ function gerenciarTeclasDialogo(e) {
         if (e.code === "Space") {
             e.preventDefault();
 
-            // Trava o clique se já estiver escurecendo para evitar bugs de avançar duplo
             if (telaTransicaoElemento.classList.contains("escuro")) return;
 
             // 1. Inicia o efeito de fechar a tela (fade out)
@@ -399,17 +495,42 @@ function finalizarDialogo() {
     else if (listaCenasAtiva === cenasTransicao4_5) {
         avancarDeFaseLogica();
     }
-    // ==========================================
-    // AÇÃO APÓS TERMINAR O DIÁLOGO DO DUELO
-    // ==========================================
     else if (listaCenasAtiva === cenasDueloFase5) {
-        // Libera a tela de transição tirando o escuro (se houver)
         if (typeof telaTransicaoElemento !== 'undefined' && telaTransicaoElemento) {
             telaTransicaoElemento.classList.remove("escuro");
         }
-
-        // DISPARA A CONTAGEM DRAMÁTICA DA FASE 5!
         iniciarContagemFase();
+    }
+
+    else if (listaCenasAtiva === cenasFimFase5) {
+        setTimeout(() => {
+            iniciarDialogo(cenasFimJogo);
+        }, 300);
+    }
+
+    // ==========================================
+    // FIM DE JOGO (PLOT TWIST DO NARRADOR)
+    // ==========================================
+    else if (listaCenasAtiva === cenasFimJogo) {
+        const boxDialogo = document.getElementById("dialogo");
+        if (boxDialogo) {
+            boxDialogo.classList.add("oculto");
+        }
+
+        // 2. Procura a imagem do fim do jogo e a exibe
+        const imgFim = document.getElementById("tela-fim-jogo");
+        if (imgFim) {
+            imgFim.classList.remove("oculto");
+
+            // 3. Quando o jogador clicar na imagem do final, o jogo reinicia!
+            imgFim.addEventListener("click", () => {
+                location.reload();
+            });
+        } else {
+            // Caso esqueça de colocar a imagem no HTML, o alert serve como segurança
+            alert("Parabéns! Você completou a história!");
+            location.reload();
+        }
     }
 }
 
@@ -418,7 +539,7 @@ function finalizarDialogo() {
 // ==========================================
 let ouro = 0
 let pontos = 0
-let faseAtual = 5 // Declarada aqui primeiro!
+let faseAtual = 5
 
 // Calcula dinamicamente antes de exibir no HUD pela primeira vez
 let pontosParaProximaFase = faseAtual * 40
@@ -471,7 +592,7 @@ const spritesAbutre2 = [
     "../img/abutre2voando4.png", "../img/abutre2voando5.png", "../img/abutre2voando6.png",
     "../img/abutre2voando7.png"
 ]
-// Array com as 6 imagens de animação do espírito flutuante
+
 const spritesEspirito = [
     "../img/espirito1.png",
     "../img/espirito2.png",
@@ -499,10 +620,8 @@ for (let i = 1; i <= totalSpritesFeno; i++) {
 // ==========================================
 btnPause.addEventListener("click", () => {
     jogoPausado = !jogoPausado;
-    // Remove o foco do botão para não dar o bug do Espaço
     btnPause.blur();
 
-    // mudanças: tela de pause surgindo e botão de pause mudando de lugar
     if (jogoPausado) {
         btnPause.innerText = "▶ Continuar"
         musicaJogo.pause()
@@ -517,18 +636,14 @@ btnPause.addEventListener("click", () => {
         const ultimoElemento = hud.lastElementChild
         hud.insertBefore(btnPause, ultimoElemento);
 
-        // Força o navegador a focar no cenário do jogo
         cenario.focus()
-
-        // Só reinicia o loop se não houver outra instância rodando
-        // Como o requestAnimationFrame já roda continuamente se emTransicaoDeFase for checado,
-        // remover a chamada direta do loopDoJogo() aqui evita duplicações!
     }
 });
 
 btnRecusar.addEventListener("click", () => {
     location.reload()
 })
+
 // ==========================================
 // PERSONAGEM SELECIONADO
 // ==========================================
@@ -591,13 +706,13 @@ const personagens = {
 // ==========================================
 // SEGURANÇA: SÓ USAR PERSONAGENS COM SPRITES 100% PRONTOS 
 // ==========================================
-
 const PERSONAGENS_COM_SPRITES_COMPLETOS = [
     "morgana",
     "ruby",
     "jack",
     "arthur"
 ];
+
 function resolverPersonagemSeguro(nomeEscolhido) {
     return PERSONAGENS_COM_SPRITES_COMPLETOS.includes(nomeEscolhido)
         ? nomeEscolhido
@@ -633,10 +748,9 @@ let protaX = 50; let protaY = chao; let velY = 0
 let pulando = false
 let agachado = false;
 
-// Aumentamos a velocidade, o pulo e a gravidade para o jogo responder melhor a 60 FPS:
-const gravidade = 1.4;         // Antes era 0.5
-const forcaPulo = 26;         // Antes era 18
-const velocidadeAndar = 10;     // Antes era 4
+const gravidade = 1.4;
+const forcaPulo = 26;
+const velocidadeAndar = 10;
 
 // ==========================================
 // VARIÁVEIS DO JOGADOR 2
@@ -644,7 +758,7 @@ const velocidadeAndar = 10;     // Antes era 4
 let frameCorrendo2 = 0; let framePulo2 = 0; let frameAtirando2 = 0; let frameAgachado2 = 0;
 let estaAtirando2 = false; let timerAnimacao2 = 0;
 
-let protaX2 = 220; let protaY2 = chao; let velY2 = 0; // Nasce um pouco à frente do Jogador 1
+let protaX2 = 220; let protaY2 = chao; let velY2 = 0;
 let pulando2 = false;
 let agachado2 = false;
 
@@ -664,7 +778,6 @@ window.addEventListener("keydown", (e) => {
         : (e.code === "ArrowDown" || e.code === "KeyS");
 
     if (teclaAgacharJogador1 && !pulando) {
-        // Se ele acabou de agachar agora, reseta o frame da animação
         if (!agachado) {
             frameAgachado = 0;
             timerAnimacao = 0;
@@ -761,8 +874,8 @@ function criarBolaFeno() {
     const fenoElemento = document.createElement("img");
     fenoElemento.className = "bola-feno";
 
-    let posY = chao; // Altura padrão (no chão)
-    let asSprites = null; // Guardará o array de animação se houver
+    let posY = chao;
+    let asSprites = null;
 
     if (faseAtual === 2) {
         // --- COIOTES DA FASE 2 ---
@@ -934,7 +1047,7 @@ function jogadorColidiuComObstaculo(pX, pY, pAgachado, bolaObj) {
 
     // 2. Ajuste Dinâmico se ela estiver AGACHADA
     if (pAgachado) {
-        morgana.topo = pY + 80; // Nova altura da caixa de colisão agachada
+        morgana.topo = pY + 80;
     }
 
     // 3. Definição da Caixa de Colisão do Obstáculo (Feno, Abutre ou Espírito)
@@ -963,6 +1076,38 @@ function jogadorColidiuComObstaculo(pX, pY, pAgachado, bolaObj) {
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
 faseAtual = 5 // aqui muda em q faze começa o jogoooo 
+
+let projeteisChefao = [];
+
+function criarBolaPoder(chefaoX, chefaoY, viradoParaEsquerda) {
+    const bola = document.createElement("div");
+    bola.className = "bola-poder";
+
+    bola.style.position = "absolute";
+    bola.style.width = "45px";
+    bola.style.height = "45px";
+    bola.style.borderRadius = "50%";
+
+    bola.style.backgroundColor = "#ba313d";
+    bola.style.boxShadow = "0 0 20px 8px rgb(169, 44, 54), inset 0 0 10px #781414";
+    bola.style.zIndex = "5";
+
+    let alturaPoder = parseFloat(chefaoY) + 130;
+    bola.style.bottom = `${alturaPoder}px`;
+    bola.style.left = `${chefaoX}px`;
+
+    cenario.appendChild(bola);
+
+    let velocidadeReal = viradoParaEsquerda ? -12 : 12;
+
+    projeteisChefao.push({
+        elemento: bola,
+        x: chefaoX,
+        y: alturaPoder,
+        velocidade: velocidadeReal
+    });
+}
+
 let inimigos = []
 
 const dadosInimigos = {
@@ -1004,7 +1149,6 @@ function carregarCenarioDaFase() {
 }
 
 function criarInimigo() {
-    // Adicionamos "emDialogo" (ou a variável que você usa para travar o jogo nas conversas)
     if (jogoPausado || naContagem || emTransicaoDeFase || (typeof emDialogo !== 'undefined' && emDialogo)) return;
 
     // =======================================================
@@ -1012,13 +1156,12 @@ function criarInimigo() {
     // =======================================================
     if (faseAtual === 5) {
         const jaTemChefao = inimigos.some(ini => ini.tipo === "chefao");
-        if (jaTemChefao) return; // Se já existir o Chefão no jogo, não criamos mais nada!
+        if (jaTemChefao) return;
 
         const inimigoElemento = document.createElement("img");
         inimigoElemento.classList.add("inimigo");
         inimigoElemento.classList.add("chefao");
 
-        // Define a sprite inicial do Chefão com base no objeto de animação
         if (dadosInimigos["chefao"] && dadosInimigos["chefao"].andando) {
             inimigoElemento.src = dadosInimigos["chefao"].andando[0];
         } else {
@@ -1039,15 +1182,61 @@ function criarInimigo() {
             elemento: inimigoElemento,
             x: posX,
             tipo: "chefao",
-            estado: "andando", // Garante que o loop de animação funcione!
+            estado: "andando",
             frame: 0,
             timer: 0,
             timerAtaque: 0,
-            vida: 10,
+            vida: 1,
             velocidade: 3
         });
 
-        console.log("O Chefão do Duelo Final nasceu com 10 de vida!");
+        // ----------------------------------------------------------------
+        // ADICIONA A BARRA DE VIDA DE RPG DO CHEFÃO DINAMICAMENTE
+        // ----------------------------------------------------------------
+        const chefaoHud = document.createElement("div");
+        chefaoHud.id = "chefao-hud";
+        chefaoHud.style.position = "absolute";
+        chefaoHud.style.top = "70px";
+        chefaoHud.style.left = "50%";
+        chefaoHud.style.transform = "translateX(-50%)";
+        chefaoHud.style.width = "450px";
+        chefaoHud.style.textAlign = "center";
+        chefaoHud.style.zIndex = "10";
+
+        // Nome do Chefão acima da barra
+        const chefaoNome = document.createElement("div");
+        chefaoNome.innerText = "★ CHEFÃO ★";
+        chefaoNome.style.color = "#ffebc2";
+        chefaoNome.style.fontFamily = "'Courier New', monospace";
+        chefaoNome.style.fontWeight = "bold";
+        chefaoNome.style.fontSize = "22px";
+        chefaoNome.style.textShadow = "2px 2px 4px #000000";
+        chefaoNome.style.marginBottom = "6px";
+
+        // Fundo cinza escuro da barra
+        const barraBg = document.createElement("div");
+        barraBg.style.width = "100%";
+        barraBg.style.height = "16px";
+        barraBg.style.backgroundColor = "#222";
+        barraBg.style.border = "3px solid #a07040";
+        barraBg.style.borderRadius = "6px";
+        barraBg.style.overflow = "hidden";
+        barraBg.style.boxShadow = "0 0 15px rgba(0,0,0,0.7)";
+
+        // O preenchimento vermelho da vida
+        const barraFg = document.createElement("div");
+        barraFg.id = "chefao-vida-progresso";
+        barraFg.style.width = "100%";
+        barraFg.style.height = "100%";
+        barraFg.style.backgroundColor = "#510808";
+        barraFg.style.transition = "width 0.3s ease-out";
+
+        barraBg.appendChild(barraFg);
+        chefaoHud.appendChild(chefaoNome);
+        chefaoHud.appendChild(barraBg);
+        cenario.appendChild(chefaoHud);
+
+        console.log("O Chefão do Duelo Final nasceu com a Barra de Vida ativa!");
         return;
     }
 
@@ -1127,7 +1316,37 @@ function criarInimigo() {
     });
 }
 
-let chefaoAtivo = null; // Guardará o objeto do Chefão
+window.atualizarBarraVidaChefao = function (vidaAtual) {
+    const barra = document.getElementById("chefao-vida-progresso");
+    const hud = document.getElementById("chefao-hud");
+
+    if (barra) {
+        let porcentagem = (vidaAtual / 20) * 100;
+        if (porcentagem < 0) porcentagem = 0;
+        if (porcentagem > 100) porcentagem = 100;
+
+        console.log(`Vida do Chefão: ${vidaAtual} / 20 (${porcentagem}%)`);
+
+        barra.style.width = `${porcentagem}%`;
+
+        if (porcentagem < 30) {
+            barra.style.backgroundColor = "rgb(40, 5, 5)";
+        }
+    } else {
+        console.warn("Elemento 'chefao-vida-progresso' não foi encontrado na tela!");
+    }
+
+    // Se o Chefão morreu, remove o HUD da tela suavemente
+    if (vidaAtual <= 0 && hud) {
+        hud.style.transition = "opacity 0.5s ease-out";
+        hud.style.opacity = "0";
+        setTimeout(() => {
+            hud.remove();
+        }, 500);
+    }
+};
+
+let chefaoAtivo = null;
 
 function iniciarContagemFase() {
     if (faseAtual === 1) pontosParaProximaFase = 40;
@@ -1143,7 +1362,7 @@ function iniciarContagemFase() {
     }
 
     naContagem = true;
-    jogoPausado = true; // Pausa o jogo para a contagem
+    jogoPausado = true;
 
     // Remove qualquer tela de contagem antiga que possa ter ficado presa
     const telaAntiga = document.getElementById("telaIntroFase");
@@ -1185,8 +1404,6 @@ function iniciarContagemFase() {
 
     cenario.appendChild(telaIntro);
 
-    // ... código anterior da iniciarContagemFase() ...
-
     let contador = 3;
     const textoContagem = document.getElementById("textoContagem");
 
@@ -1208,7 +1425,7 @@ function iniciarContagemFase() {
             // NOVO: SE FOR A FASE 5, SPAWNA O CHEFÃO!
             // ==========================================
             if (faseAtual === 5) {
-                criarInimigo(); // Usa a criação padrão que já configura a animação e velocidade!
+                criarInimigo();
             }
 
             console.log("Contagem finalizada! Jogo rodando.");
@@ -1221,19 +1438,14 @@ function iniciarContagemFase() {
 // ==========================================
 let ultimoTempoQuadro = 0;
 const fpsAlvo = 60;
-const intervaloQuadro = 1000 / fpsAlvo; // ~16.66ms por quadro
+const intervaloQuadro = 1000 / fpsAlvo;
 
 // ==========================================
-// GAME LOOP (VERSÃO COM FPS CORRIGIDO)
+// GAME LOOP (VERSÃO CORRIGIDA E OTIMIZADA)
 // ==========================================
 function loopDoJogo(tempoAtual) {
-    // Garante que o loop continue rodando mesmo se estiver em transição
-    if (emTransicaoDeFase) {
-        requestAnimationFrame(loopDoJogo);
-        return;
-    }
-
-    if (jogoPausado || naContagem) {
+    // Garante que o loop continue rodando mesmo se estiver em transição ou pausado
+    if (emTransicaoDeFase || jogoPausado || naContagem) {
         requestAnimationFrame(loopDoJogo);
         return;
     }
@@ -1258,7 +1470,6 @@ function loopDoJogo(tempoAtual) {
 
     // SÓ PERMITE ANDAR E PULAR SE NÃO ESTIVER AGACHADO
     if (!agachado) {
-
         const direita1 = modoDoisJogadores ? teclas["KeyD"] : (teclas["ArrowRight"] || teclas["KeyD"]);
         const esquerda1 = modoDoisJogadores ? teclas["KeyA"] : (teclas["ArrowLeft"] || teclas["KeyA"]);
         const pular1 = modoDoisJogadores ? teclas["KeyW"] : (teclas["ArrowUp"] || teclas["KeyW"]);
@@ -1281,10 +1492,17 @@ function loopDoJogo(tempoAtual) {
         }
     }
 
-    // Aplicação da gravidade e pulo
+    // Aplicação da gravidade física
     protaY += velY;
-    if (protaY > chao) velY -= gravidade;
-    if (protaY <= chao) { protaY = chao; pulando = false; velY = 0; framePulo = 0; }
+    if (protaY > chao) {
+        velY -= gravidade;
+    }
+    if (protaY <= chao) {
+        protaY = chao;
+        pulando = false;
+        velY = 0;
+        framePulo = 0;
+    }
 
     // --- ATUALIZAÇÃO DO SPRITE VISUAL ---
     if (estaAtirando) {
@@ -1299,8 +1517,8 @@ function loopDoJogo(tempoAtual) {
         }
         if (estaAtirando) {
             protagonista.src = spritesMorgana.atirando[frameAtirando];
-            protagonista.style.width = "";
-            protagonista.style.height = "";
+            if (protagonista.style.width !== "") protagonista.style.width = "";
+            if (protagonista.style.height !== "") protagonista.style.height = "";
         }
     }
     else if (agachado) {
@@ -1308,14 +1526,15 @@ function loopDoJogo(tempoAtual) {
         if (timerAnimacao >= 6) {
             timerAnimacao = 0;
             frameAgachado++;
-            // Mantém travado no último frame (totalmente agachada) enquanto segurar a seta
             if (frameAgachado >= spritesMorgana.agachada.length) {
                 frameAgachado = spritesMorgana.agachada.length - 1;
             }
         }
         protagonista.src = spritesMorgana.agachada[frameAgachado];
-        protagonista.style.width = "120px";
-        protagonista.style.height = "120px";
+        if (protagonista.style.width !== "120px") {
+            protagonista.style.width = "120px";
+            protagonista.style.height = "120px";
+        }
     }
     else if (pulando) {
         timerAnimacao++;
@@ -1327,8 +1546,8 @@ function loopDoJogo(tempoAtual) {
             }
         }
         protagonista.src = spritesMorgana.pulo[framePulo];
-        protagonista.style.width = "";
-        protagonista.style.height = "";
+        if (protagonista.style.width !== "") protagonista.style.width = "";
+        if (protagonista.style.height !== "") protagonista.style.height = "";
     }
     else if (estaAndando) {
         timerAnimacao++;
@@ -1337,15 +1556,16 @@ function loopDoJogo(tempoAtual) {
             frameCorrendo = (frameCorrendo + 1) % spritesMorgana.correndo.length;
         }
         protagonista.src = spritesMorgana.correndo[frameCorrendo];
-        protagonista.style.width = "120px";
-        protagonista.style.height = "140px";
+        if (protagonista.style.width !== "120px") {
+            protagonista.style.width = "120px";
+            protagonista.style.height = "140px";
+        }
     }
     else {
         protagonista.src = spritesMorgana.parada;
         frameCorrendo = 0;
-
-        protagonista.style.width = "";
-        protagonista.style.height = "";
+        if (protagonista.style.width !== "") protagonista.style.width = "";
+        if (protagonista.style.height !== "") protagonista.style.height = "";
     }
 
     protagonista.style.left = `${protaX}px`;
@@ -1374,7 +1594,7 @@ function loopDoJogo(tempoAtual) {
             }
         }
 
-        // Física (gravidade/pulo) idêntica à do Jogador 1
+        // Física do Jogador 2
         protaY2 += velY2;
         if (protaY2 > chao) velY2 -= gravidade;
         if (protaY2 <= chao) { protaY2 = chao; pulando2 = false; velY2 = 0; framePulo2 = 0; }
@@ -1404,8 +1624,10 @@ function loopDoJogo(tempoAtual) {
                 }
             }
             protagonista2.src = spritesJogador2.agachada[frameAgachado2];
-            protagonista2.style.width = "100px";
-            protagonista2.style.height = "100px";
+            if (protagonista2.style.width !== "100px") {
+                protagonista2.style.width = "100px";
+                protagonista2.style.height = "100px";
+            }
         }
         else if (pulando2) {
             timerAnimacao2++;
@@ -1425,16 +1647,16 @@ function loopDoJogo(tempoAtual) {
                 frameCorrendo2 = (frameCorrendo2 + 1) % spritesJogador2.correndo.length;
             }
             protagonista2.src = spritesJogador2.correndo[frameCorrendo2];
-
-            protagonista2.style.width = "120px";
-            protagonista2.style.height = "140px";
+            if (protagonista2.style.width !== "120px") {
+                protagonista2.style.width = "120px";
+                protagonista2.style.height = "140px";
+            }
         }
         else {
             protagonista2.src = spritesJogador2.parada;
             frameCorrendo2 = 0;
-
-            protagonista2.style.width = "";
-            protagonista2.style.height = "";
+            if (protagonista2.style.width !== "") protagonista2.style.width = "";
+            if (protagonista2.style.height !== "") protagonista2.style.height = "";
         }
 
         protagonista2.style.left = `${protaX2}px`;
@@ -1444,13 +1666,10 @@ function loopDoJogo(tempoAtual) {
     // --- 2. LÓGICA E ANIMAÇÃO DOS INIMIGOS ---
     for (let i = inimigos.length - 1; i >= 0; i--) {
         let ini = inimigos[i];
-
         let velInimigoAtual = (ini.velocidade !== undefined) ? ini.velocidade : 3;
         let direcaoX = 1;
 
-        // ==========================================
-        // ALVO DO INIMIGO (jogador mais próximo, no modo 2 jogadores)
-        // ==========================================
+        // Alvo Inteligente (Mira no mais próximo)
         let alvoX = protaX;
         let alvoPulando = pulando;
         let alvoAgachado = agachado;
@@ -1466,36 +1685,18 @@ function loopDoJogo(tempoAtual) {
         }
 
         if (ini.estado === "andando") {
-            let proximoX = ini.x;
-
-            // Calcula para onde ele deveria ir normalmente
             if (alvoX > ini.x) {
-                proximoX += velInimigoAtual;
+                ini.x += velInimigoAtual;
                 direcaoX = 1;
             } else {
-                proximoX -= velInimigoAtual;
+                ini.x -= velInimigoAtual;
                 direcaoX = -1;
             }
-
-            // --- REGRA ESPECIAL DO CHEFÃO: PARAR NA METADE DA TELA ---
-            if (ini.tipo === "chefao") {
-                const metadeDaTela = window.innerWidth / 2;
-                // Como o Chefão vem da direita, ele não pode ter o X menor do que a metade da tela
-                if (proximoX < metadeDaTela) {
-                    proximoX = metadeDaTela;
-                }
-            }
-
-            // Aplica a nova posição calculada
-            ini.x = proximoX;
-        }
-        else {
+        } else {
             direcaoX = alvoX > ini.x ? 1 : -1;
         }
 
         ini.timer++;
-
-        // Define o limite da troca de sprite (24 para o Chefão, 12 para o resto)
         let limiteAnimacao = (ini.tipo === "chefao") ? 14 : 12;
 
         if (ini.timer >= limiteAnimacao) {
@@ -1504,8 +1705,8 @@ function loopDoJogo(tempoAtual) {
             ini.frame = (ini.frame + 1) % listaSprites.length;
             ini.elemento.src = listaSprites[ini.frame];
 
-            // --- CONTROLE DE TAMANHO ABSOLUTO ---
-            if (ini.tipo === "bandidoCavalo1" || ini.tipo === "bandidoCavalo2" || ini.tipo === "cavaloZombie" || ini.tipo === "cavaloEsqueleto1" || ini.tipo === "cavaloEsqueleto2") {
+            // Ajuste de Dimensões
+            if (["bandidoCavalo1", "bandidoCavalo2", "cavaloZombie", "cavaloEsqueleto1", "cavaloEsqueleto2"].includes(ini.tipo)) {
                 ini.elemento.style.width = "220px";
                 ini.elemento.style.height = "160px";
             }
@@ -1514,7 +1715,6 @@ function loopDoJogo(tempoAtual) {
                 ini.elemento.style.height = "180px";
             }
             else if (ini.tipo === "chefao") {
-                // Mantém o tamanho grande dele atualizado a cada frame de animação
                 ini.elemento.style.width = "280px";
                 ini.elemento.style.height = "320px";
             }
@@ -1522,36 +1722,31 @@ function loopDoJogo(tempoAtual) {
 
         ini.elemento.style.transform = `scaleX(${direcaoX})`;
 
-        ini.elemento.style.transform = `scaleX(${direcaoX})`;
-
-        // ========================================================
-        // 2.1 LÓGICA DE ATAQUE EXCLUSIVA DO CHEFÃO
-        // ========================================================
+        // --- LÓGICA DE ATAQUE DO CHEFÃO ---
         if (ini.tipo === "chefao") {
             ini.timerAtaque++;
-
-            // Ele tenta atirar a cada 180 frames (aprox. 3 segundos)
             if (ini.timerAtaque >= 180 && ini.estado === "andando") {
                 ini.timerAtaque = 0;
-                ini.estado = "atirando"; // Ativa o estado de tiro (carrega seus sprites de tiro)
-                ini.frame = 0;           // Reinicia a animação do primeiro frame de tiro
+                ini.estado = "atirando";
+                ini.frame = 0;
 
-                // Toca o dano se o jogador não esquivar (pulando ou agachando)
-                if (!alvoPulando && !alvoAgachado) {
-                    perderVida();
-                }
+                const estiloTransform = ini.elemento.style.transform || "";
+                const viradoParaEsquerda = estiloTransform.includes("scaleX(-1)");
 
-                // Após 1.2 segundos (tempo do tiro), ele volta a andar imponentemente
+                setTimeout(() => {
+                    if (inimigos.includes(ini)) {
+                        criarBolaPoder(ini.x, ini.elemento.style.bottom, viradoParaEsquerda);
+                    }
+                }, 400);
+
                 setTimeout(() => {
                     ini.estado = "andando";
                     ini.frame = 0;
-                }, 1200); 
+                }, 1200);
             }
         }
 
-        // ========================================================
-        // 2.2 LÓGICA DOS INIMIGOS COMUNS (NÃO CHEFÃO)
-        // ========================================================
+        // --- LÓGICA DOS INIMIGOS COMUNS (ATIRADORES) ---
         if (ini.tipo !== "chefao") {
             const atiradores = ["hostil1", "hostil2", "hostil3", "bandidoCavalo1", "bandidoCavalo2", "fantasma"];
 
@@ -1565,7 +1760,6 @@ function loopDoJogo(tempoAtual) {
                         ini.estado = "atirando";
                         ini.frame = 0;
 
-                        // SISTEMA DE ESQUIVA
                         if (!alvoPulando && !alvoAgachado) perderVida();
 
                         setTimeout(() => {
@@ -1578,9 +1772,8 @@ function loopDoJogo(tempoAtual) {
                 }
             }
 
-            // --- COLISÃO FÍSICA (INIMIGO ENCOSTOU NO JOGADOR) ---
+            // Colisão Física Individual
             let colidiuFisicamente = false;
-
             let distFisica1X = Math.abs(protaX - ini.x);
             let distFisica1Y = Math.abs(protaY - chao);
             if (distFisica1X < 50 && distFisica1Y < 70) {
@@ -1603,6 +1796,7 @@ function loopDoJogo(tempoAtual) {
             }
         }
 
+        // Remove inimigos que saem do limite do mapa
         if (ini.x < -200 || ini.x > window.innerWidth + 200) {
             ini.elemento.remove();
             inimigos.splice(i, 1);
@@ -1612,7 +1806,7 @@ function loopDoJogo(tempoAtual) {
         ini.elemento.style.left = `${ini.x}px`;
     }
 
-    // --- 3. LÓGICA DOS PROJÉTEIS (MOVIMENTO E COLISÃO) ---
+    // --- 3. LÓGICA DOS PROJÉTEIS DOS JOGADORES ---
     for (let b = balas.length - 1; b >= 0; b--) {
         let bala = balas[b];
         bala.x += (velocidadeBala * bala.direcao);
@@ -1621,9 +1815,7 @@ function loopDoJogo(tempoAtual) {
 
         for (let i = inimigos.length - 1; i >= 0; i--) {
             let ini = inimigos[i];
-
             let distBalaX = Math.abs(bala.x - ini.x);
-
             let inimigoYCentro = (typeof ini.y !== 'undefined') ? (ini.y + 75) : (chao + 75);
             let distBalaY = Math.abs(bala.y - inimigoYCentro);
 
@@ -1631,39 +1823,45 @@ function loopDoJogo(tempoAtual) {
                 bala.elemento.remove();
                 balas.splice(b, 1);
                 balaDestruida = true;
-
                 ini.vida--;
+
+                if (ini.tipo === "chefao") {
+                    window.atualizarBarraVidaChefao(ini.vida);
+                }
 
                 if (ini.vida <= 0) {
                     let pontosGanhos = 0;
-
-                    if (ini.tipo === "hostil1" || ini.tipo === "hostil2") {
-                        pontosGanhos = 3;
-                    } else if (ini.tipo === "hostil3" || ini.tipo === "fantasma") {
-                        pontosGanhos = 5;
-                    } else if (ini.tipo === "bandidoCavalo1" || ini.tipo === "bandidoCavalo2" || ini.tipo === "cavaloEsqueleto1" || ini.tipo === "cavaloEsqueleto2") {
-                        pontosGanhos = 7;
-                    } else if (ini.tipo === "camelo") {
-                        pontosGanhos = 10;
-                    } else if (ini.tipo === "zumbi1" || ini.tipo === "zumbi2" || ini.tipo === "esqueleto") {
-                        pontosGanhos = 8;
-                    } else if (ini.tipo === "chefao") {
-                        pontosGanhos = 20;
-                    }
+                    if (ini.tipo === "hostil1" || ini.tipo === "hostil2") pontosGanhos = 3;
+                    else if (ini.tipo === "hostil3" || ini.tipo === "fantasma") pontosGanhos = 5;
+                    else if (["bandidoCavalo1", "bandidoCavalo2", "cavaloEsqueleto1", "cavaloEsqueleto2"].includes(ini.tipo)) pontosGanhos = 7;
+                    else if (ini.tipo === "camelo") pontosGanhos = 10;
+                    else if (["zumbi1", "zumbi2", "esqueleto"].includes(ini.tipo)) pontosGanhos = 8;
+                    else if (ini.tipo === "chefao") pontosGanhos = 20;
 
                     pontos += pontosGanhos;
                     hudPontos.innerText = `Pontos: ${pontos}/${pontosParaProximaFase}`;
 
                     criarMoeda(ini.x + 40, (ini.y || chao) + 20);
-
                     ini.elemento.remove();
                     inimigos.splice(i, 1);
 
-                    verificarMudancaDeFase();
-
+                    // Se NÃO for o chefão, segue o fluxo normal de verificar mudança de fase
                     if (ini.tipo === "chefao") {
-                        alert("Parabéns! Você derrotou o Chefão com seus poderes e salvou o dia!");
-                        location.reload();
+                        const barraVida = document.getElementById("barra-vida-chefao") ||
+                            document.getElementById("barra-chefao") ||
+                            document.getElementById("boss-bar") ||
+                            document.querySelector(".barra-chefao");
+
+                        if (barraVida) {
+                            barraVida.remove();
+                        }
+
+                        iniciarDialogo(cenasFimFase5);
+                    }
+
+                    // Se FOR o chefão, inicia as falas finais da vitória!
+                    if (ini.tipo === "chefao") {
+                        iniciarDialogo(cenasFimFase5);
                     }
                 }
                 break;
@@ -1678,7 +1876,7 @@ function loopDoJogo(tempoAtual) {
         }
     }
 
-    // --- LÓGICA E ANIMAÇÃO DAS MOEDAS ---
+    // --- 4. LÓGICA E ANIMAÇÃO DAS MOEDAS ---
     for (let i = moedas.length - 1; i >= 0; i--) {
         let moeda = moedas[i];
 
@@ -1706,7 +1904,6 @@ function loopDoJogo(tempoAtual) {
         moeda.elemento.style.bottom = `${moeda.y}px`;
 
         let pegouMoeda = false;
-
         let distanciaX1 = Math.abs(protaX - moeda.x);
         let distanciaY1 = Math.abs(protaY - moeda.y);
         if (distanciaX1 < 50 && distanciaY1 < 80) pegouMoeda = true;
@@ -1718,7 +1915,7 @@ function loopDoJogo(tempoAtual) {
         }
 
         if (pegouMoeda) {
-            ouro++
+            ouro++;
             hudOuro.innerText = `Ouro: ${ouro}`;
             moeda.elemento.remove();
             moedas.splice(i, 1);
@@ -1727,26 +1924,15 @@ function loopDoJogo(tempoAtual) {
         }
     }
 
-    // --- 4. LÓGICA E ANIMAÇÃO DAS BOLAS DE FENO (OBSTÁCULOS/COIOTES/ABUTRES) ---
+    // --- 5. LÓGICA DAS BOLAS DE FENO (OBSTÁCULOS) ---
     for (let i = bolasFeno.length - 1; i >= 0; i--) {
         let bola = bolasFeno[i];
-
         bola.x -= bola.velocidade;
 
         if (bola.spritesAnimacao) {
             bola.timer++;
-
-            // Configurações padrão (para os Abutres da Fase 3)
-            let limiteTimer = 6;
-            let largura = "120px";
-            let altura = "120px";
-
-            // Ajustes específicos se for o Espírito (Fase 4)
-            if (faseAtual === 4) {
-                limiteTimer = 16;
-                largura = "120px";
-                altura = "120px";
-            }
+            let limiteTimer = (faseAtual === 4) ? 16 : 6;
+            let dimen = "120px";
 
             if (bola.timer >= limiteTimer) {
                 bola.timer = 0;
@@ -1754,8 +1940,8 @@ function loopDoJogo(tempoAtual) {
                 bola.elemento.src = bola.spritesAnimacao[bola.frame];
             }
 
-            bola.elemento.style.width = largura;
-            bola.elemento.style.height = altura;
+            bola.elemento.style.width = dimen;
+            bola.elemento.style.height = dimen;
             bola.elemento.style.transform = "none";
         }
         else if (faseAtual === 2) {
@@ -1807,27 +1993,60 @@ function loopDoJogo(tempoAtual) {
         }
     }
 
+    // --- 6. PROJÉTEIS DO CHEFÃO ---
+    for (let j = projeteisChefao.length - 1; j >= 0; j--) {
+        let proj = projeteisChefao[j];
+        proj.x += proj.velocidade;
+        proj.elemento.style.left = `${proj.x}px`;
+
+        let tamanhoBola = 45;
+        let colidiuP1 = false;
+        let alturaProta1 = agachado ? 70 : 145;
+        let topoJogador1 = protaY + alturaProta1;
+
+        let colidiuHorizontalP1 = Math.abs((protaX + 25) - (proj.x + 22)) < 45;
+        let colidiuVerticalP1 = (proj.y < topoJogador1) && ((proj.y + tamanhoBola) > protaY);
+
+        if (colidiuHorizontalP1 && colidiuVerticalP1) colidiuP1 = true;
+
+        let colidiuP2 = false;
+        if (modoDoisJogadores) {
+            let alturaProta2 = agachado2 ? 70 : 145;
+            let topoJogador2 = protaY2 + alturaProta2;
+
+            let colidiuHorizontalP2 = Math.abs((protaX2 + 25) - (proj.x + 22)) < 45;
+            let colidiuVerticalP2 = (proj.y < topoJogador2) && ((proj.y + tamanhoBola) > protaY2);
+
+            if (colidiuHorizontalP2 && colidiuVerticalP2) colidiuP2 = true;
+        }
+
+        if (colidiuP1 || colidiuP2) {
+            proj.elemento.remove();
+            projeteisChefao.splice(j, 1);
+            perderVida();
+            continue;
+        }
+
+        if (proj.x < -100) {
+            proj.elemento.remove();
+            projeteisChefao.splice(j, 1);
+        }
+    }
+
     requestAnimationFrame(loopDoJogo);
 }
 
+// ==========================================
+// OUTRAS FUNÇÕES AUXILIARES DO MOTOR
+// ==========================================
 function verificarMudancaDeFase() {
     if (pontos >= pontosParaProximaFase) {
-        salvarOuroNoEstoque()
-        if (faseAtual === 1) {
-            iniciarDialogo(cenasTransicao1_2);
-        }
-        else if (faseAtual === 2) {
-            iniciarDialogo(cenasTransicao2_3);
-        }
-        else if (faseAtual === 3) {
-            iniciarDialogo(cenasTransicao3_4);
-        }
-        else if (faseAtual === 4) {
-            iniciarDialogo(cenasTransicao4_5);
-        }
-        else if (faseAtual < 5) {
-            avancarDeFaseLogica();
-        }
+        salvarOuroNoEstoque();
+        if (faseAtual === 1) iniciarDialogo(cenasTransicao1_2);
+        else if (faseAtual === 2) iniciarDialogo(cenasTransicao2_3);
+        else if (faseAtual === 3) iniciarDialogo(cenasTransicao3_4);
+        else if (faseAtual === 4) iniciarDialogo(cenasTransicao4_5);
+        else if (faseAtual < 5) avancarDeFaseLogica();
         else {
             alert("Parabéns! Você concluiu o jogo!");
             location.reload();
@@ -1836,33 +2055,27 @@ function verificarMudancaDeFase() {
 }
 
 function avancarDeFaseLogica() {
-    pontos = 0
-    faseAtual++
+    pontos = 0;
+    faseAtual++;
 
-    // --- ATUALIZA A META DE PONTOS DA NOVA FASE AQUI ---
-    if (faseAtual === 1) {
-        pontosParaProximaFase = 40;
-    } else if (faseAtual === 2) {
-        pontosParaProximaFase = 80;
-    } else if (faseAtual === 3) {
-        pontosParaProximaFase = 120;
-    } else if (faseAtual === 4) {
-        pontosParaProximaFase = 160;
-    }
+    if (faseAtual === 1) pontosParaProximaFase = 40;
+    else if (faseAtual === 2) pontosParaProximaFase = 80;
+    else if (faseAtual === 3) pontosParaProximaFase = 120;
+    else if (faseAtual === 4) pontosParaProximaFase = 160;
 
-    inimigos.forEach(ini => ini.elemento.remove())
-    inimigos = []
+    inimigos.forEach(ini => ini.elemento.remove());
+    inimigos = [];
 
     if (typeof balas !== 'undefined') {
-        balas.forEach(b => b.elemento.remove())
-        balas = []
+        balas.forEach(b => b.elemento.remove());
+        balas = [];
     }
     if (typeof moedas !== 'undefined') {
-        moedas.forEach(m => m.elemento.remove())
-        moedas = []
+        moedas.forEach(m => m.elemento.remove());
+        moedas = [];
     }
 
-    carregarCenarioDaFase()
+    carregarCenarioDaFase();
 
     if (faseAtual < 5) {
         hudPontos.innerText = `Pontos: 0/${pontosParaProximaFase}`;
@@ -1875,7 +2088,6 @@ function avancarDeFaseLogica() {
     protagonista.style.left = `${protaX}px`;
     protagonista.style.bottom = `${protaY}px`;
 
-    // Reposiciona também o Jogador 2 
     if (modoDoisJogadores) {
         protaX2 = 220;
         protaY2 = chao;
@@ -1883,21 +2095,15 @@ function avancarDeFaseLogica() {
         protagonista2.style.bottom = `${protaY2}px`;
     }
 
-    // ========================================================
-    // SE FOR A FASE 5, ABRE O DIÁLOGO PRIMEIRO. SE NÃO, CONTAGEM!
-    // ========================================================
     if (faseAtual === 5) {
-        iniciarDialogo(cenasDueloFase5); // Começa direto conversando
+        iniciarDialogo(cenasDueloFase5);
     } else {
-        iniciarContagemFase(); // Outras fases começam direto na contagem
+        iniciarContagemFase();
     }
 }
 
-// ==========================================
-// FUNÇÃO DE DANO 
-// ==========================================
 function perderVida() {
-    if (invencivel) return; // Se estiver no tempo de piscar, ignora o dano
+    if (invencivel) return;
 
     vidas--;
     hudVidas.innerText = textoVidas();
@@ -1905,8 +2111,6 @@ function perderVida() {
     if (vidas <= 0) {
         vidas = 0;
         hudVidas.innerText = textoVidas();
-
-        // Zera apenas o ouro da gameplay atual
         ouro = 0;
         hudOuro.innerText = `Ouro: ${ouro}`;
 
@@ -1914,10 +2118,7 @@ function perderVida() {
         menuGameOver.classList.remove("oculto");
         musicaJogo.pause();
     } else {
-        // Ativa uma pequena invencibilidade temporária ao tomar dano para não morrer instantaneamente
         invencivel = true;
-
-        // Garante que o jogo não trave e que o controle do teclado continue ativo
         jogoPausado = false;
         cenario.focus();
 
@@ -1935,13 +2136,11 @@ function perderVida() {
             if (modoDoisJogadores && protagonista2) {
                 protagonista2.style.opacity = "1";
             }
-        }, 1500); // 1 segundo e meio de invencibilidade piscando
+        }, 1500);
     }
 }
 
 window.addEventListener("beforeunload", function () {
-    // Se o jogo não estiver pausado por Game Over (ou seja, o jogador saiu no meio)
-    // você garante que o ouro coletado até ali vá para o estoque
     if (ouro > 0 && vidas > 0) {
         let estoqueAtual = parseInt(localStorage.getItem("ouroEstoque")) || 0;
         estoqueAtual += ouro;
@@ -1949,44 +2148,30 @@ window.addEventListener("beforeunload", function () {
     }
 });
 
-
 function salvarOuroNoEstoque() {
-    // 1. Pega o estoque antigo do localStorage. Se não existir, assume 0.
     let estoqueAtual = parseInt(localStorage.getItem("ouroEstoque")) || 0;
-
-
-    // 2. Soma o ouro coletado nesta partida ao estoque permanente
     estoqueAtual += ouro;
-
-    // 3. Salva o novo total acumulado de volta no localStorage
     localStorage.setItem("ouroEstoque", estoqueAtual);
-
-    // 4. Zera o ouro da partida atual para não duplicar na próxima fase
     ouro = 0;
     hudOuro.innerText = `Ouro: ${ouro}`;
-
-    console.log("Estoque atualizado com sucesso! Novo total: " + estoqueAtual);
+    console.log("Estoque atualizado! Novo total: " + estoqueAtual);
 }
 
 // ==========================================
 // INICIALIZAÇÃO AUTOMÁTICA DOS MOTORES DO JOGO
 // ==========================================
-
-// 1. Carrega o plano de fundo da Fase 1
 carregarCenarioDaFase();
-
-// 2. Inicia o loop principal de física e animações
 loopDoJogo();
-
-// 3. Inicia a contagem regressiva (3, 2, 1... ATIRE!) para liberar a Fase 1
 iniciarContagemFase();
 
-// 4. Temporizador para criar inimigos a cada 2.5 segundos
 setInterval(() => {
-    criarInimigo();
+    if (!jogoPausado && !emTransicaoDeFase && !naContagem) {
+        criarInimigo();
+    }
 }, 2500);
 
-// 5. Temporizador para criar as bolas de feno rolando a cada 4 segundos
 setInterval(() => {
-    criarBolaFeno();
+    if (!jogoPausado && !emTransicaoDeFase && !naContagem) {
+        criarBolaFeno();
+    }
 }, 4000);
