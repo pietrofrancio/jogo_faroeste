@@ -53,7 +53,6 @@ musicaJogo.volume = 0.2
 // ==========================================
 let jogoPausado = false
 let naContagem = false
-
 let indiceCenaAtual = 0;
 let listaCenasAtiva = [];
 let emTransicaoDeFase = false;
@@ -66,23 +65,23 @@ let telaTransicaoElemento = null;
 const cenasTransicao1_2 = [
     {
         fundo: "../img/cenario1.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Essa cidade já viu dias melhores",
-        imagem: "../img/morganaNormal.png",
+        imagem: protagonista.normal,
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario1.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Se aqui já está assim, imagina o que vem pela frente",
-        imagem: "../img/morganaNormal.png",
+        imagem: protagonista.normal,
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario1.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Algo me diz que esse trabalho vai longe demais...",
-        imagem: "../img/morganaNormal.png",
+        imagem: protagonista.normal,
         posicao: "esquerda"
     },
 ];
@@ -90,23 +89,23 @@ const cenasTransicao1_2 = [
 const cenasTransicao2_3 = [
     {
         fundo: "../img/cenario2.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "O que era aquela coisa!?",
-        imagem: "../img/morganaSeria.png",
+        imagem: protagonista.seria,
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario2.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Coiotes eu entendo… mas pistoleiros fantasmas? Isso não é normal",
-        imagem: "../img/morganaSeria.png",
+        imagem: protagonista.seria,
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario2.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Mas não importa, vou seguir em frente, eu preciso encontrar todo aquele ouro",
-        imagem: "../img/morganaNormal.png",
+        imagem: protagonista.normal,
         posicao: "esquerda"
     },
 ];
@@ -114,23 +113,23 @@ const cenasTransicao2_3 = [
 const cenasTransicao3_4 = [
     {
         fundo: "../img/cenario3.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "O que são todas essas coisas?",
-        imagem: "../img/morganaPreucupada.png",
+        imagem: protagonista.preocupada,
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario3.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Antes eram fantasmas, agora esqueletos e até camelos zumbis!?",
-        imagem: "../img/morganaPreucupada.png",
+        imagem: protagonista.preocupada,
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario3.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Tem algo de errado nesse trabalho. Cada passo me leva mais fundo e eu não sei se tem volta.",
-        imagem: "../img/morganaPreucupada.png",
+        imagem: protagonista.preocupada,
         posicao: "esquerda"
     },
 ];
@@ -138,16 +137,16 @@ const cenasTransicao3_4 = [
 const cenasTransicao4_5 = [
     {
         fundo: "../img/cenario4.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Se isso tá aqui fora nem quero imaginar o que tem dentro naquela mina...",
-        imagem: "../img/morganaPreucupada.png",
+        imagem: protagonista.preocupada,
         posicao: "esquerda"
     },
     {
         fundo: "../img/cenario4.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Essa coisa me trouxe até aqui, e agora é tarde demais para fugir.",
-        imagem: "../img/morganaPreucupada.png",
+        imagem: protagonista.preocupada,
         posicao: "esquerda"
     },
 ];
@@ -155,9 +154,9 @@ const cenasTransicao4_5 = [
 const cenasDueloFase5 = [
     {
         fundo: "../img/cenario5.png",
-        nome: "Morgana",
-        fala: "Então ela realmente existe…",
-        imagem: "../img/morganaNormal.png",
+        nome: protagonista.nome,
+        fala: "E você ficou...",
+        imagem: protagonista.normal,
         posicao: "esquerda"
     },
     {
@@ -169,9 +168,9 @@ const cenasDueloFase5 = [
     },
     {
         fundo: "../img/cenario5.png",
-        nome: "Morgana",
+        nome: protagonista.nome,
         fala: "Quem é você!?",
-        imagem: "../img/morganaPreucupada.png",
+        imagem: protagonista.preocupada,
         posicao: "esquerda"
     },
     {
@@ -183,9 +182,9 @@ const cenasDueloFase5 = [
     },
     {
         fundo: "../img/cenario5.png",
-        nome: "Morgana",
+        nome: protagonista.nome,
         fala: "O que aconteceu com esse lugar?",
-        imagem: "../img/morganaPreucupada.png",
+        imagem: protagonista.preocupada,
         posicao: "esquerda"
     },
     {
@@ -203,9 +202,9 @@ const cenasDueloFase5 = [
         posicao: "direita"
     }, {
         fundo: "../img/cenario5.png",
-        nome: "Morgana",
+        nome: protagonista.nome,
         fala: "E você ficou...",
-        imagem: "../img/morganaNormal.png",
+        imagem: protagonista.normal,
         posicao: "esquerda"
     },
     {
@@ -919,6 +918,25 @@ function criarMoeda(x, y) {
         timer: 0
     })
 }
+function criarVida(x, y) {
+    const vida = document.createElement("img");
+
+    vida.src = "../img/vida.png"; // coloque o nome da imagem da vida
+    vida.style.position = "absolute";
+    vida.style.width = "40px";
+    vida.style.height = "40px";
+    vida.style.left = `${x}px`;
+    vida.style.bottom = `${y}px`;
+    vida.style.zIndex = "4";
+
+    cenario.appendChild(vida);
+
+    vidasDropadas.push({
+        elemento: vida,
+        x,
+        y
+    });
+}
 
 // ============================================================
 // FUNÇÃO DE COLISÃO COM INIMIGOS
@@ -962,8 +980,10 @@ function jogadorColidiuComObstaculo(pX, pY, pAgachado, bolaObj) {
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-faseAtual = 5 // aqui muda em q faze começa o jogoooo 
+faseAtual = 1 // aqui muda em q faze começa o jogoooo 
 let inimigos = []
+let vidaDropadaNaFase = false;
+let vidasDropadas = [];
 
 const dadosInimigos = {
     hostil1: { andando: ["../img/bandido1Andando1.png", "../img/bandido1Andando2.png", "../img/bandido1Andando3.png", "../img/bandido1Andando4.png", "../img/bandido1Andando5.png", "../img/bandido1Andando6.png", "../img/bandido1Andando7.png"], atirando: ["../img/bandido1Atirando1.png", "../img/bandido1Atirando2.png", "../img/bandido1Atirando3.png", "../img/bandido1Atirando4.png"] },
@@ -986,7 +1006,7 @@ const dadosInimigos = {
     esqueleto: { andando: ["../img/esqueleto1.png", "../img/esqueleto2.png", "../img/esqueleto3.png", "../img/esqueleto4.png", "../img/esqueleto5.png", "../img/esqueleto6.png", "../img/esqueleto7.png"] },
 
     // --- CHEFÃO DA FASE 4 ---
-    chefao: { andando: ["../img/chefao1.png", "../img/chefao2.png", "../img/chefao3.png", "../img/chefao4.png", "../img/chefao5.png"], atirando: ["../img/chefaoAtacando1.png", "../img/chefaoAtacando2.png", "../img/chefaoAtacando3.png", "../img/chefaoAtacando4.png", "../img/chefaoAtacando5.png", "../img/chefaoAtacando6.png", "../img/chefaoAtacando7.png", "../img/chefaoAtacando8.png"] },
+chefao: { andando: ["../img/chefao1.png", "../img/chefao2.png", "../img/chefao3.png", "../img/chefao4.png", "../img/chefao5.png", "../img/chefao6.png"], atirando: ["../img/chefaoAtacando1.png", "../img/chefaoAtacando2.png", "../img/chefaoAtacando3.png", "../img/chefaoAtacando4.png", "../img/chefaoAtacando5.png", "../img/chefaoAtacando6.png", "../img/chefaoAtacando7.png", "../img/chefaoAtacando8.png"] },
 }
 
 const configuracaoFases = {
@@ -1079,8 +1099,8 @@ function criarInimigo() {
         inimigoElemento.style.height = "180px";
     }
     else if (tipoSorteado === "fantasma") {
-        inimigoElemento.style.width = "130px";
-        inimigoElemento.style.height = "150px";
+        inimigoElemento.style.width = "160px";
+        inimigoElemento.style.height = "140px";
     }
     else {
         inimigoElemento.style.width = "140px";
@@ -1656,7 +1676,12 @@ function loopDoJogo(tempoAtual) {
 
                     criarMoeda(ini.x + 40, (ini.y || chao) + 20);
 
-                    ini.elemento.remove();
+if (!vidaDropadaNaFase && Math.random() < 0.12) {
+    criarVida(ini.x + 40, (ini.y || chao) + 20);
+    vidaDropadaNaFase = true;
+}
+
+ini.elemento.remove();
                     inimigos.splice(i, 1);
 
                     verificarMudancaDeFase();
@@ -1726,6 +1751,29 @@ function loopDoJogo(tempoAtual) {
             somMoeda.play().catch(() => { });
         }
     }
+for (let i = vidasDropadas.length - 1; i >= 0; i--) {
+    let vida = vidasDropadas[i];
+vida.elemento.style.left = `${vida.x}px`;
+    vida.elemento.style.bottom = `${vida.y}px`;
+
+    let pegou = Math.abs(protaX - vida.x) < 50 &&
+                Math.abs(protaY - vida.y) < 80;
+
+    if (!pegou && modoDoisJogadores) {
+        pegou = Math.abs(protaX2 - vida.x) < 50 &&
+                Math.abs(protaY2 - vida.y) < 80;
+    }
+
+    if (pegou) {
+        if (vidas < 5) {
+            vidas++;
+            hudVidas.innerText = textoVidas();
+        }
+
+        vida.elemento.remove();
+        vidasDropadas.splice(i, 1);
+    }
+}
 
     // --- 4. LÓGICA E ANIMAÇÃO DAS BOLAS DE FENO (OBSTÁCULOS/COIOTES/ABUTRES) ---
     for (let i = bolasFeno.length - 1; i >= 0; i--) {
@@ -1838,7 +1886,7 @@ function verificarMudancaDeFase() {
 function avancarDeFaseLogica() {
     pontos = 0
     faseAtual++
-
+    vidaDropadaNaFase = false; // libera um novo drop para a próxima fase
     // --- ATUALIZA A META DE PONTOS DA NOVA FASE AQUI ---
     if (faseAtual === 1) {
         pontosParaProximaFase = 40;

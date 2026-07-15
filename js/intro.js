@@ -8,7 +8,40 @@ const nomePersonagem = document.getElementById("nome-personagem")
 const imgPersonagem = document.getElementById("personagem")
 const spanContinuar = document.querySelector(".continuar")
 const spanPular = document.querySelector(".pular")
+const personagemSelecionado = localStorage.getItem("personagemSelecionado") || "morgana";
 
+const personagens = {
+    morgana: {
+        nome: "Morgana",
+        normal: "../img/morganaNormal.png",
+        seria: "../img/morganaSeria.png",
+        preocupada: "../img/morganaPreucupada.png"
+    },
+
+    ruby: {
+        nome: "Ruby",
+        normal: "../img/rubyNormal.png",
+        seria: "../img/rubySeria.png",
+        preocupada: "../img/rubyPreucupada.png"
+    },
+
+    jack: {
+        nome: "Jack",
+        normal: "../img/jackNormal.png",
+        seria: "../img/jackSeria.png",
+        preocupada: "../img/jackPreucupada.png"
+    },
+
+    arthur: {
+        nome: "Arthur",
+        normal: "../img/arthurNormal.png",
+        seria: "../img/arthurSeria.png",
+        preocupada: "../img/arthurPreucupada.png"
+    }
+};
+
+const protagonista = personagens[personagemSelecionado];
+document.getElementById("personagem").src = protagonista.normal;
 // ==========================================
 // MUSICA
 // ==========================================
@@ -26,7 +59,7 @@ musicaIntro.play().catch(() => {
 // ==========================================
 window.addEventListener("keydown", (e) => {
 
-    if(e.code === "KeyS"){
+    if (e.code === "KeyS") {
 
         fade.style.opacity = 1
 
@@ -45,7 +78,7 @@ const cenas = [
         fundo: "../img/cenario1.png",
         nome: "Narrador",
         fala: "No velho oeste, onde a poeira cobre segredos e a lei vale menos que uma bala, existe um nome que nunca recusa trabalho...",
-        imagem: "",
+        imagem: protagonista.normal,
         posicao: ""
     },
     {
@@ -57,9 +90,9 @@ const cenas = [
     },
     {
         fundo: "../img/cenario1.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Depende de quanta grana estamos falando.",
-        imagem: "../img/morganaGananciosa.png",
+        imagem: protagonista.gananciosa,
         posicao: "esquerda"
     },
     {
@@ -71,9 +104,9 @@ const cenas = [
     },
     {
         fundo: "../img/cenario1.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Só isso? Parece fácil demais.",
-        imagem: "../img/morganaNormal.png",
+        imagem: protagonista.normal,
         posicao: "esquerda"
     },
     {
@@ -92,9 +125,9 @@ const cenas = [
     },
     {
         fundo: "../img/cenario1.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "E o preço?",
-        imagem: "../img/morganaNormal.png",
+        imagem: protagonista.normal,
         posicao: "esquerda"
     },
     {
@@ -106,9 +139,9 @@ const cenas = [
     },
     {
         fundo: "../img/cenario1.png",
-        nome: "Protagonista",
+        nome: protagonista.nome,
         fala: "Parece bom para mim. Negócio fechado!",
-        imagem: "../img/morganaNormal.png",
+        imagem: protagonista.normal,
         posicao: "esquerda"
     }
 ]
@@ -136,12 +169,12 @@ function atualizarVisual() {
             imgPersonagem.style.left = "auto"
             imgPersonagem.style.right = "50px"
 
-            imgPersonagem.style.transform = "scale(1.4)" 
-            imgPersonagem.style.transformOrigin = "bottom" 
+            imgPersonagem.style.transform = "scale(1.4)"
+            imgPersonagem.style.transformOrigin = "bottom"
         } else {
             imgPersonagem.style.right = "auto"
             imgPersonagem.style.left = "50px"
-            imgPersonagem.style.transform = "scale(1)" 
+            imgPersonagem.style.transform = "scale(1)"
         }
     }
 
