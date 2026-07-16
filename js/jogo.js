@@ -724,7 +724,7 @@ function finalizarDialogo() {
 // ==========================================
 // 5. PROGRESSÃO, OURO E PONTOS
 // ==========================================
-let ouro = localStorage.getItem("ouroAcumulado") ? parseInt(localStorage.getItem("ouroAcumulado")) : 0;
+let ouro = 0;
 let pontos = 0
 let faseAtual = 5 // Declarada aqui primeiro!
 
@@ -1290,7 +1290,7 @@ function jogadorColidiuComObstaculo(pX, pY, pAgachado, bolaObj) {
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-faseAtual = 5 // aqui muda em q faze começa o jogoooo 
+faseAtual = 1 // aqui muda em q faze começa o jogoooo 
 let inimigos = []
 let vidaDropadaNaFase = false;
 let vidasDropadas = [];
@@ -2193,7 +2193,6 @@ const somTiroChefao = new Audio("../efeitos_sonoros/tiro-chefao.mp3");
             ouro++;
             hudOuro.innerText = `Ouro: ${ouro}`;
             
-            localStorage.setItem("ouroAcumulado", ouro); 
 
             moeda.elemento.remove();
             moedas.splice(i, 1);
@@ -2414,7 +2413,6 @@ function perderVida() {
         hudOuro.innerText = `Ouro: ${ouro}`;
 
         // 2. 👈 ADICIONE ESTA LINHA AQUI para deletar o ouro salvo no navegador!
-        localStorage.removeItem("ouroAcumulado");
 
         jogoPausado = true;
         menuGameOver.classList.remove("oculto");
@@ -2468,12 +2466,7 @@ function salvarOuroNoEstoque() {
     // 3. Salva o novo total acumulado de volta no localStorage
     localStorage.setItem("ouroEstoque", estoqueAtual);
 
-    // 4. Zera o ouro da partida atual para não duplicar na próxima fase
-    ouro = 0;
-    hudOuro.innerText = `Ouro: ${ouro}`;
-
-    console.log("Estoque updated com sucesso! Novo total: " + estoqueAtual);
-}
+    }
 
 function mostrarTelaFim() {
     // 1. Pausa ou para o loop do seu jogo para os inimigos pararem de se mover
