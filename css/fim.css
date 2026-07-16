@@ -1,0 +1,315 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    overflow:hidden;
+    font-family:'Press Start 2P', cursive;
+    background:black;
+}
+
+#cenario{
+    position:fixed;
+    inset:0;
+
+    width:100vw;
+    height:100vh;
+
+    object-fit:cover;
+}
+
+/* ==========================
+   PERSONAGEM
+========================== */
+
+#personagem{
+    position:absolute;
+
+    bottom:120px;
+    left:50px;
+
+    width:300px;
+
+    image-rendering:pixelated;
+    transition:all .5s;
+}
+
+/* ==========================
+   CAIXA DE DIÁLOGO
+========================== */
+
+#caixa-dialogo{
+    position:absolute;
+
+    bottom:0;
+    left:0;
+
+    width:100%;
+    min-height:180px;
+
+    background:rgba(30,15,10,.95);
+
+    border-top:5px solid #a07040;
+
+    color:#ffebc2;
+
+    padding:30px;
+}
+
+#texto{
+    font-size:18px;
+    line-height:1.8;
+    min-height:auto;
+}
+
+/* ==========================
+   NOME
+========================== */
+
+#nome-personagem{
+    position:absolute;
+
+    top:-45px;
+    left:30px;
+
+    background:rgba(30,15,10,1);
+
+    border:5px solid #a07040;
+
+    color:#ffebc2;
+
+    padding:10px 15px;
+
+    font-size:16px;
+}
+
+/* ==========================
+   ENTER
+========================== */
+
+.continuar{
+    position:absolute;
+
+    bottom:15px;
+    left:30px;
+
+    font-size:14px;
+    color:#b0894a;
+    font-weight:bold;
+
+    animation:piscar 1.2s infinite;
+}
+
+/* ==========================
+   PULAR
+========================== */
+
+.pular{
+    position:absolute;
+
+    bottom:15px;
+    right:30px;
+
+    font-size:14px;
+    color:#b0894a;
+    font-weight:bold;
+
+    animation:piscar 1.2s infinite;
+}
+
+/* ==========================
+   FADE
+========================== */
+
+#fade{
+    position:fixed;
+
+    inset:0;
+
+    background:black;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:opacity 1s;
+
+    z-index:999;
+}
+
+/* ==========================
+   PISCAR
+========================== */
+
+@keyframes piscar{
+
+    0%,100%{
+        opacity:1;
+    }
+
+    50%{
+        opacity:.2;
+    }
+
+}
+
+/* ==========================
+   TRANSFORMAÇÃO
+========================== */
+
+.transformando{
+    animation:transformar .18s infinite;
+}
+
+@keyframes transformar{
+
+    0%{
+        filter:brightness(1);
+    }
+
+    25%{
+        filter:brightness(3);
+    }
+
+    50%{
+        filter:brightness(.4);
+    }
+
+    75%{
+        filter:brightness(2);
+    }
+
+    100%{
+        filter:brightness(1);
+    }
+
+}
+
+/* Tremor */
+
+body.transformando{
+    animation:tremor .08s infinite;
+}
+
+@keyframes tremor{
+
+    0%{transform:translate(2px,1px);}
+    20%{transform:translate(-2px,-1px);}
+    40%{transform:translate(3px,-2px);}
+    60%{transform:translate(-3px,2px);}
+    80%{transform:translate(2px,-1px);}
+    100%{transform:translate(0,0);}
+
+}
+
+/* ==========================================
+   TELA Do FIM
+   ========================================== */
+
+/* Container principal da tela de vitória */
+.tela-vitoria-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Alinha todo o bloco ao topo */
+    align-items: flex-start;     /* Alinha todo o bloco à esquerda */
+    box-sizing: border-box;
+    padding: 80px 0 0 80px;      /* Distância segura do topo e da lateral esquerda */
+    background-color: #000;      /* Fundo preto de segurança */
+}
+
+/* Imagem de fundo cobrindo 100% da tela sem faixas pretas */
+.tela-vitoria-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    object-fit: cover;            /* Faz a imagem preencher a tela toda */
+    object-position: right center; /* Mantém o foco no cowboy e no sol (lado direito) */
+}
+
+/* Bloco de textos à esquerda (sem caixa de fundo) */
+.tela-vitoria-header {
+    text-align: left;
+    max-width: 600px;             /* Limita a largura para o texto não invadir o personagem */
+    margin-bottom: 50px;          /* Espaço confortável entre o texto e os botões */
+}
+
+/* Título principal gigante e pixelado */
+.tela-vitoria-titulo {
+    font-family: 'Press Start 2P', monospace;
+    color: #ffd700; 
+    font-size: 56px; 
+    margin: 0 0 25px 0; 
+    text-shadow: 5px 5px 0px #000; /* Sombra preta marcante */
+}
+
+/* Subtítulo pixelado legível */
+.tela-vitoria-subtitulo {
+    font-family: 'Press Start 2P', monospace;
+    color: #ffebc2; 
+    font-size: 18px; 
+    line-height: 2.2;             /* Espaçamento entre as linhas para melhor leitura */
+    margin: 0; 
+    text-shadow: 3px 3px 0px #000;
+}
+
+/* Container que empilha os botões na esquerda */
+.tela-vitoria-botoes {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+}
+
+/* Estilo base dos botões (combinando com o seu menu de Pause/Game Over) */
+.btn-fim {
+    width: 440px;                 /* Largura ajustada para caber a fonte pixelada maior */
+    padding: 20px; 
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px; 
+    font-weight: bold;
+    cursor: pointer;
+    image-rendering: pixelated;
+    text-transform: uppercase;
+    transition: transform 0.1s;
+}
+
+/* Botão "Jogar Novamente" (Estilo Madeira Principal) */
+.btn-recomecar {
+    background: #6c3f1f;
+    color: #ffe9a8;
+    border: 4px solid #3a200f;
+    outline: 3px solid #b57b44;
+}
+
+/* Botão "Menu Principal" (Estilo Madeira Escura) */
+.btn-menu {
+    background: #4e2913;
+    color: #d6a75f;
+    border: 4px solid #291408;
+    outline: 3px solid #8c572b;
+}
+
+/* Efeito Hover unificado com o do seu jogo */
+.btn-fim:hover {
+    background: #8a542b !important; /* Clareia ao passar o mouse */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 #3a200f;
+}
+
+/* Efeito de clique físico unificado */
+.btn-fim:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
