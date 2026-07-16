@@ -15,70 +15,77 @@ const personagens = {
         nome: "Morgana",
         normal: "../img/morganaNormal.png",
         seria: "../img/morganaSeria.png",
-        preocupada: "../img/morganaPreucupada.png"
+        preocupada: "../img/morganaPreucupada.png",
+        gananciosa: "../img/morganaGananciosa.png" // Adicionado!
     },
 
     ruby: {
         nome: "Ruby",
         normal: "../img/rubyNormal.png",
         seria: "../img/rubySeria.png",
-        preocupada: "../img/rubyPreucupada.png"
+        preocupada: "../img/rubyPreucupada.png",
+        gananciosa: "../img/rubyGananciosa.png" // Adicionado!
     },
 
     jack: {
         nome: "Jack",
         normal: "../img/jackNormal.png",
         seria: "../img/jackSeria.png",
-        preocupada: "../img/jackPreucupada.png"
+        preocupada: "../img/jackPreucupada.png",
+        gananciosa: "../img/jackGananciosa.png" // Adicionado!
     },
 
-    arthur: {
-        nome: "Arthur",
-        normal: "../img/arthurNormal.png",
-        seria: "../img/arthurSeria.png",
-        preocupada: "../img/arthurPreucupada.png"
+    miguel: {
+        nome: "Miguel",
+        normal: "../img/miguelNormal.png",
+        seria: "../img/miguelSeria.png",
+        preocupada: "../img/miguelPreucupada.png",
+        gananciosa: "../img/miguelGananciosa.png" // Adicionado!
     }
 };
 
 const protagonista = personagens[personagemSelecionado];
-document.getElementById("personagem").src = protagonista.normal;
+
+// Define a imagem inicial com segurança
+if (imgPersonagem && protagonista) {
+    imgPersonagem.src = protagonista.normal;
+}
+
 // ==========================================
 // MUSICA
 // ==========================================
 const musicaIntro = document.getElementById("musicaIntro")
 
-musicaIntro.src = "../music/intro.mp3"
-musicaIntro.volume = 0.4
+if (musicaIntro) {
+    musicaIntro.src = "../music/intro.mp3"
+    musicaIntro.volume = 0.4
 
-musicaIntro.play().catch(() => {
-    console.log("Aguardando interação do usuário.")
-})
+    musicaIntro.play().catch(() => {
+        console.log("Aguardando interação do usuário.")
+    })
+}
 
 // ==========================================
-// PARA PULAR A HISTORIAAAAAAAAAAAAAA (Calma Gabriela, ass: Clari)
+// PARA PULAR A HISTORIA
 // ==========================================
 window.addEventListener("keydown", (e) => {
-
     if (e.code === "KeyS") {
-
         fade.style.opacity = 1
-
         setTimeout(() => {
             window.location.href = "jogo.html"
         }, 1000)
     }
-
 })
 
 // ==========================================
-// HISTÓRIA
+// HISTÓRIA (CORRIGIDO: Narrador agora sem imagem do protagonista)
 // ==========================================
 const cenas = [
     {
         fundo: "../img/cenario1.png",
         nome: "Narrador",
         fala: "No velho oeste, onde a poeira cobre segredos e a lei vale menos que uma bala, existe um nome que nunca recusa trabalho...",
-        imagem: protagonista.normal,
+        imagem: "", // CORREÇÃO: Vazio para o narrador falar sozinho
         posicao: ""
     },
     {
@@ -92,7 +99,7 @@ const cenas = [
         fundo: "../img/cenario1.png",
         nome: protagonista.nome,
         fala: "Depende de quanta grana estamos falando.",
-        imagem: protagonista.gananciosa,
+        imagem: protagonista.gananciosa, // Agora funciona perfeitamente!
         posicao: "esquerda"
     },
     {
@@ -152,13 +159,12 @@ const cenas = [
 let cenaAtual = 0
 let bloqueiaInput = false
 
-nomePersonagem.innerText = cenas[cenaAtual].nome
-texto.innerText = cenas[cenaAtual].fala
+if (nomePersonagem) nomePersonagem.innerText = cenas[cenaAtual].nome
+if (texto) texto.innerText = cenas[cenaAtual].fala
 
 function atualizarVisual() {
-
     // 1. Trata a imagem do personagem
-    if (cenas[cenaAtual].imagem === "") {
+    if (!cenas[cenaAtual].imagem || cenas[cenaAtual].imagem === "") {
         imgPersonagem.style.display = "none"
     } else {
         imgPersonagem.src = cenas[cenaAtual].imagem
@@ -178,27 +184,37 @@ function atualizarVisual() {
         }
     }
 
-    // 2. Trata Nome, Texto e agora a DICA DE ESPAÇO!
+    // 2. Trata Nome, Texto e a DICA DE ESPAÇO!
     if (cenas[cenaAtual].posicao === "direita") {
-        nomePersonagem.style.left = "auto"
-        nomePersonagem.style.right = "30px"
-        texto.style.textAlign = "right"
+        if (nomePersonagem) {
+            nomePersonagem.style.left = "auto"
+            nomePersonagem.style.right = "30px"
+        }
+        if (texto) texto.style.textAlign = "right"
 
-        spanContinuar.style.left = "auto"
-        spanContinuar.style.right = "30px"
-
-        spanPular.style.left = "auto"
-        spanPular.style.right = "30px"
+        if (spanContinuar) {
+            spanContinuar.style.left = "auto"
+            spanContinuar.style.right = "30px"
+        }
+        if (spanPular) {
+            spanPular.style.left = "auto"
+            spanPular.style.right = "30px"
+        }
     } else {
-        nomePersonagem.style.right = "auto"
-        nomePersonagem.style.left = "30px"
-        texto.style.textAlign = "left"
+        if (nomePersonagem) {
+            nomePersonagem.style.right = "auto"
+            nomePersonagem.style.left = "30px"
+        }
+        if (texto) texto.style.textAlign = "left"
 
-        spanContinuar.style.right = "auto"
-        spanContinuar.style.left = "30px"
-
-        spanPular.style.right = "auto"
-        spanPular.style.left = "30px"
+        if (spanContinuar) {
+            spanContinuar.style.right = "auto"
+            spanContinuar.style.left = "30px"
+        }
+        if (spanPular) {
+            spanPular.style.right = "auto"
+            spanPular.style.left = "30px"
+        }
     }
 }
 
@@ -223,9 +239,9 @@ function proximaCena() {
     fade.style.opacity = 1
 
     setTimeout(() => {
-        cenario.style.backgroundImage = `url('${cenas[cenaAtual].fundo}')`
-        nomePersonagem.innerText = cenas[cenaAtual].nome
-        texto.innerText = cenas[cenaAtual].fala
+        if (cenario) cenario.style.backgroundImage = `url('${cenas[cenaAtual].fundo}')`
+        if (nomePersonagem) nomePersonagem.innerText = cenas[cenaAtual].nome
+        if (texto) texto.innerText = cenas[cenaAtual].fala
 
         atualizarVisual()
 
