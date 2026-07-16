@@ -573,25 +573,46 @@ function mostrarCena() {
     const imgAvatar = document.getElementById("personagem");
 
     // ====================================================================
-    // 1. TRADUÇÃO DINÂMICA DO PROTAGONISTA & VERSÃO GANANCIOSA
+    // 1. TRADUÇÃO DINÂMICA DO PROTAGONISTA & VERSÃO GANANCIOSA (Corrigido)
     // ====================================================================
     let nomeLocutor = cena.nome;
-    let imagemLocutor = cena.imagem;
+    let imagemLocutor = cena.imagem; // Mantém a imagem padrão do diálogo como primeiro plano de segurança
 
-    // Se a cena for do protagonista (Morgana, player, protagonista, etc.)
-    if (cena.nome === "Morgana" || cena.locutor === "protagonista" || cena.locutor === "player") {
-        nomeLocutor = heroiAtivo.nome;
+    // Lista de termos que indicam que o locutor é o protagonista
+    const termosProtagonista = ["Morgana", "protagonista", "player", "Protagonista", "heroi", "Heroi"];
 
-        // --- DETECTOR DE VERSÃO GANANCIOSA ---
-        // Se a cena original pedia a imagem "gananciosa" (ex: contendo a palavra 'Gananciosa' no nome do arquivo)
-        if (cena.imagem && cena.imagem.toLowerCase().includes("gananciosa")) {
-            // Monta o caminho dinâmico para o herói ativo na versão gananciosa!
-            // Ex: de "../img/morganaGananciosa.png" para "../img/miguelGananciosa.png"
-            imagemLocutor = `../img/${personagemSelecionado}Gananciosa.png`;
+    if (termosProtagonista.includes(cena.nome) || termosProtagonista.includes(cena.locutor) || !nomeLocutor || nomeLocutor === "undefined") {
+        
+        // 1. Define o Nome de forma segura
+        if (typeof heroiAtivo !== 'undefined' && heroiAtivo && heroiAtivo.nome && heroiAtivo.nome !== "undefined") {
+            nomeLocutor = heroiAtivo.nome;
+        } else if (typeof personagemSelecionado !== 'undefined' && personagemSelecionado && personagemSelecionado !== "undefined") {
+            nomeLocutor = personagemSelecionado.charAt(0).toUpperCase() + personagemSelecionado.slice(1);
         } else {
-            // Caso contrário, carrega a versão normal do personagem escolhido
-            imagemLocutor = heroiAtivo.sprite;
+            nomeLocutor = "Ruby"; // Nome reserva caso tudo falhe
         }
+
+        // 2. Define a Imagem de forma segura
+        // Se a cena pedir especificamente a versão gananciosa
+        if (cena.imagem && typeof cena.imagem === "string" && cena.imagem.toLowerCase().includes("gananciosa")) {
+            const heroiNomeArquivo = (typeof personagemSelecionado !== 'undefined' && personagemSelecionado) 
+                ? personagemSelecionado 
+                : "morgana";
+            imagemLocutor = `../img/${heroiNomeArquivo}Gananciosa.png`;
+        } 
+        // Caso contrário, tenta usar o sprite do herói ativo
+        else if (typeof heroiAtivo !== 'undefined' && heroiAtivo && heroiAtivo.sprite) {
+            imagemLocutor = heroiAtivo.sprite;
+        } else if (typeof heroiAtivo !== 'undefined' && heroiAtivo && heroiAtivo.normal) {
+            imagemLocutor = heroiAtivo.normal;
+        }
+        // Se não houver herói ativo configurado, ele NÃO mexe no `imagemLocutor`, 
+        // mantendo a imagem original da cena que já estava funcionando!
+    }
+
+    // Garantia final contra strings "undefined" no nome
+    if (!nomeLocutor || nomeLocutor === "undefined") {
+        nomeLocutor = "Ruby";
     }
 
     // ====================================================================
@@ -637,6 +658,7 @@ function mostrarCena() {
 }
 
 function removerControlesEFechar() {
+    // 1. Remove o listener do diálogo para não vazar entrada
     window.removeEventListener("keydown", gerenciarTeclasDialogo);
 
     const dialogoEl = document.getElementById("dialogo");
@@ -644,6 +666,25 @@ function removerControlesEFechar() {
 
     const imgAvatar = document.getElementById("personagem");
     if (imgAvatar) imgAvatar.style.display = "none";
+
+    // ====================================================================
+    // 2. CORREÇÃO DO PULO INFINITO (Reseta as variáveis de movimento do jogo)
+    // ====================================================================
+    
+    if (typeof teclasPressionadas !== 'undefined') {
+        teclasPressionadas["Space"] = false;
+        teclasPressionadas["KeyW"] = false;
+        teclasPressionadas["ArrowUp"] = false;
+    }
+    
+    if (typeof estaPulando !== 'undefined') {
+        estaPulando = false; 
+    }
+
+    if (typeof heroiAtivo !== 'undefined' && heroiAtivo) {
+        if (heroiAtivo.velocidadeY) heroiAtivo.velocidadeY = 0;
+        if (heroiAtivo.estaPulando) heroiAtivo.estaPulando = false;
+    }
 
     finalizarDialogo();
 }
@@ -683,7 +724,7 @@ function finalizarDialogo() {
 // ==========================================
 // 5. PROGRESSÃO, OURO E PONTOS
 // ==========================================
-let ouro = 0
+let ouro = localStorage.getItem("ouroAcumulado") ? parseInt(localStorage.getItem("ouroAcumulado")) : 0;
 let pontos = 0
 let faseAtual = 5 // Declarada aqui primeiro!
 
@@ -1186,6 +1227,7 @@ function criarMoeda(x, y) {
         timer: 0
     })
 }
+
 function criarVida(x, y) {
     const vida = document.createElement("img");
 
@@ -1248,7 +1290,7 @@ function jogadorColidiuComObstaculo(pX, pY, pAgachado, bolaObj) {
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-faseAtual = 5 // aqui muda em q faze começa o jogoooo 
+faseAtual = 1 // aqui muda em q faze começa o jogoooo 
 let inimigos = []
 let vidaDropadaNaFase = false;
 let vidasDropadas = [];
@@ -1347,7 +1389,7 @@ function criarInimigo() {
             frame: 0,
             timer: 0,
             timerAtaque: 0,
-            vida: 1,
+            vida: 25,
             velocidade: 3
         });
 
@@ -2148,8 +2190,11 @@ const somTiroChefao = new Audio("../efeitos_sonoros/tiro-chefao.mp3");
         }
 
         if (pegouMoeda) {
-            ouro++
+            ouro++;
             hudOuro.innerText = `Ouro: ${ouro}`;
+            
+            localStorage.setItem("ouroAcumulado", ouro); 
+
             moeda.elemento.remove();
             moedas.splice(i, 1);
             somMoeda.currentTime = 0;
@@ -2364,14 +2409,17 @@ function perderVida() {
         vidas = 0;
         hudVidas.innerText = textoVidas();
 
-        // Zera apenas o ouro da gameplay atual
+        // 1. Zera o ouro da gameplay atual
         ouro = 0;
         hudOuro.innerText = `Ouro: ${ouro}`;
+
+        // 2. 👈 ADICIONE ESTA LINHA AQUI para deletar o ouro salvo no navegador!
+        localStorage.removeItem("ouroAcumulado");
 
         jogoPausado = true;
         menuGameOver.classList.remove("oculto");
         musicaJogo.pause();
-    } else {
+    }else {
         // Ativa uma pequena invencibilidade temporária ao tomar dano para não morrer instantaneamente
         invencivel = true;
 
