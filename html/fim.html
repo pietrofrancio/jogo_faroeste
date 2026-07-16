@@ -17,27 +17,24 @@
     <!-- Escurecimento -->
     <div id="fade"></div>
 
-    <!-- Personagem -->
-    <img id="personagem" src="../img/personagens/protagonista/parado.png" alt="Personagem">
-
-    <!-- Nome -->
-    <div id="nome-personagem"></div>
+    <!-- Personagem (carregado dinamicamente) -->
+    <img id="personagem" src="" alt="Personagem">
 
     <!-- Caixa de diálogo -->
     <div id="caixa-dialogo">
+        
+        <div id="nome-personagem"></div>
 
         <div id="texto"></div>
 
         <div class="botoes">
-
-            <span class="continuar">
-                ENTER - Continuar
-            </span>
-
             <span class="pular">
                 S - Pular
             </span>
 
+            <span class="continuar">
+                ESPAÇO - Continuar
+            </span>
         </div>
 
     </div>
@@ -46,8 +43,6 @@
     <audio id="musica" loop>
         <source src="../music/final.mp3" type="audio/mpeg">
     </audio>
-
-    <!-- Sons -->
 
     <script src="../js/fim.js"></script>
 

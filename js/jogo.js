@@ -389,7 +389,7 @@ const cenasDueloFase5 = [
     {
         fundo: "../img/cenario5.png",
         nome: protagonista.nome,
-        fala: "E você ficou...",
+        fala: "Então ela realmente existe...",
         imagem: protagonista.normal,
         posicao: "esquerda"
     },
@@ -1248,7 +1248,7 @@ function jogadorColidiuComObstaculo(pX, pY, pAgachado, bolaObj) {
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-faseAtual = 1 // aqui muda em q faze começa o jogoooo 
+faseAtual = 5 // aqui muda em q faze começa o jogoooo 
 let inimigos = []
 let vidaDropadaNaFase = false;
 let vidasDropadas = [];
@@ -1347,7 +1347,7 @@ function criarInimigo() {
             frame: 0,
             timer: 0,
             timerAtaque: 0,
-            vida: 25,
+            vida: 1,
             velocidade: 3
         });
 
