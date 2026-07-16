@@ -131,25 +131,32 @@
 /* ==========================================
    PROTAGONISTA (JOGADOR 1)
    ========================================== */
-#protagonista {
+/* O CONTAINER controla onde o personagem está e qual o tamanho dele */
+#protagonistaHTML {
     position: absolute;
-    width: 150px;   
-    height: 170px;  
+    width: 150px;   /* Tamanho padrão de gameplay */
+    height: 170px;  /* Tamanho padrão de gameplay */
     bottom: 50px;   
     left: 50px;
     z-index: 6; 
     transform-origin: bottom center; 
-    object-fit: contain;     
-    object-position: bottom; 
-    transform: scaleX(1);
 }
 
-#protagonista.olhando-esquerda {
+/* A IMAGEM apenas se adapta e preenche 100% do container */
+#protagonista {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;     
+    object-position: bottom; 
+    display: block;
+}
+
+#protagonistaHTML.olhando-esquerda {
     transform: scaleX(-1) !important; 
 }
 
-#protagonista.agachado {
-    /* Diminui a altura do elemento para ela descer fisicamente */
+/* Quando agachado, o container diminui */
+#protagonistaHTML.agachado {
     height: 110px;
     bottom: 50px; 
 }
@@ -157,17 +164,22 @@
 /* ==========================================
    PROTAGONISTA 2 (JOGADOR 2 - MODO COOPERATIVO) 
    ========================================== */
-#protagonista2 {
+#protagonista2HTML {
     position: absolute;
-    width: 150px;
-    height: 170px;
+    width: 120px;
+    height: 140px;
     bottom: 50px;
     left: 220px;
     z-index: 6;
     transform-origin: bottom center;
+}
+
+#protagonista2 {
+    width: 100% !important;
+    height: 100% !important;
     object-fit: contain;
     object-position: bottom;
-    transform: scaleX(1);
+    display: block;
     /* Distingue visualmente o P2 alterando a paleta de cores dele via filtro */
     filter: hue-rotate(190deg) saturate(1.6) brightness(1.05);
 }
@@ -195,6 +207,65 @@
     border: none !important;      /* Remove bordas HTML/CSS */
     outline: none !important;     /* Remove contornos de seleção ou foco */
     box-shadow: none !important;  /* Garante que não há sombras lineares simulando bordas */
+}
+
+/* ==========================================
+   BARRA DE VIDA DO CHEFÃO
+   ========================================== */
+#container-vida-chefao {
+    position: absolute;
+    top: 80px; /* Fica logo abaixo do HUD */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    background: #6B3D18;
+    border: 4px solid #D6A75F;
+    padding: 4px;
+    box-shadow: 0 4px 0 #000;
+    z-index: 999;
+    font-family: 'Press Start 2P', monospace;
+    text-align: center;
+}
+
+#titulo-chefao {
+    color: #ffebc2;
+    font-size: 11px;
+    margin-bottom: 6px;
+    text-shadow: 2px 2px 0px #000;
+    text-transform: uppercase;
+}
+
+#barra-vida-fundo {
+    width: 100%;
+    height: 16px;
+    background: #1a0a03;
+    border: 2px solid #000;
+}
+
+#barra-vida-cheia {
+    width: 100%; /* Começa em 100% */
+    height: 100%;
+    background: #600f0f;
+    transition: width 0.2s ease-out; /* Efeito suave ao tomar dano */
+}
+
+/* ==========================================
+   PROJÉTIL DO CHEFÃO (BOLA DE PODER)
+   ========================================== */
+.bola-poder {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, #a63c45 30%, #501318 70%, transparent 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 15px #893f40, 0 0 30px #3c1917;
+    z-index: 5;
+    animation: pulsarPoder 0.4s infinite alternate;
+}
+
+@keyframes pulsarPoder {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.15); }
 }
 
 /* Força o fantasma a ignorar a limitação menor */
@@ -541,16 +612,93 @@ img[src*="fantasma"] {
    ESTILO DO CHEFÃO GIGANTE DURANTE A GAMEPLAY
    ======================================================= */
 .inimigo.chefao {
-    width: 280px !important;    /* Quase o dobro do tamanho de um inimigo normal! */
-    height: 320px !important;   /* Altura proporcional */
-    bottom: 50px !important;    /* Mantém os pés dele no chão do cenário */
-    z-index: 6 !important;      /* Garante que ele fique destacado */
-    image-rendering: pixelated; /* Mantém os pixels nítidos mesmo grandão */
-    border: none !important;      /* Remove bordas HTML/CSS */
-    outline: none !important;     /* Remove contornos de seleção ou foco */
-    box-shadow: none !important;  /* Garante que não há sombras lineares simulando bordas */
+    width: 280px !important;    
+    height: 320px !important;   
+    bottom: 20px !important;    
+    z-index: 6 !important;      
+    image-rendering: pixelated; 
+    border: none !important;    
+    outline: none !important;   
+    box-shadow: none !important;
     
-    /* Se a sprite dele vier virada para o lado errado na gameplay, 
-       descomente a linha abaixo para espelhar ele de frente para a Morgana: */
-    /* transform: scaleX(-1); */
+}
+
+
+img[src*="chefao"], .chefao {
+    margin-bottom: 60px !important; 
+}
+
+/* Container que cobre a tela inteira com um fundo escuro semi-transparente */
+#tela-fim-jogo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85); /* Fundo preto suave */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Fica por cima de absolutamente tudo */
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* Classe utilitária para esconder elementos */
+.oculto {
+    display: none !important;
+}
+
+/* Caixa interna que organiza o conteúdo */
+.conteudo-fim {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 30px;
+}
+
+/* Estilo da sua imagem "FIM" */
+#imagem-fim {
+    max-width: 400px;
+    height: auto;
+    image-rendering: pixelated; /* Mantém o estilo retrô de pixel art nítido */
+    animation: pulsarFim 1.5s infinite alternate;
+}
+
+/* Grupo de botões */
+.botoes-fim {
+    display: flex;
+    gap: 20px;
+}
+
+/* Estilo dos Botões (Seguindo estilo retrô/faroeste) */
+.botoes-fim button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: #ffd700;
+    background-color: #5c3114;
+    border: 4px solid #ffd700;
+    padding: 12px 24px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #000;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.botoes-fim button:hover {
+    background-color: #723e1a;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #000;
+}
+
+.botoes-fim button:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #000;
+}
+
+/* Animaçãozinha sutil na imagem de FIM */
+@keyframes pulsarFim {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
 }
