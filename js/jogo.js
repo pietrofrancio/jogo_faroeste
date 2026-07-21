@@ -1389,7 +1389,7 @@ function criarInimigo() {
             frame: 0,
             timer: 0,
             timerAtaque: 0,
-            vida: 1,
+            vida: 25,
             velocidade: 3
         });
 
