@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/jogo.css">
+    <script src="../js/jogo.js" defer></script>
+    <title>Página do jogo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <audio id="musicaJogo" loop></audio>
+
+    <div class="game-container">
+        <div id="hud">
+            <div class="coluna-central">
+                <span id="hudPontos">Pontos: 0</span>
+                <span id="ouro">Ouro: 0</span>
+            </div>
+            <button id="btnPause">⏸ Pausar</button>
+            <span id="vidas">Vidas: 5 <span class="coracao-vida"></span></span>
+        </div>
+
+        <div id="cenario">
+            <!-- Jogador 1 (O container que se move + a imagem de gameplay de pixel art) -->
+            <div id="protagonistaHTML" style="position: absolute; bottom: 0px; left: 50px; z-index: 10;">
+                <!-- Usamos a versão PARADA em pixel art, não a "Normal" que é o busto de diálogo -->
+                <img id="protagonista" src="../img/morganaParada.png" alt="Protagonista 1"
+                    style="width: 100px; height: auto;">
+            </div>
+
+            <!-- Jogador 2 -->
+            <div id="protagonista2HTML" class="oculto"
+                style="position: absolute; bottom: 0px; left: 220px; z-index: 10;">
+                <img id="protagonista2" src="../img/morganaParada.png" alt="Protagonista 2"
+                    style="width: 100px; height: auto;">
+            </div>
+        </div>
+
+        <!-- TELA DE FIM DE JOGO -->
+        <div id="tela-fim-jogo" class="oculto">
+            <div class="conteudo-fim">
+                <!-- Substitua 'caminho/para/sua/imagem_fim.png' pelo caminho real da sua imagem escrito FIM -->
+                <img src="../img/fim.png" id="imagem-fim" alt="FIM">
+
+                <div class="botoes-fim">
+                    <button id="btn-reiniciar" onclick="reiniciarPartida()">REINICIAR</button>
+                    <button id="btn-menu" onclick="voltarAoMenu()">MENU PRINCIPAL</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="texto"></div>
+        <div id="fade"></div>
+    </div>
+
+    <!-- Menu de Game Over -->
+    <div id="gameOverMenu" class="oculto">
+        <div class="painelGameOver">
+            <h1>GAME OVER</h1>
+
+            <p class="textoGameOver">
+                O espírito da Morgana ainda resiste...
+                <br><br>
+                Deseja continuar a aventura?
+            </p>
+
+            <button id="recusar">
+                Reiniciar Jornada
+            </button>
+        </div>
+    </div>
+
+    <!-- Tela de Pause -->
+    <div id="pauseTela" class="oculto">
+        <div id="painelPause">
+            <h1>Jogo Pausado</h1><br><br><br>
+            <a href="./loja.html" id="btn">Loja</a><br><br>
+            <a href="../index.html" id="btn">Página Principal</a><br><br>
+        </div>
+    </div>
+</body>
+
+</html>
