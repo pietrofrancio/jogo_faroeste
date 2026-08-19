@@ -1323,7 +1323,7 @@ function jogadorColidiuComObstaculo(pX, pY, pAgachado, bolaObj) {
 // ==========================================
 // SISTEMA DE FASES E INIMIGOS
 // ==========================================
-faseAtual = 3 // aqui muda em q faze começa o jogoooo 
+faseAtual = 1 // aqui muda em q faze começa o jogoooo 
 let inimigos = []
 let vidaDropadaNaFase = false;
 let vidasDropadas = [];
