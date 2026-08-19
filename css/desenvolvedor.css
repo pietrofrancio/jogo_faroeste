@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Press Start 2P', cursive;
+    overflow:hidden;
+    color:#2b180d;
+}
+
+/*==================================
+        VÍDEO DE FUNDO
+==================================*/
+
+.video-background{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+}
+
+#bg-video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.55);
+}
+
+/*==================================
+        CONTAINER
+==================================*/
+
+.container{
+    width:95%;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+}
+
+h1{
+    color:#f7d78b;
+    font-size:2rem;
+    margin-bottom:45px;
+
+    text-shadow:
+        3px 3px #3a1c0b,
+        6px 6px #000;
+}
+
+/*==================================
+        CARTAZES
+==================================*/
+
+.devs{
+
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:35px;
+
+}
+
+.dev-card{
+
+    width:255px;
+    background-image: url(../img/papel_velho.jpg);
+    border:3px solid #5d3418;
+    box-shadow:
+        0 0 0 2px #2d170a,
+        10px 10px 18px rgba(0,0,0,.6);
+
+    padding:18px;
+    text-align:center;
+    position:relative;
+    transition:.25s;
+
+}
+
+.dev-card:nth-child(1){
+    transform:rotate(-3deg);
+}
+
+.dev-card:nth-child(2){
+    transform:rotate(2deg);
+}
+
+.dev-card:nth-child(3){
+    transform:rotate(-2deg);
+}
+
+.dev-card:nth-child(4){
+    transform:rotate(3deg);
+}
+
+.dev-card:hover{
+
+    transform:
+    translateY(-10px)
+    rotate(0deg)
+    scale(1.03);
+
+}
+
+/* efeito de papel */
+
+.dev-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+    radial-gradient(rgba(255,255,255,.18),transparent 70%);
+
+    opacity:.45;
+
+    pointer-events:none;
+
+}
+
+/*==================================
+        WANTED
+==================================*/
+
+.wanted{
+    font-size:2rem;
+    color:#231208;
+    margin-bottom:8px;
+    letter-spacing:2px;
+}
+
+.alive{
+    font-size:.55rem;
+    color:#3a1b0a;
+    margin-bottom:18px;
+}
+
+/*==================================
+        FOTO
+==================================*/
+
+.dev-card img{
+    width:170px;
+    height:190px;
+    object-fit:cover;
+    border:3px solid #382012;
+    margin-bottom:18px;
+    filter:
+sepia(.45)
+brightness(1.18)
+contrast(1.05);
+}
+
+/*==================================
+        TEXTO
+==================================*/
+
+.dev-card h2{
+    font-size:.73rem;
+    line-height:20px;
+    color:#241108;
+    margin-bottom:18px;
+}
+
+.dev-card p{
+    font-size:.60rem;
+    margin-bottom:15px;
+    color:#241108;
+}
+
+.dev-card span{
+    display:block;
+    font-size:.55rem;
+    color:#241108;
+}
+
+/*==================================
+        RECOMPENSA
+==================================*/
+.reward{
+    margin-top:20px;
+    border-top:2px solid #4a2a13; /* REMOVA ESTA LINHA */
+    padding-top:15px;
+    font-size:.72rem;
+    color:#241108;
+}
+/*==================================
+        BOTÃO
+==================================*/
+
+.voltar{
+    margin-top:45px;
+    text-decoration:none;
+    background:#5b3117;
+    color:#f5dfaa;
+    padding:18px 40px;
+    border:3px solid #d2a35e;
+    transition:.2s;
+    box-shadow:6px 6px #1a0b04;
+
+}
+
+.voltar:hover{
+    background:#d2a35e;
+    color:#35180b;
+    transform:translateY(-3px);
+}
+/*==================================
+        RESPONSIVO
+==================================*/
+@media(max-width:1200px){
+    body{
+        overflow:auto;
+    }
+    .container{
+        padding:50px 20px;
+    }
+}
+@media(max-width:700px){
+    h1{
+        font-size:1.2rem;
+        text-align:center;
+    }
+    .dev-card{
+        width:280px;
+    }
+}
